@@ -48,6 +48,7 @@ import org.jclouds.util.Throwables2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.SkipException;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -341,6 +342,7 @@ public class FilesystemStorageStrategyImplTest {
       assertEquals(newBlob.getMetadata().getName(), blobKey, "Created blob name is different");
    }
 
+   @Test(dataProvider = "ignoreOnMacOSX")
    public void testWriteDirectoryBlob() throws IOException {
       String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
       Blob blob = storageStrategy.newBlob(blobKey);
@@ -352,11 +354,11 @@ public class FilesystemStorageStrategyImplTest {
       assertTrue(storageStrategy.blobExists(CONTAINER_NAME, blobKey));
    }
 
+   @Test(dataProvider = "ignoreOnMacOSX")
    public void testGetDirectoryBlob() throws IOException {
       String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
       Blob blob = storageStrategy.newBlob(blobKey);
       storageStrategy.putBlob(CONTAINER_NAME, blob);
-
       assertTrue(storageStrategy.blobExists(CONTAINER_NAME, blobKey));
 
       blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
@@ -388,6 +390,7 @@ public class FilesystemStorageStrategyImplTest {
       storageStrategy.removeBlob(CONTAINER_NAME, blobKey);
    }
 
+   @Test(dataProvider = "ignoreOnMacOSX")
    public void testDeleteIntermediateDirectoryBlob() throws IOException {
       String parentKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
       String childKey = TestUtils.createRandomBlobKey(parentKey + "directory-", File.separator);
@@ -396,6 +399,7 @@ public class FilesystemStorageStrategyImplTest {
 
       storageStrategy.removeBlob(CONTAINER_NAME, parentKey);
       assertFalse(storageStrategy.blobExists(CONTAINER_NAME, parentKey));
+
       assertTrue(storageStrategy.blobExists(CONTAINER_NAME, childKey));
    }
 
@@ -629,4 +633,9 @@ public class FilesystemStorageStrategyImplTest {
       return tempAbsolutePath;
    }
 
+   @DataProvider
+   public Object[][] ignoreOnMacOSX() {
+        return org.jclouds.utils.TestUtils.isMacOSX() ? TestUtils.NO_INVOCATIONS
+                : TestUtils.SINGLE_NO_ARG_INVOCATION;
+   }
 }
