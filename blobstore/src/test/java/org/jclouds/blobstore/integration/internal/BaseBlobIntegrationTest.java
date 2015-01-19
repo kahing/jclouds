@@ -555,6 +555,10 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       testPut(payload, new ByteSourcePayload(byteSource), length, new PutOptions().multipart(true));
    }
 
+   protected void checkUserMetadata(Map<String, String> userMetadata1, Map<String, String> userMetadata2) {
+      assertThat(userMetadata1).isEqualTo(userMetadata2);
+   }
+
    private void testPut(Payload payload, Payload expectedPayload, long length, PutOptions options)
          throws IOException, InterruptedException {
       BlobStore blobStore = view.getBlobStore();
@@ -581,10 +585,10 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          }
          validateMetadata(blob.getMetadata(), container, blob.getMetadata().getName());
          checkContentMetadata(blob);
-         assertThat(blob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
-
          PageSet<? extends StorageMetadata> set = blobStore.list(container);
          assertThat(set).hasSize(1);
+
+         checkUserMetadata(blob.getMetadata().getUserMetadata(), userMetadata);
       } finally {
          returnContainer(container);
       }
