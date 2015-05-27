@@ -90,11 +90,34 @@ public class Strings2 {
    public static boolean isCidrFormat(String in) {
       return CIDR_PATTERN.matcher(in).matches();
    }
-      
+
+   // taken from https://docs.oracle.com/javase/7/docs/api/java/net/URI.html#legal-chars
+   private static final Pattern URL_VALID_PATTERN = Pattern.compile("[a-zA-Z0-9_\\-!.~'()*,;:$&/\\[\\]@%]+");
    private static final Pattern URL_ENCODED_PATTERN = Pattern.compile(".*%[a-fA-F0-9][a-fA-F0-9].*");
 
+   private static boolean isHexadecimal(char ch) {
+      return (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f') || (ch >= '0' && ch <= '9');
+   }
+
    public static boolean isUrlEncoded(String in) {
-      return URL_ENCODED_PATTERN.matcher(in).matches();
+      if (!URL_VALID_PATTERN.matcher(in).matches()) {
+         return false;
+      }
+
+      // ensure that all % are followed by 2 hexadecimal characters
+      int percentIdx = 0;
+      while ((percentIdx = in.indexOf('%', percentIdx)) != -1) {
+         if (percentIdx + 2 >= in.length()) {
+            return false;
+         }
+         if (!isHexadecimal(in.charAt(percentIdx + 1)) ||
+                 !isHexadecimal(in.charAt(percentIdx + 2))) {
+            return false;
+         }
+         percentIdx += 2;
+      }
+
+      return true;
    }
 
    /**
@@ -111,8 +134,8 @@ public class Strings2 {
          return null;
       String input = in.toString();
       // Don't double decode
-      if (!isUrlEncoded(input)) {
-         return input;
+      if (!URL_ENCODED_PATTERN.matcher(in).matches()) {
+         return in;
       }
       try {
          return URLDecoder.decode(input, "UTF-8");
