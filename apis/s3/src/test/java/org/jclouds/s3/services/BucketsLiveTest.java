@@ -16,6 +16,7 @@
  */
 package org.jclouds.s3.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.s3.S3ClientLiveTest.TEST_ACL_EMAIL;
 import static org.jclouds.s3.S3ClientLiveTest.TEST_ACL_ID;
 import static org.jclouds.s3.domain.AccessControlList.GroupGranteeURI.ALL_USERS;
@@ -79,7 +80,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
     */
    @Test(groups = { "integration", "live" })
    public void deleteBucketIfEmptyNotFound() throws Exception {
-      assert getApi().deleteBucketIfEmpty("dbienf");
+      assertThat(getApi().deleteBucketIfEmpty("dbienf")).isTrue();
    }
 
    @Test(groups = { "integration", "live" })
@@ -87,7 +88,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
       String bucketName = getContainerName();
       try {
          addBlobToContainer(bucketName, "test");
-         assert !getApi().deleteBucketIfEmpty(bucketName);
+         assertThat(!getApi().deleteBucketIfEmpty(bucketName)).isTrue();
       } finally {
          returnContainer(bucketName);
       }
@@ -223,7 +224,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
             public void run() {
                try {
                   BucketLogging newLogging = getApi().getBucketLogging(bucketName);
-                  assert newLogging != null;
+                  assertThat(newLogging != null).isTrue();
                   AccessControlList acl = new AccessControlList();
                   for (Grant grant : newLogging.getTargetGrants()) { // TODO: add permission
                      // checking features to
@@ -269,7 +270,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
          Set<BucketMetadata> list = getApi().listOwnedBuckets();
          BucketMetadata firstBucket = Iterables.get(list, 0);
          BucketMetadata toMatch = new BucketMetadata(bucketName, new Date(), firstBucket.getOwner());
-         assert list.contains(toMatch);
+         assertThat(list.contains(toMatch)).isTrue();
       } finally {
          returnContainer(bucketName);
       }
@@ -290,7 +291,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
          addAlphabetUnderRoot(bucketName);
          ListBucketResponse bucket = getApi().listBucket(bucketName, afterMarker("y"));
          assertEquals(bucket.getMarker(), "y");
-         assert !bucket.isTruncated();
+         assertThat(!bucket.isTruncated()).isTrue();
          assertEquals(bucket.size(), 1);
       } finally {
          returnContainer(bucketName);
@@ -305,7 +306,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
          add15UnderRoot(bucketName);
          ListBucketResponse bucket = getApi().listBucket(bucketName, delimiter("/"));
          assertEquals(bucket.getDelimiter(), "/");
-         assert !bucket.isTruncated();
+         assertThat(!bucket.isTruncated()).isTrue();
          assertEquals(bucket.size(), 15);
          assertEquals(bucket.getCommonPrefixes().size(), 1);
       } finally {
@@ -322,7 +323,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
          add15UnderRoot(bucketName);
 
          ListBucketResponse bucket = getApi().listBucket(bucketName, withPrefix("apps/"));
-         assert !bucket.isTruncated();
+         assertThat(!bucket.isTruncated()).isTrue();
          assertEquals(bucket.size(), 10);
          assertEquals(bucket.getPrefix(), "apps/");
       } finally {
@@ -337,7 +338,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
          addAlphabetUnderRoot(bucketName);
          ListBucketResponse bucket = getApi().listBucket(bucketName, maxResults(5));
          assertEquals(bucket.getMaxKeys(), 5);
-         assert bucket.isTruncated();
+         assertThat(bucket.isTruncated()).isTrue();
          assertEquals(bucket.size(), 5);
       } finally {
          returnContainer(bucketName);

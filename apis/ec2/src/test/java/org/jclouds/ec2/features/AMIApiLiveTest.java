@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.DescribeImagesOptions.Builder.imageIds;
 import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.addNewBlockDevice;
 import static org.jclouds.util.Predicates2.retry;
@@ -240,7 +241,7 @@ public class AMIApiLiveTest extends BaseComputeServiceContextLiveTest {
                device.getVolumeId());
          snapshotsToDelete.add(snapshot.getId());
          Predicate<Snapshot> snapshotted = retry(new SnapshotCompleted(ec2Api.getElasticBlockStoreApi().get()), 600, 10, SECONDS);
-         assert snapshotted.apply(snapshot);
+         assertThat(snapshotted.apply(snapshot)).isTrue();
          return snapshot;
       } finally {
          if (instanceId != null)

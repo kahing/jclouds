@@ -20,6 +20,7 @@ import static com.google.common.hash.Hashing.md5;
 import static com.google.common.net.HttpHeaders.TRANSFER_ENCODING;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.inject.name.Names.named;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.testng.Assert.assertEquals;
@@ -128,7 +129,7 @@ public abstract class BaseRestApiTest {
          assertEquals(md.getContentLength(), length);
       } else {
          assertEquals(request.getFirstHeaderOrNull(TRANSFER_ENCODING), "chunked");
-         assert md.getContentLength() == null || md.getContentLength().equals(length);
+         assertThat(md.getContentLength() == null || md.getContentLength().equals(length)).isTrue();
       }
       assertEquals(md.getContentType(), contentType);
       assertEquals(md.getContentDisposition(), contentDispositon);

@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.compute.functions;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
@@ -69,7 +70,7 @@ public class AWSRunningInstanceToNodeMetadataTest {
    @BeforeTest
    protected void setUpInjector() {
       dateService = Guice.createInjector().getInstance(DateService.class);
-      assert dateService != null;
+      assertThat(dateService != null).isTrue();
    }
 
    @Test

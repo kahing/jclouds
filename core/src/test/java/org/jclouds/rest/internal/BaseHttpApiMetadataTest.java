@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.rest.internal;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.util.Set;
@@ -40,7 +41,7 @@ public abstract class BaseHttpApiMetadataTest extends BaseApiMetadataTest {
    @Test
    public void testContextAssignableFromRestContext() {
       Set<ApiMetadata> all = ImmutableSet.copyOf(Apis.contextAssignableFrom(typeToken(ApiContext.class)));
-      assert all.contains(toTest) : String.format("%s not found in %s", toTest, all);
+      assertThat(all.contains(toTest)).as(String.format("%s not found in %s", toTest, all)).isTrue();
    }
 
 }

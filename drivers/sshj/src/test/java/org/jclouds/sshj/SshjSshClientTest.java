@@ -17,6 +17,7 @@
 package org.jclouds.sshj;
 
 import static com.google.inject.name.Names.bindProperties;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -92,45 +93,45 @@ public class SshjSshClientTest {
    }
 
    public void testExceptionClassesRetry() {
-      assert ssh.shouldRetry(new ConnectionException("Read timed out", new SSHException("Read timed out",
-            new SocketTimeoutException("Read timed out"))));
-      assert ssh.shouldRetry(new SFTPException("Failure!"));
-      assert ssh.shouldRetry(new SocketTimeoutException("connect timed out"));
-      assert ssh.shouldRetry(new TransportException("socket closed"));
-      assert ssh.shouldRetry(new ConnectionException("problem"));
-      assert ssh.shouldRetry(new ConnectException("Connection refused"));
-      assert !ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException()));
+      assertThat(ssh.shouldRetry(new ConnectionException("Read timed out", new SSHException("Read timed out",
+            new SocketTimeoutException("Read timed out"))))).isTrue();
+      assertThat(ssh.shouldRetry(new SFTPException("Failure!"))).isTrue();
+      assertThat(ssh.shouldRetry(new SocketTimeoutException("connect timed out"))).isTrue();
+      assertThat(ssh.shouldRetry(new TransportException("socket closed"))).isTrue();
+      assertThat(ssh.shouldRetry(new ConnectionException("problem"))).isTrue();
+      assertThat(ssh.shouldRetry(new ConnectException("Connection refused"))).isTrue();
+      assertThat(!ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException()))).isTrue();
    }
 
    public void testOnlyRetryAuthWhenSet() {
       SshjSshClient ssh1 = createClient();
-      assert !ssh1.shouldRetry(new AuthorizationException("problem", null));
-      assert !ssh1.shouldRetry(new UserAuthException("problem", null));
+      assertThat(!ssh1.shouldRetry(new AuthorizationException("problem", null))).isTrue();
+      assertThat(!ssh1.shouldRetry(new UserAuthException("problem", null))).isTrue();
       ssh1.retryAuth = true;
-      assert ssh1.shouldRetry(new AuthorizationException("problem", null));
-      assert ssh1.shouldRetry(new UserAuthException("problem", null));
+      assertThat(ssh1.shouldRetry(new AuthorizationException("problem", null))).isTrue();
+      assertThat(ssh1.shouldRetry(new UserAuthException("problem", null))).isTrue();
    }
 
    public void testOnlyRetryAuthWhenSetViaProperties() {
       Properties props = new Properties();
       props.setProperty("jclouds.ssh.retry-auth", "true");
       SshjSshClient ssh1 = createClient(props);
-      assert ssh1.shouldRetry(new AuthorizationException("problem", null));
-      assert ssh1.shouldRetry(new UserAuthException("problem", null));
+      assertThat(ssh1.shouldRetry(new AuthorizationException("problem", null))).isTrue();
+      assertThat(ssh1.shouldRetry(new UserAuthException("problem", null))).isTrue();
    }
 
    public void testExceptionMessagesRetry() {
-      assert !ssh.shouldRetry(new SSHException(""));
-      assert !ssh.shouldRetry(new NullPointerException((String) null));
+      assertThat(!ssh.shouldRetry(new SSHException(""))).isTrue();
+      assertThat(!ssh.shouldRetry(new NullPointerException((String) null))).isTrue();
    }
 
    public void testCausalChainHasMessageContaining() {
-      assert ssh.causalChainHasMessageContaining(
+      assertThat(ssh.causalChainHasMessageContaining(
             new SSHException("Session.connect: java.io.IOException: End of IO Stream Read")).apply(
-            " End of IO Stream Read");
-      assert ssh.causalChainHasMessageContaining(
-            new SSHException("Session.connect: java.net.SocketException: Connection reset")).apply("java.net.Socket");
-      assert !ssh.causalChainHasMessageContaining(new NullPointerException()).apply(" End of IO Stream Read");
+            " End of IO Stream Read")).isTrue();
+      assertThat(ssh.causalChainHasMessageContaining(
+            new SSHException("Session.connect: java.net.SocketException: Connection reset")).apply("java.net.Socket")).isTrue();
+      assertThat(!ssh.causalChainHasMessageContaining(new NullPointerException()).apply(" End of IO Stream Read")).isTrue();
    }
 
    public void testRetryOnToStringNpe() {
@@ -139,7 +140,7 @@ public class SshjSshClientTest {
       // ensure we test toString on the exception independently
       props.setProperty("jclouds.ssh.retryable-messages", nex.toString());
       SshjSshClient ssh1 = createClient(props);
-      assert ssh1.shouldRetry(new RuntimeException(nex));
+      assertThat(ssh1.shouldRetry(new RuntimeException(nex))).isTrue();
    }
 
    private static class ExceptionWithStrangeToString extends RuntimeException {
@@ -155,7 +156,7 @@ public class SshjSshClientTest {
       Properties props = new Properties();
       props.setProperty("jclouds.ssh.retryable-messages", "foo-bar");
       SshjSshClient ssh1 = createClient(props);
-      assert ssh1.shouldRetry(new RuntimeException(nex));
+      assertThat(ssh1.shouldRetry(new RuntimeException(nex))).isTrue();
    }
 
    public void testDontThrowIOExceptionOnClear() throws Exception {
@@ -175,7 +176,7 @@ public class SshjSshClientTest {
       Properties props = new Properties();
       props.setProperty("jclouds.ssh.retryable-messages", "foo-baR");
       SshjSshClient ssh1 = createClient(props);
-      assert !ssh1.shouldRetry(new RuntimeException(nex));
+      assertThat(!ssh1.shouldRetry(new RuntimeException(nex))).isTrue();
    }
 
    public void testRetriesLoggedAtInfoWithCount() throws Exception {

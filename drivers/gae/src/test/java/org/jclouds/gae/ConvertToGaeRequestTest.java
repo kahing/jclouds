@@ -16,6 +16,7 @@
  */
 package org.jclouds.gae;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
@@ -81,7 +82,7 @@ public class ConvertToGaeRequestTest {
    void testConvertRequestSetsFetchOptions() throws IOException {
       HttpRequest request = HttpRequest.builder().method(HttpMethod.GET).endpoint(endPoint).build();
       HTTPRequest gaeRequest = req.apply(request);
-      assert gaeRequest.getFetchOptions() != null;
+      assertThat(gaeRequest.getFetchOptions() != null).isTrue();
    }
 
    @Test
@@ -99,7 +100,7 @@ public class ConvertToGaeRequestTest {
    void testConvertRequestNoContent() throws IOException {
       HttpRequest request = HttpRequest.builder().method(HttpMethod.GET).endpoint(endPoint).build();
       HTTPRequest gaeRequest = req.apply(request);
-      assert gaeRequest.getPayload() == null;
+      assertThat(gaeRequest.getPayload() == null).isTrue();
       assertEquals(gaeRequest.getHeaders().size(), 1);  // user agent
       assertEquals(gaeRequest.getHeaders().get(0).getName(), HttpHeaders.USER_AGENT);
       assertEquals(gaeRequest.getHeaders().get(0).getValue(), "jclouds/1.0 urlfetch/1.4.3");

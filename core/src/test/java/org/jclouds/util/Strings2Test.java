@@ -16,6 +16,7 @@
  */
 package org.jclouds.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Strings2.urlDecode;
 import static org.jclouds.util.Strings2.urlEncode;
 import static org.testng.Assert.assertEquals;
@@ -28,8 +29,8 @@ import com.google.common.collect.ImmutableMap;
 public class Strings2Test {
 
    public void testIsEncoded() {
-      assert Strings2.isUrlEncoded("/read-tests/%73%6f%6d%65%20%66%69%6c%65");
-      assert !Strings2.isUrlEncoded("/read-tests/ tep");
+      assertThat(Strings2.isUrlEncoded("/read-tests/%73%6f%6d%65%20%66%69%6c%65")).isTrue();
+      assertThat(!Strings2.isUrlEncoded("/read-tests/ tep")).isTrue();
    }
 
    public void testNoDoubleEncode() {
@@ -56,11 +57,11 @@ public class Strings2Test {
    }
 
    public void testIsCidrFormat() {
-      assert Strings2.isCidrFormat("1.2.3.4/5");
-      assert Strings2.isCidrFormat("0.0.0.0/0");
-      assert !Strings2.isCidrFormat("banana");
-      assert !Strings2.isCidrFormat("1.2.3.4");
-      assert !Strings2.isCidrFormat("500.500.500.500/2423");
+      assertThat(Strings2.isCidrFormat("1.2.3.4/5")).isTrue();
+      assertThat(Strings2.isCidrFormat("0.0.0.0/0")).isTrue();
+      assertThat(!Strings2.isCidrFormat("banana")).isTrue();
+      assertThat(!Strings2.isCidrFormat("1.2.3.4")).isTrue();
+      assertThat(!Strings2.isCidrFormat("500.500.500.500/2423")).isTrue();
    }
       
 }

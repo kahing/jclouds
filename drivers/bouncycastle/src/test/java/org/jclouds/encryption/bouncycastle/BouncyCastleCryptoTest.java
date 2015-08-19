@@ -24,6 +24,8 @@ import org.testng.annotations.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test(groups = "unit")
 public class BouncyCastleCryptoTest  {
 
@@ -31,6 +33,6 @@ public class BouncyCastleCryptoTest  {
    protected void createCrypto() {
       Injector i = Guice.createInjector(new BouncyCastleCryptoModule());
       Crypto crypto = i.getInstance(Crypto.class);
-      assert crypto instanceof BouncyCastleCrypto;
+      assertThat(crypto instanceof BouncyCastleCrypto).isTrue();
    }
 }

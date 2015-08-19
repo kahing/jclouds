@@ -26,6 +26,8 @@ import com.google.common.net.HostAndPort;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests the ability to configure a {@link SshjSshClient}
  */
@@ -38,6 +40,6 @@ public class SshjSshClientModuleTest {
       SshClient.Factory factory = i.getInstance(SshClient.Factory.class);
       SshClient connection = factory.create(HostAndPort.fromParts("localhost", 22), LoginCredentials.builder().user("username")
             .password("password").build());
-      assert connection instanceof SshjSshClient;
+      assertThat(connection instanceof SshjSshClient).isTrue();
    }
 }

@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.v2_0.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.v2_0.predicates.ExtensionPredicates.aliasEquals;
 import static org.jclouds.openstack.v2_0.predicates.ExtensionPredicates.namespaceEquals;
 
@@ -34,27 +35,27 @@ public class ExtensionPredicatesTest {
 
    @Test
    public void testAliasEqualsWhenEqual() {
-      assert aliasEquals("os-keypairs").apply(ref);
+      assertThat(aliasEquals("os-keypairs").apply(ref)).isTrue();
    }
 
    @Test
    public void testAliasEqualsWhenNotEqual() {
-      assert !aliasEquals("foo").apply(ref);
+      assertThat(!aliasEquals("foo").apply(ref)).isTrue();
    }
 
    @Test
    public void testNamespaceEqualsWhenEqual() {
-      assert namespaceEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(ref);
+      assertThat(namespaceEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(ref)).isTrue();
    }
 
    @Test
    public void testNamespaceEqualsWhenEqualEvenOnInputHttps() {
-      assert namespaceEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(
-               ref.toBuilder().namespace(URI.create("https://docs.openstack.org/ext/keypairs/api/v1.1")).build());
+      assertThat(namespaceEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(
+               ref.toBuilder().namespace(URI.create("https://docs.openstack.org/ext/keypairs/api/v1.1")).build())).isTrue();
    }
 
    @Test
    public void testNamespaceEqualsWhenNotEqual() {
-      assert !namespaceEquals(URI.create("foo")).apply(ref);
+      assertThat(!namespaceEquals(URI.create("foo")).apply(ref)).isTrue();
    }
 }

@@ -17,6 +17,7 @@
 package org.jclouds;
 
 import static com.google.common.base.Suppliers.ofInstance;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertEquals;
 
@@ -221,8 +222,8 @@ public class ContextBuilderTest {
       ContextBuilder.addHttpModuleIfNeededAndNotPresent(modules);
       ContextBuilder.addLoggingModuleIfNotPresent(modules);
       assertEquals(modules.size(), 2);
-      assert modules.remove(0) instanceof JavaUrlHttpCommandExecutorServiceModule;
-      assert modules.remove(0) instanceof JDKLoggingModule;
+      assertThat(modules.remove(0) instanceof JavaUrlHttpCommandExecutorServiceModule).isTrue();
+      assertThat(modules.remove(0) instanceof JDKLoggingModule).isTrue();
    }
 
    @Test
@@ -231,8 +232,8 @@ public class ContextBuilderTest {
       ContextBuilder.addHttpModuleIfNeededAndNotPresent(modules);
       ContextBuilder.addLoggingModuleIfNotPresent(modules);
       assertEquals(modules.size(), 2);
-      assert modules.remove(0) instanceof JavaUrlHttpCommandExecutorServiceModule;
-      assert modules.remove(0) instanceof JDKLoggingModule;
+      assertThat(modules.remove(0) instanceof JavaUrlHttpCommandExecutorServiceModule).isTrue();
+      assertThat(modules.remove(0) instanceof JDKLoggingModule).isTrue();
    }
 
    public void testBuilder() {

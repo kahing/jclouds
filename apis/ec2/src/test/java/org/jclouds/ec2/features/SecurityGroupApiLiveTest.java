@@ -21,6 +21,7 @@ import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -253,8 +254,8 @@ public class SecurityGroupApiLiveTest extends BaseComputeServiceContextLiveTest 
       public void run() {
          try {
             Set<SecurityGroup> oneResult = client.describeSecurityGroupsInRegion(null, group);
-            assert all(getOnlyElement(oneResult), permission) : permission
-                  + ": " + oneResult;
+            assertThat(all(getOnlyElement(oneResult), permission)).as(permission
+                  + ": " + oneResult).isTrue();
          } catch (Exception e) {
             throw new AssertionError(e);
          }

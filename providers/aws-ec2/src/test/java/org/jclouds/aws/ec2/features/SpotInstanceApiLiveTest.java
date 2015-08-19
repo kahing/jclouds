@@ -19,6 +19,7 @@ package org.jclouds.aws.ec2.features;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.aws.ec2.options.DescribeSpotPriceHistoryOptions.Builder.from;
 import static org.jclouds.aws.ec2.options.RequestSpotInstancesOptions.Builder.launchGroup;
 import static org.jclouds.util.Predicates2.retry;
@@ -134,19 +135,18 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
       for (String region : Region.DEFAULT_REGIONS) {
          Set<Spot> spots = client.getSpotInstanceApi().get().describeSpotPriceHistoryInRegion(region, from(new Date()));
          assertNotNull(spots);
-         assert !spots.isEmpty();
+         assertThat(!spots.isEmpty()).isTrue();
          for (Spot spot : spots) {
-            assert spot.getSpotPrice() > 0 : spots;
+            assertThat(spot.getSpotPrice() > 0).as(String.valueOf(spots)).isTrue();
             assertEquals(spot.getRegion(), region);
-            assert in(
+            assertThat(in(
                     ImmutableSet.of("Linux/UNIX", "Linux/UNIX (Amazon VPC)", "SUSE Linux", "SUSE Linux (Amazon VPC)",
-                              "Windows", "Windows (Amazon VPC)")).apply(spot.getProductDescription()) : spot;
-            assert // sometimes get D2 type, which we don't yet enumerate
-                    spot.getInstanceType().startsWith("d2.") ||
+                              "Windows", "Windows (Amazon VPC)")).apply(spot.getProductDescription())).as(String.valueOf(spot)).isTrue();
+            assertThat(spot.getInstanceType().startsWith("d2.") ||
                     in(ImmutableSet.of("c1.medium", "c1.xlarge", "cc1.4xlarge", "cg1.4xlarge", "cc2.8xlarge", "m1.large",
                               "m1.small", "m1.medium", "m1.xlarge", "m2.2xlarge", "m2.4xlarge", "m2.xlarge", "m3.xlarge",
                               "m3.2xlarge", "t1.micro", "cr1.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge",
-                              "c4.8xlarge")).apply(spot.getInstanceType()) : spot;
+                              "c4.8xlarge")).apply(spot.getInstanceType())).as(String.valueOf(spot)).isTrue();
          }
       }
 
@@ -181,10 +181,10 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
       SpotInstanceRequest spot = refresh(request);
       assertNotNull(spot);
       assertEquals(spot, request);
-      assert activeTester.apply(request) : refresh(request);
+      assertThat(activeTester.apply(request)).as(String.valueOf(refresh(request))).isTrue();
       System.out.println(System.currentTimeMillis() - start);
       spot = refresh(request);
-      assert spot.getInstanceId() != null : spot;
+      assertThat(spot.getInstanceId() != null).as(String.valueOf(spot)).isTrue();
       instance = getOnlyElement(getOnlyElement(client.getInstanceApi().get().describeInstancesInRegion(spot.getRegion(),
                spot.getInstanceId())));
       assertEquals(instance.getSpotInstanceRequestId(), spot.getId());

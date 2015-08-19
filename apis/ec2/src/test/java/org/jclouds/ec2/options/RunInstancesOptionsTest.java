@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.asType;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withBlockDeviceMappings;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withClientToken;
@@ -40,8 +41,8 @@ public class RunInstancesOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(RunInstancesOptions.class);
-      assert !String.class.isAssignableFrom(RunInstancesOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(RunInstancesOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(RunInstancesOptions.class)).isTrue();
    }
 
    @Test

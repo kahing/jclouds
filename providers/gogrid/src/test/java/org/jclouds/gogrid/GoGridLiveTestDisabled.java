@@ -19,6 +19,7 @@ package org.jclouds.gogrid;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -114,7 +115,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
                "GSI-f8979644-e646-4711-ad58-d98a5fa3612c", ram, availableIp.getIp(),
                new AddServerOptions().withDescription(description));
       assertNotNull(createdServer);
-      assert serverLatestJobCompleted.apply(createdServer);
+      assertThat(serverLatestJobCompleted.apply(createdServer)).isTrue();
 
       assertEquals(Iterables.getLast(api.getServerServices().getServersByName(nameOfServer)).getDescription(),
                description);
@@ -139,36 +140,36 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
       Server createdServer = api.getServerServices().addServer(nameOfServer,
                "GSI-f8979644-e646-4711-ad58-d98a5fa3612c", ram, availableIp.getIp());
       assertNotNull(createdServer);
-      assert serverLatestJobCompleted.apply(createdServer);
+      assertThat(serverLatestJobCompleted.apply(createdServer)).isTrue();
 
       // get server by name
       Set<Server> response = api.getServerServices().getServersByName(nameOfServer);
-      assert response.size() == 1;
+      assertThat(response.size() == 1).isTrue();
 
       // restart the server
       api.getServerServices().power(nameOfServer, PowerCommand.RESTART);
 
       Set<Job> jobs = api.getJobServices().getJobsForObjectName(nameOfServer);
-      assert "RestartVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName());
+      assertThat("RestartVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName())).isTrue();
 
-      assert serverLatestJobCompleted.apply(createdServer);
+      assertThat(serverLatestJobCompleted.apply(createdServer)).isTrue();
 
       int serverCountAfterAddingOneServer = api.getServerServices().getServerList().size();
-      assert serverCountAfterAddingOneServer == serverCountBeforeTest + 1 : "There should be +1 increase in the number of servers since the test started";
+      assertThat(serverCountAfterAddingOneServer == serverCountBeforeTest + 1).as("There should be +1 increase in the number of servers since the test started").isTrue();
 
       // delete the server
       api.getServerServices().deleteByName(nameOfServer);
 
       jobs = api.getJobServices().getJobsForObjectName(nameOfServer);
-      assert "DeleteVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName());
+      assertThat("DeleteVirtualServer".equals(Iterables.getLast(jobs).getCommand().getName())).isTrue();
 
-      assert serverLatestJobCompleted.apply(createdServer);
+      assertThat(serverLatestJobCompleted.apply(createdServer)).isTrue();
 
       int serverCountAfterDeletingTheServer = api.getServerServices().getServerList().size();
-      assert serverCountAfterDeletingTheServer == serverCountBeforeTest : "There should be the same # of servers as since the test started";
+      assertThat(serverCountAfterDeletingTheServer == serverCountBeforeTest).as("There should be the same # of servers as since the test started").isTrue();
 
       // make sure that IP is put back to "unassigned"
-      assert api.getIpServices().getUnassignedIpList().contains(availableIp);
+      assertThat(api.getIpServices().getUnassignedIpList().contains(availableIp)).isTrue();
    }
 
    /**
@@ -187,7 +188,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
       Server createdServer = api.getServerServices().addServer(nameOfServer,
                "GSI-f8979644-e646-4711-ad58-d98a5fa3612c", ram, Iterables.getLast(availableIps).getIp());
 
-      assert serverLatestJobCompleted.apply(createdServer);
+      assertThat(serverLatestJobCompleted.apply(createdServer)).isTrue();
 
       // restart the server
       api.getServerServices().power(nameOfServer, PowerCommand.RESTART);
@@ -199,7 +200,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
 
       Job latestJobFetched = Iterables.getOnlyElement(api.getJobServices().getJobsById(latestJobId));
 
-      assert latestJob.equals(latestJobFetched) : "Job and its representation found by ID don't match";
+      assertThat(latestJob.equals(latestJobFetched)).as("Job and its representation found by ID don't match").isTrue();
 
       long[] idsOfAllJobs = new long[jobs.size()];
       int i = 0;
@@ -208,9 +209,9 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
       }
 
       Set<Job> jobsFetched = api.getJobServices().getJobsById(idsOfAllJobs);
-      assert jobsFetched.size() == jobs.size() : format(
+      assertThat(jobsFetched.size() == jobs.size()).as(format(
                "Number of jobs fetched by ids doesn't match the number of jobs "
-                        + "requested. Requested/expected: %d. Found: %d.", jobs.size(), jobsFetched.size());
+                        + "requested. Requested/expected: %d. Found: %d.", jobs.size(), jobsFetched.size())).isTrue();
 
       // delete the server
       api.getServerServices().deleteByName(nameOfServer);
@@ -240,14 +241,14 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
                LoadBalancerPersistenceType.SOURCE_ADDRESS);
       LoadBalancer createdLoadBalancer = api.getLoadBalancerServices().addLoadBalancer(nameOfLoadBalancer,
                IpPortPair.builder().ip(vip).port(80).build(), Arrays.asList(IpPortPair.builder().ip(realIp1).port(80).build(),
-               IpPortPair.builder().ip(realIp2).port(80).build()),
+                      IpPortPair.builder().ip(realIp2).port(80).build()),
                options);
       assertNotNull(createdLoadBalancer);
-      assert loadBalancerLatestJobCompleted.apply(createdLoadBalancer);
+      assertThat(loadBalancerLatestJobCompleted.apply(createdLoadBalancer)).isTrue();
 
       // get load balancer by name
       Set<LoadBalancer> response = api.getLoadBalancerServices().getLoadBalancersByName(nameOfLoadBalancer);
-      assert response.size() == 1;
+      assertThat(response.size() == 1).isTrue();
       createdLoadBalancer = Iterables.getOnlyElement(response);
       assertNotNull(createdLoadBalancer.getRealIpList());
       assertEquals(createdLoadBalancer.getRealIpList().size(), 2);
@@ -256,24 +257,24 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
 
       LoadBalancer editedLoadBalancer = api.getLoadBalancerServices().editLoadBalancerNamed(nameOfLoadBalancer,
                Arrays.asList(IpPortPair.builder().ip(realIp3).port(8181).build()));
-      assert loadBalancerLatestJobCompleted.apply(editedLoadBalancer);
+      assertThat(loadBalancerLatestJobCompleted.apply(editedLoadBalancer)).isTrue();
       assertNotNull(editedLoadBalancer.getRealIpList());
       assertEquals(editedLoadBalancer.getRealIpList().size(), 1);
       assertEquals(Iterables.getOnlyElement(editedLoadBalancer.getRealIpList()).getIp().getIp(), realIp3.getIp());
 
       int lbCountAfterAddingOneServer = api.getLoadBalancerServices().getLoadBalancerList().size();
-      assert lbCountAfterAddingOneServer == lbCountBeforeTest + 1 : "There should be +1 increase in the number of load balancers since the test started";
+      assertThat(lbCountAfterAddingOneServer == lbCountBeforeTest + 1).as("There should be +1 increase in the number of load balancers since the test started").isTrue();
 
       // delete the load balancer
       api.getLoadBalancerServices().deleteByName(nameOfLoadBalancer);
 
       Set<Job> jobs = api.getJobServices().getJobsForObjectName(nameOfLoadBalancer);
-      assert "DeleteLoadBalancer".equals(Iterables.getLast(jobs).getCommand().getName());
+      assertThat("DeleteLoadBalancer".equals(Iterables.getLast(jobs).getCommand().getName())).isTrue();
 
-      assert loadBalancerLatestJobCompleted.apply(createdLoadBalancer);
+      assertThat(loadBalancerLatestJobCompleted.apply(createdLoadBalancer)).isTrue();
 
       int lbCountAfterDeletingTheServer = api.getLoadBalancerServices().getLoadBalancerList().size();
-      assert lbCountAfterDeletingTheServer == lbCountBeforeTest : "There should be the same # of load balancers as since the test started";
+      assertThat(lbCountAfterDeletingTheServer == lbCountBeforeTest).as("There should be the same # of load balancers as since the test started").isTrue();
    }
 
    /**
@@ -291,7 +292,7 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
          }
       };
 
-      assert Iterables.all(images, isDatabaseServer) : "All of the images should've been of database type";
+      assertThat(Iterables.all(images, isDatabaseServer)).as("All of the images should've been of database type").isTrue();
 
       ServerImage image = Iterables.getLast(images);
       ServerImage imageFromServer = Iterables
@@ -319,11 +320,11 @@ public class GoGridLiveTestDisabled extends BaseApiLiveTest<GoGridApi> {
       Server createdServer = api.getServerServices().addServer(nameOfServer,
                "GSI-f8979644-e646-4711-ad58-d98a5fa3612c", "1", availableIp.getIp());
       assertNotNull(createdServer);
-      assert serverLatestJobCompleted.apply(createdServer);
+      assertThat(serverLatestJobCompleted.apply(createdServer)).isTrue();
 
       // get server by name
       Set<Server> response = api.getServerServices().getServersByName(nameOfServer);
-      assert response.size() == 1;
+      assertThat(response.size() == 1).isTrue();
       createdServer = Iterables.getOnlyElement(response);
 
       Map<String, Credentials> credsMap = api.getServerServices().getServerCredentialsList();

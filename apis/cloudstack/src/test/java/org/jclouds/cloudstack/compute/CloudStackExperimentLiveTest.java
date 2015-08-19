@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Sets.newTreeSet;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.options.CreateNetworkOptions.Builder.vlan;
 import static org.jclouds.cloudstack.options.ListNetworkOfferingsOptions.Builder.specifyVLAN;
 
@@ -76,7 +77,7 @@ public class CloudStackExperimentLiveTest extends BaseCloudStackApiLiveTest {
       Network network = null;
       Set<? extends NodeMetadata> nodes = null;
       try {
-         assert !view.getComputeService().listAssignableLocations().isEmpty();
+         assertThat(!view.getComputeService().listAssignableLocations().isEmpty()).isTrue();
 
          Template template = view.getComputeService().templateBuilder().build();
 
@@ -103,7 +104,7 @@ public class CloudStackExperimentLiveTest extends BaseCloudStackApiLiveTest {
          // launch the VM
          nodes = view.getComputeService().createNodesInGroup(group, 1, template);
 
-         assert !nodes.isEmpty();
+         assertThat(!nodes.isEmpty()).isTrue();
 
       } catch (RunNodesException e) {
          Logger.getAnonymousLogger().log(Level.SEVERE, "error creating nodes", e);

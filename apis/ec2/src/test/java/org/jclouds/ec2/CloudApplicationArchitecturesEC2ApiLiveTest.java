@@ -17,6 +17,7 @@
 package org.jclouds.ec2;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.asType;
 import static org.jclouds.util.Predicates2.retry;
 import static org.jclouds.scriptbuilder.domain.Statements.exec;
@@ -194,11 +195,11 @@ public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServ
 
       assertEquals(null, client.getInstanceApi().get().getRootDeviceNameForInstanceInRegion(null, instanceId));
 
-      assert client.getInstanceApi().get().getRamdiskForInstanceInRegion(null, instanceId).startsWith("ari-");
+      assertThat(client.getInstanceApi().get().getRamdiskForInstanceInRegion(null, instanceId).startsWith("ari-")).isTrue();
 
       assertEquals(false, client.getInstanceApi().get().isApiTerminationDisabledForInstanceInRegion(null, instanceId));
 
-      assert client.getInstanceApi().get().getKernelForInstanceInRegion(null, instanceId).startsWith("aki-");
+      assertThat(client.getInstanceApi().get().getKernelForInstanceInRegion(null, instanceId).startsWith("aki-")).isTrue();
 
       assertEquals(InstanceType.M1_SMALL,
             client.getInstanceApi().get().getInstanceTypeForInstanceInRegion(null, instanceId));
@@ -298,7 +299,7 @@ public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServ
       try {
          ssh.connect();
          ExecResponse uptime = ssh.exec("uptime");
-         assert uptime.getOutput().indexOf("0 min") != -1 : "reboot didn't work: " + uptime;
+         assertThat(uptime.getOutput().indexOf("0 min") != -1).as("reboot didn't work: " + uptime).isTrue();
       } finally {
          if (ssh != null)
             ssh.disconnect();
@@ -314,7 +315,7 @@ public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServ
             .describeAddressesInRegion(null, address));
 
       assertEquals(compare.getPublicIp(), address);
-      assert compare.getInstanceId() == null;
+      assertThat(compare.getInstanceId() == null).isTrue();
 
       client.getElasticIPAddressApi().get().associateAddressInRegion(null, address, instanceId);
 
@@ -336,7 +337,7 @@ public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServ
       compare = Iterables.getLast(client.getElasticIPAddressApi().get().describeAddressesInRegion(null, address));
 
       assertEquals(compare.getPublicIp(), address);
-      assert compare.getInstanceId() == null;
+      assertThat(compare.getInstanceId() == null).isTrue();
 
       reservation = Iterables.getOnlyElement(client.getInstanceApi().get().describeInstancesInRegion(null, instanceId));
       // assert reservation.getRunningInstances().last().getIpAddress() == null;
@@ -345,23 +346,23 @@ public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServ
 
    private RunningInstance blockUntilWeCanSshIntoInstance(RunningInstance instance) throws UnknownHostException {
       System.out.printf("%d: %s awaiting instance to run %n", System.currentTimeMillis(), instance.getId());
-      assert runningTester.apply(instance);
+      assertThat(runningTester.apply(instance)).isTrue();
 
       instance = getInstance(instance.getId());
 
       System.out
             .printf("%d: %s awaiting instance to have ip assigned %n", System.currentTimeMillis(), instance.getId());
-      assert hasIpTester.apply(instance);
+      assertThat(hasIpTester.apply(instance)).isTrue();
 
       System.out.printf("%d: %s awaiting ssh service to start%n", System.currentTimeMillis(), instance.getIpAddress());
-      assert socketTester.apply(HostAndPort.fromParts(instance.getIpAddress(), 22));
+      assertThat(socketTester.apply(HostAndPort.fromParts(instance.getIpAddress(), 22))).isTrue();
 
       System.out.printf("%d: %s ssh service started%n", System.currentTimeMillis(), instance.getDnsName());
       sshPing(instance);
       System.out.printf("%d: %s ssh connection made%n", System.currentTimeMillis(), instance.getId());
 
       System.out.printf("%d: %s awaiting http service to start%n", System.currentTimeMillis(), instance.getIpAddress());
-      assert socketTester.apply(HostAndPort.fromParts(instance.getIpAddress(), 80));
+      assertThat(socketTester.apply(HostAndPort.fromParts(instance.getIpAddress(), 80))).isTrue();
       System.out.printf("%d: %s http service started%n", System.currentTimeMillis(), instance.getDnsName());
       return instance;
    }

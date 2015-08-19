@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.aws.ec2.options.DescribeSpotPriceHistoryOptions.Builder.from;
 import static org.jclouds.aws.ec2.options.DescribeSpotPriceHistoryOptions.Builder.instanceType;
 import static org.jclouds.aws.ec2.options.DescribeSpotPriceHistoryOptions.Builder.productDescription;
@@ -36,8 +37,8 @@ public class DescribeSpotPriceHistoryOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(DescribeSpotPriceHistoryOptions.class);
-      assert !String.class.isAssignableFrom(DescribeSpotPriceHistoryOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(DescribeSpotPriceHistoryOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(DescribeSpotPriceHistoryOptions.class)).isTrue();
    }
 
    @Test

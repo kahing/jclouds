@@ -20,6 +20,7 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
@@ -2269,8 +2270,8 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.<Object> of("robot", "egg"))).getHeaders();
       assertEquals(headers.size(), 2);
       Collection<String> values = headers.get("header");
-      assert values.contains("robot");
-      assert values.contains("egg");
+      assertThat(values.contains("robot")).isTrue();
+      assertThat(values.contains("egg")).isTrue();
    }
 
    interface TestEndpointParams {

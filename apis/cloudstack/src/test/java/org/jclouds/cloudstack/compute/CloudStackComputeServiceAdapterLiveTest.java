@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.compute;
 import static com.google.common.collect.Iterables.getFirst;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
@@ -103,7 +104,7 @@ public class CloudStackComputeServiceAdapterLiveTest extends BaseCloudStackApiLi
 
       loginCredentials = prioritizeCredentialsFromTemplate.apply(template, vm.getCredentials());
 
-      assert InetAddresses.isInetAddress(address) : vm;
+      assertThat(InetAddresses.isInetAddress(address)).as(String.valueOf(vm)).isTrue();
       HostAndPort socket = HostAndPort.fromParts(address, 22);
       checkSSH(socket);
    }
@@ -124,7 +125,7 @@ public class CloudStackComputeServiceAdapterLiveTest extends BaseCloudStackApiLi
       assertFalse(Iterables.isEmpty(templates));
 
       for (org.jclouds.cloudstack.domain.Template template : templates) {
-         assert TemplatePredicates.isReady().apply(template) : template;
+         assertThat(TemplatePredicates.isReady().apply(template)).as(String.valueOf(template)).isTrue();
       }
    }
 

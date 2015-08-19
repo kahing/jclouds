@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.addBlockDeviceFromSnapshot;
 import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.addEphemeralBlockDeviceFromSnapshot;
 import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.addNewBlockDevice;
@@ -40,8 +41,8 @@ public class RegisterImageBackedByEbsOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(RegisterImageBackedByEbsOptions.class);
-      assert !String.class.isAssignableFrom(RegisterImageBackedByEbsOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(RegisterImageBackedByEbsOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(RegisterImageBackedByEbsOptions.class)).isTrue();
    }
 
    @Test

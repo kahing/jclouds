@@ -18,6 +18,7 @@ package org.jclouds.blobstore.integration.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagateIfPossible;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 
@@ -297,7 +298,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
    protected Blob validateContent(String container, String name) throws InterruptedException {
       assertConsistencyAwareContainerSize(container, 1);
       Blob newObject = view.getBlobStore().getBlob(container, name);
-      assert newObject != null;
+      assertThat(newObject != null).isTrue();
       validateMetadata(newObject.getMetadata(), container, name);
       try {
          assertEquals(getContentAsStringOrNullAndClose(newObject), TEST_STRING);
@@ -312,7 +313,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       assertConsistencyAware(new Runnable() {
          public void run() {
             try {
-               assert view.getBlobStore().countBlobs(containerName) == count : String.format(
+               assertThat(view.getBlobStore().countBlobs(containerName) == count).as(String.format(
                      "expected only %d values in %s: %s", count, containerName, ImmutableSet.copyOf(Iterables
                            .transform(view.getBlobStore().list(containerName),
                                  new Function<StorageMetadata, String>() {
@@ -321,7 +322,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
                                        return from.getName();
                                     }
 
-                                 })));
+                                 })))).isTrue();
             } catch (Exception e) {
                Throwables.propagateIfPossible(e);
             }
@@ -334,7 +335,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       assertConsistencyAware(new Runnable() {
          public void run() {
             try {
-               assert view.getBlobStore().blobExists(containerName, name) : String.format(
+               assertThat(view.getBlobStore().blobExists(containerName, name)).as(String.format(
                      "could not find %s in %s: %s", name, containerName, ImmutableSet.copyOf(Iterables.transform(
                            view.getBlobStore().list(containerName), new Function<StorageMetadata, String>() {
 
@@ -342,7 +343,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
                                  return from.getName();
                               }
 
-                           })));
+                           })))).isTrue();
             } catch (Exception e) {
                Throwables.propagateIfPossible(e);
             }
@@ -355,8 +356,8 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       assertConsistencyAware(new Runnable() {
          public void run() {
             try {
-               assert !view.getBlobStore().blobExists(containerName, name) : String.format("found %s in %s", name,
-                     containerName);
+               assertThat(!view.getBlobStore().blobExists(containerName, name)).as(String.format("found %s in %s", name,
+                     containerName)).isTrue();
             } catch (Exception e) {
                Throwables.propagateIfPossible(e);
             }
@@ -368,7 +369,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       assertConsistencyAware(new Runnable() {
          public void run() {
             try {
-               assert view.getBlobStore().containerExists(containerName) : String.format("container %s doesn't exist", containerName);
+               assertThat(view.getBlobStore().containerExists(containerName)).as(String.format("container %s doesn't exist", containerName)).isTrue();
             } catch (Exception e) {
                Throwables.propagate(e);
             }
@@ -391,8 +392,8 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
                });
                Location actualLoc = container.getLocation();
 
-               assert loc.equals(actualLoc) : String.format("blob %s, in location %s instead of %s", containerName,
-                        actualLoc, loc);
+               assertThat(loc.equals(actualLoc)).as(String.format("blob %s, in location %s instead of %s", containerName,
+                        actualLoc, loc)).isTrue();
             } catch (Exception e) {
                Throwables.propagate(e);
             }
@@ -407,8 +408,8 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
             try {
                Blob blob = view.getBlobStore().getBlob(containerName, blobName);
                Date actualExpires = blob.getPayload().getContentMetadata().getExpires();
-               assert expectedExpires.equals(actualExpires) : "expires=" + actualExpires + "; expected="
-                        + expectedExpires;
+               assertThat(expectedExpires.equals(actualExpires)).as("expires=" + actualExpires + "; expected="
+                        + expectedExpires).isTrue();
             } catch (Exception e) {
                Throwables.propagateIfPossible(e);
             }
@@ -423,8 +424,8 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
             try {
                Location actualLoc = view.getBlobStore().getBlob(containerName, blobName).getMetadata().getLocation();
 
-               assert loc.equals(actualLoc) : String.format(
-                     "blob %s in %s, in location %s instead of %s", blobName, containerName, actualLoc, loc);
+               assertThat(loc.equals(actualLoc)).as(String.format(
+                     "blob %s in %s, in location %s instead of %s", blobName, containerName, actualLoc, loc)).isTrue();
             } catch (Exception e) {
                Throwables.propagate(e);
             }
@@ -434,7 +435,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
 
    public String getContainerName() throws InterruptedException {
       String containerName = containerNames.poll(30, TimeUnit.SECONDS);
-      assert containerName != null : "unable to get a container for the test";
+      assertThat(containerName != null).as("unable to get a container for the test").isTrue();
       createContainerAndEnsureEmpty(containerName);
       return containerName;
    }
@@ -477,8 +478,8 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       assertConsistencyAware(new Runnable() {
          public void run() {
             try {
-               assert !view.getBlobStore().containerExists(containerName) : "container " + containerName
-                     + " still exists";
+               assertThat(!view.getBlobStore().containerExists(containerName)).as("container " + containerName
+                     + " still exists").isTrue();
             } catch (Exception e) {
                propagateIfPossible(e);
             }

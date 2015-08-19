@@ -16,6 +16,7 @@
  */
 package org.jclouds.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -40,47 +41,47 @@ public class JsonBallTest {
 
    public void testJSON_STRING_PATTERN1() {
       Matcher matcher = JsonBall.JSON_STRING_PATTERN.matcher("hello");
-      assert matcher.find();
+      assertThat(matcher.find()).isTrue();
    }
 
    public void testJSON_STRING_PATTERN2() {
       Matcher matcher = JsonBall.JSON_STRING_PATTERN.matcher("hello world!");
-      assert matcher.find();
+      assertThat(matcher.find()).isTrue();
    }
 
    public void testJSON_STRING_PATTERN3() {
       Matcher matcher = JsonBall.JSON_STRING_PATTERN.matcher("\"hello world!\"");
-      assert !matcher.find();
+      assertThat(!matcher.find()).isTrue();
    }
 
    public void testJSON_STRING_PATTERN4() {
       Matcher matcher = JsonBall.JSON_STRING_PATTERN.matcher("[hello world!]");
-      assert !matcher.find();
+      assertThat(!matcher.find()).isTrue();
    }
 
    public void testJSON_STRING_PATTERN5() {
       Matcher matcher = JsonBall.JSON_STRING_PATTERN.matcher("{hello world!}");
-      assert !matcher.find();
+      assertThat(!matcher.find()).isTrue();
    }
 
    public void testJSON_NUMBER_PATTERN1() {
       Matcher matcher = JsonBall.JSON_NUMBER_PATTERN.matcher("1");
-      assert matcher.find();
+      assertThat(matcher.find()).isTrue();
    }
 
    public void testJSON_NUMBER_PATTERN2() {
       Matcher matcher = JsonBall.JSON_NUMBER_PATTERN.matcher("1.1");
-      assert matcher.find();
+      assertThat(matcher.find()).isTrue();
    }
 
    public void testJSON_NUMBER_PATTERN3() {
       Matcher matcher = JsonBall.JSON_NUMBER_PATTERN.matcher("\"1.1\"");
-      assert !matcher.find();
+      assertThat(!matcher.find()).isTrue();
    }
 
    public void testJSON_NUMBER_PATTERN4() {
       Matcher matcher = JsonBall.JSON_NUMBER_PATTERN.matcher("\"1\"");
-      assert !matcher.find();
+      assertThat(!matcher.find()).isTrue();
    }
 
    private ParseJson<Map<String, JsonBall>> handler;

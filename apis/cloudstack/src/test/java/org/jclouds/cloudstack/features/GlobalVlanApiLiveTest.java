@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.zoneId;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -58,7 +59,7 @@ public class GlobalVlanApiLiveTest extends BaseCloudStackApiLiveTest {
       skipIfNotGlobalAdmin();
 
       Set<VlanIPRange> response = globalAdminClient.getVlanClient().listVlanIPRanges();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long rangeCount = response.size();
       assertTrue(rangeCount >= 0);
 

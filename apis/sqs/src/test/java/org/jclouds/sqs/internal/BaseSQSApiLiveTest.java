@@ -17,6 +17,7 @@
 package org.jclouds.sqs.internal;
 
 import static com.google.common.collect.Iterables.get;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -103,7 +104,7 @@ public class BaseSQSApiLiveTest extends BaseApiLiveTest<SQSApi> {
          public void run() {
             FluentIterable<URI> result = api.getQueueApiForRegion(region).list();
             assertNotNull(result);
-            assert result.size() >= 1 : result;
+            assertThat(result.size() >= 1).as(String.valueOf(result)).isTrue();
             assertTrue(result.contains(finalQ), finalQ + " not in " + result);
          }
       });

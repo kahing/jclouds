@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
@@ -41,7 +42,7 @@ public class GlobalHostApiLiveTest extends BaseCloudStackApiLiveTest {
       skipIfNotGlobalAdmin();
 
       Set<Host> hosts = globalAdminClient.getHostClient().listHosts();
-      assert !hosts.isEmpty() : hosts;
+      assertThat(!hosts.isEmpty()).as(String.valueOf(hosts)).isTrue();
 
       for (Host host : hosts) {
          checkHost(host);
@@ -50,16 +51,16 @@ public class GlobalHostApiLiveTest extends BaseCloudStackApiLiveTest {
 
    private void checkHost(Host host) {
       if (host.getType() == Host.Type.ROUTING) {
-         assert host.getCpuNumber() > 0;
-         assert host.getAverageLoad() >= 0;
-         assert host.getHypervisor() != null;
+         assertThat(host.getCpuNumber() > 0).isTrue();
+         assertThat(host.getAverageLoad() >= 0).isTrue();
+         assertThat(host.getHypervisor() != null).isTrue();
       }
-      assert host.getEvents() != null;
+      assertThat(host.getEvents() != null).isTrue();
       if (host.getType() == Host.Type.SECONDARY_STORAGE_VM) {
-         assert host.getName().startsWith("s-");
+         assertThat(host.getName().startsWith("s-")).isTrue();
       }
       if (host.getType() == Host.Type.CONSOLE_PROXY) {
-         assert host.getName().startsWith("v-");
+         assertThat(host.getName().startsWith("v-")).isTrue();
       }
    }
 
@@ -68,7 +69,7 @@ public class GlobalHostApiLiveTest extends BaseCloudStackApiLiveTest {
       skipIfNotGlobalAdmin();
 
       Set<Cluster> clusters = globalAdminClient.getHostClient().listClusters();
-      assert !clusters.isEmpty() : clusters;
+      assertThat(!clusters.isEmpty()).as(String.valueOf(clusters)).isTrue();
 
       for (Cluster cluster : clusters) {
          checkCluster(cluster);

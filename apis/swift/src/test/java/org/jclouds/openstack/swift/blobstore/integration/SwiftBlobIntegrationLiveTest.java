@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.swift.blobstore.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
@@ -99,8 +100,8 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    // not supported in swift
    @Override
    protected void checkContentLanguage(Blob blob, String contentLanguage) {
-      assert blob.getPayload().getContentMetadata().getContentLanguage() == null;
-      assert blob.getMetadata().getContentMetadata().getContentLanguage() == null;
+      assertThat(blob.getPayload().getContentMetadata().getContentLanguage() == null).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentLanguage() == null).isTrue();
    }
 
    // swift doesn't support quotes

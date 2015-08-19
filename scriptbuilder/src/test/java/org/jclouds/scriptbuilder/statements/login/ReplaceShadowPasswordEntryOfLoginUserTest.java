@@ -16,6 +16,7 @@
  */
 package org.jclouds.scriptbuilder.statements.login;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.scriptbuilder.domain.OsFamily;
@@ -34,9 +35,9 @@ public class ReplaceShadowPasswordEntryOfLoginUserTest {
 
    public void testWithPasswordUNIX() {
       String cmd = new ReplaceShadowPasswordEntryOfLoginUser(crypt, "password").render(OsFamily.UNIX);
-      assert cmd.startsWith("awk -v user=^${SUDO_USER:=${USER}}: -v password='CRYPT") : cmd;
-      assert cmd
-            .endsWith("' 'BEGIN { FS=OFS=\":\" } $0 ~ user { $2 = password } 1' /etc/shadow >/etc/shadow.${SUDO_USER:=${USER}}\ntest -f /etc/shadow.${SUDO_USER:=${USER}} && mv /etc/shadow.${SUDO_USER:=${USER}} /etc/shadow\n") : cmd;
+      assertThat(cmd.startsWith("awk -v user=^${SUDO_USER:=${USER}}: -v password='CRYPT")).as(cmd).isTrue();
+      assertThat(cmd
+            .endsWith("' 'BEGIN { FS=OFS=\":\" } $0 ~ user { $2 = password } 1' /etc/shadow >/etc/shadow.${SUDO_USER:=${USER}}\ntest -f /etc/shadow.${SUDO_USER:=${USER}} && mv /etc/shadow.${SUDO_USER:=${USER}} /etc/shadow\n")).as(cmd).isTrue();
    }
 
    @Test(expectedExceptions = UnsupportedOperationException.class)

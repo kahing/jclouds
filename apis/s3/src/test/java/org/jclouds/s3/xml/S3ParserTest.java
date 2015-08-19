@@ -16,6 +16,7 @@
  */
 package org.jclouds.s3.xml;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class S3ParserTest extends PerformanceTest {
    protected void setUpInjector() {
       injector = Guice.createInjector(new SaxParserModule());
       factory = injector.getInstance(ParseSax.Factory.class);
-      assert factory != null;
+      assertThat(factory != null).isTrue();
    }
 
    @AfterTest
@@ -92,46 +93,46 @@ public class S3ParserTest extends PerformanceTest {
             }
          });
       for (int i = 0; i < LOOP_COUNT; i++)
-         assert completer.take().get() != null;
+         assertThat(completer.take().get() != null).isTrue();
    }
 
    @Test
    public void testCanParseListAllMyBuckets() throws HttpException {
       Set<BucketMetadata> s3Buckets = runParseListAllMyBuckets();
       BucketMetadata container1 = Iterables.get(s3Buckets, 0);
-      assert container1.getName().equals("adrianjbosstest");
+      assertThat(container1.getName().equals("adrianjbosstest")).isTrue();
       Date expectedDate1 = new SimpleDateFormatDateService().iso8601DateParse("2009-03-12T02:00:07.000Z");
       Date date1 = container1.getCreationDate();
-      assert date1.equals(expectedDate1);
+      assertThat(date1.equals(expectedDate1)).isTrue();
       BucketMetadata container2 = (BucketMetadata) s3Buckets.toArray()[1];
-      assert container2.getName().equals("adrianjbosstest2");
+      assertThat(container2.getName().equals("adrianjbosstest2")).isTrue();
       Date expectedDate2 = new SimpleDateFormatDateService().iso8601DateParse("2009-03-12T02:00:09.000Z");
       Date date2 = container2.getCreationDate();
-      assert date2.equals(expectedDate2);
-      assert s3Buckets.size() == 2;
+      assertThat(date2.equals(expectedDate2)).isTrue();
+      assertThat(s3Buckets.size() == 2).isTrue();
       CanonicalUser owner = new CanonicalUser("e1a5f66a480ca99a4fdfe8e318c3020446c9989d7004e7778029fbcc5d990fa0");
-      assert container1.getOwner().equals(owner);
-      assert container2.getOwner().equals(owner);
+      assertThat(container1.getOwner().equals(owner)).isTrue();
+      assertThat(container2.getOwner().equals(owner)).isTrue();
    }
 
    public static final String listContainerResult = "<ListContainerHandler xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>adrianjbosstest</Name><Prefix></Prefix><Marker></Marker><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>3366</Key><LastModified>2009-03-12T02:00:13.000Z</LastModified><ETag>&quot;9d7bb64e8e18ee34eec06dd2cf37b766&quot;</ETag><Size>136</Size><Owner><ID>e1a5f66a480ca99a4fdfe8e318c3020446c9989d7004e7778029fbcc5d990fa0</ID><DisplayName>ferncam</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents></ListContainerHandler>";
 
    public void testCanParseListContainerResult() throws HttpException {
       ListBucketResponse container = runParseListContainerResult();
-      assert !container.isTruncated();
-      assert container.getName().equals("adrianjbosstest");
-      assert container.size() == 1;
+      assertThat(!container.isTruncated()).isTrue();
+      assertThat(container.getName().equals("adrianjbosstest")).isTrue();
+      assertThat(container.size() == 1).isTrue();
       ObjectMetadata object = container.iterator().next();
-      assert object.getKey().equals("3366");
+      assertThat(object.getKey().equals("3366")).isTrue();
       Date expected = new SimpleDateFormatDateService().iso8601DateParse("2009-03-12T02:00:13.000Z");
-      assert object.getLastModified().equals(expected) : String.format("expected %1$s, but got %1$s", expected, object
-               .getLastModified());
+      assertThat(object.getLastModified().equals(expected)).as(String.format("expected %1$s, but got %1$s", expected, object
+               .getLastModified())).isTrue();
       assertEquals(object.getETag(), "\"9d7bb64e8e18ee34eec06dd2cf37b766\"");
-      assert object.getContentMetadata().getContentLength() == 136;
+      assertThat(object.getContentMetadata().getContentLength() == 136).isTrue();
       CanonicalUser owner = new CanonicalUser("e1a5f66a480ca99a4fdfe8e318c3020446c9989d7004e7778029fbcc5d990fa0");
       owner.setDisplayName("ferncam");
-      assert object.getOwner().equals(owner);
-      assert object.getStorageClass().equals(StorageClass.STANDARD);
+      assertThat(object.getOwner().equals(owner)).isTrue();
+      assertThat(object.getStorageClass().equals(StorageClass.STANDARD)).isTrue();
    }
 
    private ListBucketResponse runParseListContainerResult() throws HttpException {
@@ -170,7 +171,7 @@ public class S3ParserTest extends PerformanceTest {
             }
          });
       for (int i = 0; i < LOOP_COUNT; i++)
-         assert completer.take().get() != null;
+         assertThat(completer.take().get() != null).isTrue();
    }
 
 }

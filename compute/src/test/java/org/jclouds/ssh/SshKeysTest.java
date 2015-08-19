@@ -16,6 +16,7 @@
  */
 package org.jclouds.ssh;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ssh.SshKeys.fingerprint;
 import static org.jclouds.ssh.SshKeys.generate;
 import static org.jclouds.ssh.SshKeys.privateKeyHasFingerprint;
@@ -65,26 +66,26 @@ public class SshKeysTest {
    public void testPrivateKeyMatchesFingerprintTyped() throws IOException {
       String privKey = Strings2.toStringAndClose(getClass().getResourceAsStream("/test"));
       RSAPrivateCrtKeySpec privateKey = (RSAPrivateCrtKeySpec) Pems.privateKeySpec(privKey);
-      assert privateKeyHasFingerprint(privateKey, expectedFingerprint);
+      assertThat(privateKeyHasFingerprint(privateKey, expectedFingerprint)).isTrue();
    }
 
    @Test
    public void testPrivateKeyMatchesFingerprintString() throws IOException {
       String privKey = Strings2.toStringAndClose(getClass().getResourceAsStream("/test"));
-      assert privateKeyHasFingerprint(privKey, expectedFingerprint);
+      assertThat(privateKeyHasFingerprint(privKey, expectedFingerprint)).isTrue();
    }
 
    @Test
    public void testPrivateKeyMatchesSha1Typed() throws IOException {
       String privKey = Strings2.toStringAndClose(getClass().getResourceAsStream("/test"));
       RSAPrivateCrtKeySpec privateKey = (RSAPrivateCrtKeySpec) Pems.privateKeySpec(privKey);
-      assert privateKeyHasSha1(privateKey, expectedSha1);
+      assertThat(privateKeyHasSha1(privateKey, expectedSha1)).isTrue();
    }
 
    @Test
    public void testPrivateKeyMatchesSha1String() throws IOException {
       String privKey = Strings2.toStringAndClose(getClass().getResourceAsStream("/test"));
-      assert privateKeyHasSha1(privKey, expectedSha1);
+      assertThat(privateKeyHasSha1(privKey, expectedSha1)).isTrue();
    }
 
    @Test
@@ -93,22 +94,22 @@ public class SshKeysTest {
       RSAPrivateCrtKeySpec privateKey = (RSAPrivateCrtKeySpec) Pems.privateKeySpec(privKey);
       String pubKey = Strings2.toStringAndClose(getClass().getResourceAsStream("/test.pub"));
       RSAPublicKeySpec publicKey = publicKeySpecFromOpenSSH(pubKey);
-      assert privateKeyMatchesPublicKey(privateKey, publicKey);
+      assertThat(privateKeyMatchesPublicKey(privateKey, publicKey)).isTrue();
    }
 
    @Test
    public void testPrivateKeyMatchesPublicKeyString() throws IOException {
       String privKey = Strings2.toStringAndClose(getClass().getResourceAsStream("/test"));
       String pubKey = Strings2.toStringAndClose(getClass().getResourceAsStream("/test.pub"));
-      assert privateKeyMatchesPublicKey(privKey, pubKey);
+      assertThat(privateKeyMatchesPublicKey(privKey, pubKey)).isTrue();
    }
 
    @Test
    public void testCanGenerate() {
       Map<String, String> map = generate();
-      assert map.get("public").startsWith("ssh-rsa ") : map;
-      assert map.get("private").startsWith("-----BEGIN RSA PRIVATE KEY-----") : map;
-      assert privateKeyMatchesPublicKey(map.get("private"), map.get("public")) : map;
+      assertThat(map.get("public").startsWith("ssh-rsa ")).as(String.valueOf(map)).isTrue();
+      assertThat(map.get("private").startsWith("-----BEGIN RSA PRIVATE KEY-----")).as(String.valueOf(map)).isTrue();
+      assertThat(privateKeyMatchesPublicKey(map.get("private"), map.get("public"))).as(String.valueOf(map)).isTrue();
 
    }
 

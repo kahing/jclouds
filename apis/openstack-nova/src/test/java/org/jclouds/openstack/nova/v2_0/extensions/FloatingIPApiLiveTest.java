@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -49,7 +50,7 @@ public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {
             continue;
          FloatingIPApi api = apiOption.get();
          Set<? extends FloatingIP> response = api.list().toSet();
-         assert null != response;
+         assertThat(null != response).isTrue();
          assertTrue(response.size() > 0);
          for (FloatingIP ip : response) {
             FloatingIP newDetails = api.get(ip.getId());

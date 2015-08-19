@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
@@ -32,7 +33,7 @@ public class EventApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testlistEventTypes() throws Exception {
       final Set<String> response = client.getEventApi().listEventTypes();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (String type : response) {
          checkEventType(type);
@@ -41,7 +42,7 @@ public class EventApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testlistEvents() throws Exception {
       final Set<Event> response = client.getEventApi().listEvents();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (Event event : response) {
          checkEvent(event);
@@ -49,19 +50,19 @@ public class EventApiLiveTest extends BaseCloudStackApiLiveTest {
    }
 
    private void checkEvent(Event event) {
-      assert event.getAccount() != null : event;
-      assert event.getCreated() != null : event;
-      assert event.getDescription() != null : event;
-      assert event.getDomain() != null : event;
-      assert event.getId() != null : event;
-      assert event.getLevel() != null : event;
-      assert event.getState() != null : event;
-      assert event.getType() != null : event;
-      assert event.getUsername() != null : event;
+      assertThat(event.getAccount() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getCreated() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getDescription() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getDomain() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getId() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getLevel() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getState() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getType() != null).as(String.valueOf(event)).isTrue();
+      assertThat(event.getUsername() != null).as(String.valueOf(event)).isTrue();
    }
 
    protected void checkEventType(String eventType) {
-      assert eventType != null : eventType;
+      assertThat(eventType != null).as(eventType).isTrue();
    }
 
 }

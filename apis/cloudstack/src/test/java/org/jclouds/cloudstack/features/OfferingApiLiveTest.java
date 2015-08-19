@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -45,7 +46,7 @@ public class OfferingApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListDiskOfferings() throws Exception {
       Set<DiskOffering> response = client.getOfferingApi().listDiskOfferings();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long offeringCount = response.size();
       assertTrue(offeringCount >= 0);
       for (DiskOffering offering : response) {
@@ -54,12 +55,12 @@ public class OfferingApiLiveTest extends BaseCloudStackApiLiveTest {
                ListDiskOfferingsOptions.Builder.id(offering.getId())));
            assertEquals(offering, newDetails);
            assertEquals(offering, client.getOfferingApi().getDiskOffering(offering.getId()));
-           assert offering.getId() != null : offering;
-           assert offering.getName() != null : offering;
-           assert offering.getCreated() != null : offering;
-           assert offering.getDisplayText() != null : offering;
-           assert offering.getDiskSize() > 0 || (offering.getDiskSize() == 0 && offering.isCustomized()) : offering;
-           assert offering.getTags() != null : offering;
+           assertThat(offering.getId() != null).as(String.valueOf(offering)).isTrue();
+           assertThat(offering.getName() != null).as(String.valueOf(offering)).isTrue();
+           assertThat(offering.getCreated() != null).as(String.valueOf(offering)).isTrue();
+           assertThat(offering.getDisplayText() != null).as(String.valueOf(offering)).isTrue();
+           assertThat(offering.getDiskSize() > 0 || (offering.getDiskSize() == 0 && offering.isCustomized())).as(String.valueOf(offering)).isTrue();
+           assertThat(offering.getTags() != null).as(String.valueOf(offering)).isTrue();
 
          } catch (NoSuchElementException e) {
             // This bug is present both in 2.2.8 and 2.2.12
@@ -70,7 +71,7 @@ public class OfferingApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListServiceOfferings() throws Exception {
       Set<ServiceOffering> response = client.getOfferingApi().listServiceOfferings();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long offeringCount = response.size();
       assertTrue(offeringCount >= 0);
       for (ServiceOffering offering : response) {
@@ -78,20 +79,20 @@ public class OfferingApiLiveTest extends BaseCloudStackApiLiveTest {
                ListServiceOfferingsOptions.Builder.id(offering.getId())));
          assertEquals(offering, newDetails);
 
-         assert offering.getId() != null : offering;
-         assert offering.getName() != null : offering;
-         assert offering.getDisplayText() != null : offering;
-         assert offering.getCpuNumber() > 0 : offering;
-         assert offering.getCpuSpeed() > 0 : offering;
-         assert offering.getMemory() > 0 : offering;
-         assert offering.getStorageType() != null && StorageType.UNRECOGNIZED != offering.getStorageType() : offering;
-         assert offering.getTags() != null : offering;
+         assertThat(offering.getId() != null).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getName() != null).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getDisplayText() != null).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getCpuNumber() > 0).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getCpuSpeed() > 0).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getMemory() > 0).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getStorageType() != null && StorageType.UNRECOGNIZED != offering.getStorageType()).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getTags() != null).as(String.valueOf(offering)).isTrue();
       }
    }
 
    public void testListNetworkOfferings() throws Exception {
       Set<NetworkOffering> response = client.getOfferingApi().listNetworkOfferings();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long offeringCount = response.size();
       assertTrue(offeringCount >= 0);
       for (NetworkOffering offering : response) {
@@ -99,12 +100,12 @@ public class OfferingApiLiveTest extends BaseCloudStackApiLiveTest {
                ListNetworkOfferingsOptions.Builder.id(offering.getId())));
          assertEquals(offering, newDetails);
          assertEquals(offering, client.getOfferingApi().getNetworkOffering(offering.getId()));
-         assert offering.getId() != null : offering;
-         assert offering.getName() != null : offering;
-         assert offering.getDisplayText() != null : offering;
-         assert offering.getMaxConnections() == null || offering.getMaxConnections() > 0 : offering;
-         assert offering.getTrafficType() != null && TrafficType.UNRECOGNIZED != offering.getTrafficType() : offering;
-         assert offering.getTags() != null : offering;
+         assertThat(offering.getId() != null).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getName() != null).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getDisplayText() != null).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getMaxConnections() == null || offering.getMaxConnections() > 0).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getTrafficType() != null && TrafficType.UNRECOGNIZED != offering.getTrafficType()).as(String.valueOf(offering)).isTrue();
+         assertThat(offering.getTags() != null).as(String.valueOf(offering)).isTrue();
       }
    }
 }

@@ -58,8 +58,8 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void containerDoesntExist() {
-      assert !view.getBlobStore().containerExists("forgetaboutit");
-      assert !view.getBlobStore().containerExists("cloudcachestorefunctionalintegrationtest-first");
+      assertThat(!view.getBlobStore().containerExists("forgetaboutit")).isTrue();
+      assertThat(!view.getBlobStore().containerExists("cloudcachestorefunctionalintegrationtest-first")).isTrue();
    }
 
    @Test(groups = { "integration", "live" })
@@ -143,8 +143,8 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          BlobMetadata metadata = BlobMetadata.class.cast(get(container, 0));
 
-         assert metadata.getContentMetadata().getContentType().startsWith("text/plain") : metadata.getContentMetadata()
-               .getContentType();
+         assertThat(metadata.getContentMetadata().getContentType().startsWith("text/plain")).as(metadata.getContentMetadata()
+               .getContentType()).isTrue();
          assertEquals(metadata.getContentMetadata().getContentLength(), Long.valueOf(TEST_STRING.length()));
          assertEquals(metadata.getUserMetadata().get("adrian"), "powderpuff");
          checkMD5(metadata);
@@ -177,15 +177,15 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, maxResults(1));
 
-         assert container.getNextMarker() != null;
+         assertThat(container.getNextMarker() != null).isTrue();
          assertEquals(container.size(), 1);
          String marker = container.getNextMarker();
 
          container = view.getBlobStore().list(containerName, afterMarker(marker));
          assertEquals(container.getNextMarker(), null);
-         assert container.size() == 25 : String.format("size should have been 25, but was %d: %s", container.size(),
-               container);
-         assert container.getNextMarker() == null;
+         assertThat(container.size() == 25).as(String.format("size should have been 25, but was %d: %s", container.size(),
+               container)).isTrue();
+         assertThat(container.getNextMarker() == null).isTrue();
       } finally {
          returnContainer(containerName);
       }
@@ -200,7 +200,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          add15UnderRoot(containerName);
          awaitConsistency();
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName);
-         assert container.getNextMarker() == null;
+         assertThat(container.getNextMarker() == null).isTrue();
          assertEquals(container.size(), 16);
       } finally {
          returnContainer(containerName);
@@ -214,21 +214,21 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          String directory = "directory";
 
-         assert !view.getBlobStore().directoryExists(containerName, directory);
+         assertThat(!view.getBlobStore().directoryExists(containerName, directory)).isTrue();
 
          view.getBlobStore().createDirectory(containerName, directory);
 
-         assert view.getBlobStore().directoryExists(containerName, directory);
+         assertThat(view.getBlobStore().directoryExists(containerName, directory)).isTrue();
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName);
          // we should have only the directory under root
-         assert container.getNextMarker() == null;
-         assert container.size() == 1 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 1).as(String.valueOf(container)).isTrue();
 
          container = view.getBlobStore().list(containerName, inDirectory(directory));
 
          // we should have nothing in the directory
-         assert container.getNextMarker() == null;
-         assert container.size() == 0 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 0).as(String.valueOf(container)).isTrue();
 
          addTenObjectsUnderPrefix(containerName, directory);
 
@@ -236,58 +236,58 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          container = view.getBlobStore().list(containerName);
          // we should get back the subdir entry and the directory marker
-         assert container.getNextMarker() == null;
+         assertThat(container.getNextMarker() == null).isTrue();
          assertThat(container).hasSize(2);
 
          container = view.getBlobStore().list(containerName, inDirectory(directory));
          // we should have only the 10 items under the directory
-         assert container.getNextMarker() == null;
-         assert container.size() == 10 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 10).as(String.valueOf(container)).isTrue();
 
          // try 2 level deep directory
-         assert !view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
+         assertThat(!view.getBlobStore().directoryExists(containerName, directory + "/" + directory)).isTrue();
          view.getBlobStore().createDirectory(containerName, directory + "/" + directory);
 
          awaitConsistency();
 
-         assert view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
+         assertThat(view.getBlobStore().directoryExists(containerName, directory + "/" + directory)).isTrue();
 
          view.getBlobStore().clearContainer(containerName, inDirectory(directory));
          awaitConsistency();
 
-         assert view.getBlobStore().directoryExists(containerName, directory);
-         assert view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
+         assertThat(view.getBlobStore().directoryExists(containerName, directory)).isTrue();
+         assertThat(view.getBlobStore().directoryExists(containerName, directory + "/" + directory)).isTrue();
 
          // should have only the 2 level-deep directory above
          container = view.getBlobStore().list(containerName, inDirectory(directory));
-         assert container.getNextMarker() == null;
-         assert container.size() == 1 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 1).as(String.valueOf(container)).isTrue();
 
          view.getBlobStore().createDirectory(containerName, directory + "/" + directory);
 
          awaitConsistency();
 
          container = view.getBlobStore().list(containerName, inDirectory(directory).recursive());
-         assert container.getNextMarker() == null;
-         assert container.size() == 1 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 1).as(String.valueOf(container)).isTrue();
 
          view.getBlobStore().clearContainer(containerName, inDirectory(directory).recursive());
 
          // should no longer have the 2 level-deep directory above
          container = view.getBlobStore().list(containerName, inDirectory(directory));
-         assert container.getNextMarker() == null;
-         assert container.size() == 0 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 0).as(String.valueOf(container)).isTrue();
 
          container = view.getBlobStore().list(containerName);
          // should only have the directory
-         assert container.getNextMarker() == null;
-         assert container.size() == 1 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 1).as(String.valueOf(container)).isTrue();
          view.getBlobStore().deleteDirectory(containerName, directory);
 
          container = view.getBlobStore().list(containerName);
          // now should be completely empty
-         assert container.getNextMarker() == null;
-         assert container.size() == 0 : container;
+         assertThat(container.getNextMarker() == null).isTrue();
+         assertThat(container.size() == 0).as(String.valueOf(container)).isTrue();
       } finally {
          returnContainer(containerName);
       }
@@ -303,7 +303,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          add15UnderRoot(containerName);
          awaitConsistency();
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, inDirectory(prefix));
-         assert container.getNextMarker() == null;
+         assertThat(container.getNextMarker() == null).isTrue();
          assertEquals(container.size(), 10);
       } finally {
          returnContainer(containerName);
@@ -401,7 +401,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
    public void containerExists() throws InterruptedException {
       String containerName = getContainerName();
       try {
-         assert view.getBlobStore().containerExists(containerName);
+         assertThat(view.getBlobStore().containerExists(containerName)).isTrue();
       } finally {
          returnContainer(containerName);
       }

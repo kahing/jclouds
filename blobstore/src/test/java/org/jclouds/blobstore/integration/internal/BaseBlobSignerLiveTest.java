@@ -17,6 +17,7 @@
 package org.jclouds.blobstore.integration.internal;
 
 import static com.google.common.net.HttpHeaders.EXPECT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.blobstore.options.GetOptions.Builder.range;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -175,7 +176,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          HttpRequest request = view.getSigner().signRemoveBlob(container, name);
          assertEquals(request.getFilters().size(), 0);
          view.utils().http().invoke(request);
-         assert !view.getBlobStore().blobExists(container, name);
+         assertThat(!view.getBlobStore().blobExists(container, name)).isTrue();
       } finally {
          returnContainer(container);
       }

@@ -21,6 +21,8 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.ec2.compute.EC2ComputeServiceLiveTest;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test(groups = "live", singleThreaded = true, testName = "NovaEC2ComputeServiceLiveTest")
 public class NovaEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
 
@@ -30,6 +32,6 @@ public class NovaEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
    
    protected void checkResponseEqualsHostname(ExecResponse execResponse, NodeMetadata node1) {
       // hostname is not predictable based on node metadata
-      assert execResponse.getOutput().trim().equals("ubuntu");
+      assertThat(execResponse.getOutput().trim().equals("ubuntu")).isTrue();
    }
 }

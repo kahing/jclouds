@@ -16,6 +16,7 @@
  */
 package org.jclouds.sqs.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.sqs.options.ListQueuesOptions.Builder.queuePrefix;
 import static org.testng.Assert.assertEquals;
 
@@ -31,8 +32,8 @@ public class ListQueuesOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(ListQueuesOptions.class);
-      assert !String.class.isAssignableFrom(ListQueuesOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(ListQueuesOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(ListQueuesOptions.class)).isTrue();
    }
 
    @Test

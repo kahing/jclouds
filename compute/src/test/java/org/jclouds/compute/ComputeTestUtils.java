@@ -19,6 +19,7 @@ package org.jclouds.compute;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
 import static com.google.common.collect.Iterables.get;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
@@ -57,7 +58,7 @@ public class ComputeTestUtils {
       }
       try {
          String secret = Files.toString(new File(secretKeyFile), Charsets.UTF_8);
-         assert secret.startsWith("-----BEGIN RSA PRIVATE KEY-----") : "invalid key:\n" + secret;
+         assertThat(secret.startsWith("-----BEGIN RSA PRIVATE KEY-----")).as("invalid key:\n" + secret).isTrue();
          return ImmutableMap.<String, String> of("private", secret, "public", Files.toString(new File(secretKeyFile
                   + ".pub"), Charsets.UTF_8));
       } catch (IOException e) {
@@ -75,7 +76,7 @@ public class ComputeTestUtils {
    public static void checkHttpGet(HttpClient client, NodeMetadata node, int port) {
       for (int i = 0; i < 5; i++)
          try {
-            assert client.get(URI.create(String.format("http://%s:%d", get(node.getPublicAddresses(), 0), port))) != null;
+            assertThat(client.get(URI.create(String.format("http://%s:%d", get(node.getPublicAddresses(), 0), port))) != null).isTrue();
             break;
          } catch (UndeclaredThrowableException e) {
             assertEquals(e.getCause().getClass(), TimeoutException.class);

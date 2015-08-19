@@ -17,6 +17,7 @@
 package org.jclouds.s3.xml;
 
 import static com.google.common.io.BaseEncoding.base16;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -122,7 +123,7 @@ public class ListBucketHandlerTest extends BaseHandlerTest {
                Strings2.toInputStream(listBucketWithSlashDelimiterAndCommonPrefixApps));
       assertEquals(bucket.getCommonPrefixes().iterator().next(), "apps/");
       assertEquals(bucket.getDelimiter(), "/");
-      assert bucket.getMarker() == null;
+      assertThat(bucket.getMarker() == null).isTrue();
    }
 
    @Test
@@ -131,7 +132,7 @@ public class ListBucketHandlerTest extends BaseHandlerTest {
       ListBucketResponse bucket = createParser().parse(Strings2.toInputStream(listBucketWithPrefixAppsSlash));
       assertEquals(bucket.getPrefix(), "apps/");
       assertEquals(bucket.getMaxKeys(), 1000);
-      assert bucket.getMarker() == null;
+      assertThat(bucket.getMarker() == null).isTrue();
    }
 
    /**

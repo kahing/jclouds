@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.v2_0.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.v2_0.predicates.LinkPredicates.hrefEquals;
 import static org.jclouds.openstack.v2_0.predicates.LinkPredicates.relationEquals;
 import static org.jclouds.openstack.v2_0.predicates.LinkPredicates.typeEquals;
@@ -33,31 +34,31 @@ public class LinkPredicatesTest {
 
    @Test
    public void testRelationEqualsWhenEqual() {
-      assert relationEquals(Relation.DESCRIBEDBY).apply(ref);
+      assertThat(relationEquals(Relation.DESCRIBEDBY).apply(ref)).isTrue();
    }
 
    @Test
    public void testRelationEqualsWhenNotEqual() {
-      assert !relationEquals(Relation.UNRECOGNIZED).apply(ref);
+      assertThat(!relationEquals(Relation.UNRECOGNIZED).apply(ref)).isTrue();
    }
 
    @Test
    public void testTypeEqualsWhenEqual() {
-      assert typeEquals("application/pdf").apply(ref);
+      assertThat(typeEquals("application/pdf").apply(ref)).isTrue();
    }
 
    @Test
    public void testTypeEqualsWhenNotEqual() {
-      assert !typeEquals("foo").apply(ref);
+      assertThat(!typeEquals("foo").apply(ref)).isTrue();
    }
 
    @Test
    public void testHrefEqualsWhenEqual() {
-      assert hrefEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(ref);
+      assertThat(hrefEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(ref)).isTrue();
    }
 
    @Test
    public void testHrefEqualsWhenNotEqual() {
-      assert !hrefEquals(URI.create("foo")).apply(ref);
+      assertThat(!hrefEquals(URI.create("foo")).apply(ref)).isTrue();
    }
 }

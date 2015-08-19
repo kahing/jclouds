@@ -33,6 +33,7 @@ import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.logging.Logger.getAnonymousLogger;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.nameTask;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
@@ -195,7 +196,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       long time = currentTimeMillis();
       client.listImages();
       long duration = currentTimeMillis() - time;
-      assert duration < 1000 : format("%dms to get images", duration);
+      assertThat(duration < 1000).as(format("%dms to get images", duration)).isTrue();
    }
 
    @Test(enabled = true, expectedExceptions = NoSuchElementException.class)
@@ -224,7 +225,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
          NodeMetadata node = get(nodes, 0);
          LoginCredentials good = node.getCredentials();
-         assert good.identity != null : nodes;
+         assertThat(good.identity != null).as(String.valueOf(nodes)).isTrue();
 
          for (Entry<? extends NodeMetadata, ExecResponse> response : client.runScriptOnNodesMatching(
                runningInGroup(group), "hostname",
@@ -252,20 +253,20 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
          response = future.get(3, TimeUnit.MINUTES);
 
-         assert response.getExitStatus() == 0 : node.getId() + ": " + response;
+         assertThat(response.getExitStatus() == 0).as(node.getId() + ": " + response).isTrue();
 
          node = client.getNodeMetadata(node.getId());
          // test that the node updated to the correct admin user!
          assertEquals(node.getCredentials().identity, "foo");
-         assert node.getCredentials().credential != null : nodes;
+         assertThat(node.getCredentials().credential != null).as(String.valueOf(nodes)).isTrue();
 
          weCanCancelTasks(node);
 
-         assert response.getExitStatus() == 0 : node.getId() + ": " + response;
+         assertThat(response.getExitStatus() == 0).as(node.getId() + ": " + response).isTrue();
 
          response = client.runScriptOnNode(node.getId(), "echo $USER", wrapInInitScript(false).runAsRoot(false));
 
-         assert response.getOutput().trim().equals("foo") : node.getId() + ": " + response;
+         assertThat(response.getOutput().trim().equals("foo")).as(node.getId() + ": " + response).isTrue();
 
       } finally {
          client.destroyNodesMatching(inGroup(group));
@@ -280,12 +281,12 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
                "echo I put a bad password",
                wrapInInitScript(false).runAsRoot(false).overrideLoginCredentials(
                      LoginCredentials.builder().user(good.identity).noPrivateKey().password("romeo").build()));
-         assert responses.size() == 0 : "shouldn't pass with a bad password\n" + responses;
+         assertThat(responses.size() == 0).as("shouldn't pass with a bad password\n" + responses).isTrue();
       } catch (AssertionError e) {
          throw e;
       } catch (RunScriptOnNodesException e) {
-         assert Iterables.any(e.getNodeErrors().values(), Predicates.instanceOf(AuthorizationException.class)) : e
-               + " not authexception!";
+         assertThat(Iterables.any(e.getNodeErrors().values(), Predicates.instanceOf(AuthorizationException.class))).as(e
+               + " not authexception!").isTrue();
       }
    }
 
@@ -298,14 +299,14 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          response = future.get(1, TimeUnit.MILLISECONDS);
          fail(node.getId() + ": " + response);
       } catch (TimeoutException e) {
-         assert !future.isDone();
+         assertThat(!future.isDone()).isTrue();
          response = client.runScriptOnNode(node.getId(), "/tmp/init-sleeper status",
                wrapInInitScript(false).runAsRoot(false));
-         assert !response.getOutput().trim().equals("") : node.getId() + ": " + response;
+         assertThat(!response.getOutput().trim().equals("")).as(node.getId() + ": " + response).isTrue();
          future.cancel(true);
          response = client.runScriptOnNode(node.getId(), "/tmp/init-sleeper status",
                wrapInInitScript(false).runAsRoot(false));
-         assert response.getOutput().trim().equals("") : node.getId() + ": " + response;
+         assertThat(response.getOutput().trim().equals("")).as(node.getId() + ": " + response).isTrue();
          try {
             future.get();
             fail(future.toString());
@@ -316,7 +317,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    }
 
    protected void checkResponseEqualsHostname(ExecResponse execResponse, NodeMetadata node1) {
-      assert execResponse.getOutput().trim().equals(node1.getHostname()) : node1 + ": " + execResponse;
+      assertThat(execResponse.getOutput().trim().equals(node1.getHostname())).as(node1 + ": " + execResponse).isTrue();
    }
 
    @Test(enabled = true, dependsOnMethods = { "testImagesCache" })
@@ -402,9 +403,9 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    protected void checkOsMatchesTemplate(NodeMetadata node) {
       if (node.getOperatingSystem() != null)
-         assert node.getOperatingSystem().getFamily().equals(template.getImage().getOperatingSystem().getFamily()) : String
+         assertThat(node.getOperatingSystem().getFamily().equals(template.getImage().getOperatingSystem().getFamily())).as(String
                .format("expecting family %s but got %s", template.getImage().getOperatingSystem().getFamily(),
-                     node.getOperatingSystem());
+                     node.getOperatingSystem())).isTrue();
    }
 
    void assertLocationSameOrChild(Location test, Location expected) {
@@ -486,7 +487,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    public void testCredentialsCache() throws Exception {
       initializeContext();
       for (NodeMetadata node : nodes)
-         assert view.utils().credentialStore().get("node#" + node.getId()) != null : "credentials for " + node.getId();
+         assertThat(view.utils().credentialStore().get("node#" + node.getId()) != null).as("credentials for " + node.getId()).isTrue();
    }
 
    protected Map<? extends NodeMetadata, ExecResponse> runScriptWithCreds(final String group, OperatingSystem os,
@@ -503,7 +504,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assertEquals(node.getStatus(), Status.RUNNING);
          Credentials fromStore = view.utils().credentialStore().get("node#" + node.getId());
          assertEquals(fromStore, node.getCredentials());
-         assert node.getPublicAddresses().size() >= 1 || node.getPrivateAddresses().size() >= 1 : "no ips in" + node;
+         assertThat(node.getPublicAddresses().size() >= 1 || node.getPrivateAddresses().size() >= 1).as("no ips in" + node).isTrue();
          assertNotNull(node.getCredentials());
          if (node.getCredentials().identity != null) {
             assertNotNull(node.getCredentials().identity);
@@ -536,7 +537,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assertLocationSameOrChild(checkNotNull(metadata.getLocation(), "location of %s", metadata), template.getLocation());
          checkImageIdMatchesTemplate(metadata);
          checkOsMatchesTemplate(metadata);
-         assert metadata.getStatus() == Status.RUNNING : metadata;
+         assertThat(metadata.getStatus() == Status.RUNNING).as(String.valueOf(metadata)).isTrue();
          // due to DHCP the addresses can actually change in-between runs.
          assertEquals(metadata.getPrivateAddresses().size(), node.getPrivateAddresses().size(), format(
                "[%s] didn't match: [%s]", metadata.getPrivateAddresses(), node.getPrivateAddresses().size()));
@@ -547,8 +548,8 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    }
 
    protected void assertNodeZero(Collection<? extends NodeMetadata> metadataSet) {
-      assert metadataSet.size() == 0 : format("nodes left in set: [%s] which didn't match set: [%s]", metadataSet,
-            nodes);
+      assertThat(metadataSet.size() == 0).as(format("nodes left in set: [%s] which didn't match set: [%s]", metadataSet,
+            nodes)).isTrue();
    }
 
    @Test(enabled = true, dependsOnMethods = "testGet")
@@ -556,8 +557,8 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       Set<? extends NodeMetadata> rebootNodes = client.rebootNodesMatching(inGroup(group));
       for (ComputeMetadata node : rebootNodes) {
          assertNotNull(node);
-         assert node.getProviderId() != null : node;
-         assert node.getLocation() != null : node;
+         assertThat(node.getProviderId() != null).as(String.valueOf(node)).isTrue();
+         assertThat(node.getLocation() != null).as(String.valueOf(node)).isTrue();
       }
 
       // validation
@@ -570,13 +571,13 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       Set<? extends NodeMetadata> suspendedNodes = client.suspendNodesMatching(inGroup(group));
       for (ComputeMetadata node : suspendedNodes) {
          assertNotNull(node);
-         assert node.getProviderId() != null : node;
-         assert node.getLocation() != null : node;
+         assertThat(node.getProviderId() != null).as(String.valueOf(node)).isTrue();
+         assertThat(node.getLocation() != null).as(String.valueOf(node)).isTrue();
       }
 
       Set<? extends NodeMetadata> stoppedNodes = refreshNodes();
 
-      assert Iterables.all(stoppedNodes, new Predicate<NodeMetadata>() {
+      assertThat(Iterables.all(stoppedNodes, new Predicate<NodeMetadata>() {
 
          @Override
          public boolean apply(NodeMetadata input) {
@@ -586,13 +587,13 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             return returnVal;
          }
 
-      }) : stoppedNodes;
+      })).as(String.valueOf(stoppedNodes)).isTrue();
 
       Set<? extends NodeMetadata> resumedNodes = client.resumeNodesMatching(inGroup(group));
       for (ComputeMetadata node : resumedNodes) {
          assertNotNull(node);
-         assert node.getProviderId() != null : node;
-         assert node.getLocation() != null : node;
+         assertThat(node.getProviderId() != null).as(String.valueOf(node)).isTrue();
+         assertThat(node.getLocation() != null).as(String.valueOf(node)).isTrue();
       }
 
       testGet();
@@ -601,8 +602,8 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    @Test(enabled = true, dependsOnMethods = "testSuspendResume")
    public void testListNodes() throws Exception {
       for (ComputeMetadata node : client.listNodes()) {
-         assert node.getProviderId() != null : node;
-         assert node.getLocation() != null : node;
+         assertThat(node.getProviderId() != null).as(String.valueOf(node)).isTrue();
+         assertThat(node.getLocation() != null).as(String.valueOf(node)).isTrue();
          assertEquals(node.getType(), ComputeType.NODE);
       }
    }
@@ -628,19 +629,19 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    @Test(enabled = true, dependsOnMethods = "testSuspendResume")
    public void testGetNodesWithDetails() throws Exception {
       for (NodeMetadata node : client.listNodesDetailsMatching(all())) {
-         assert node.getProviderId() != null : node;
-         assert node.getLocation() != null : node;
+         assertThat(node.getProviderId() != null).as(String.valueOf(node)).isTrue();
+         assertThat(node.getLocation() != null).as(String.valueOf(node)).isTrue();
          assertEquals(node.getType(), ComputeType.NODE);
-         assert node instanceof NodeMetadata;
+         assertThat(node instanceof NodeMetadata).isTrue();
          NodeMetadata nodeMetadata = node;
-         assert nodeMetadata.getProviderId() != null : nodeMetadata;
+         assertThat(nodeMetadata.getProviderId() != null).as(String.valueOf(nodeMetadata)).isTrue();
          // nullable
          // assert nodeMetadata.getImage() != null : node;
          // user specified name is not always supported
          // assert nodeMetadata.getName() != null : nodeMetadata;
          if (nodeMetadata.getStatus() == Status.RUNNING) {
-            assert nodeMetadata.getPublicAddresses() != null : nodeMetadata;
-            assert !nodeMetadata.getPublicAddresses().isEmpty() || !nodeMetadata.getPrivateAddresses().isEmpty() : nodeMetadata;
+            assertThat(nodeMetadata.getPublicAddresses() != null).as(String.valueOf(nodeMetadata)).isTrue();
+            assertThat(!nodeMetadata.getPublicAddresses().isEmpty() || !nodeMetadata.getPrivateAddresses().isEmpty()).as(String.valueOf(nodeMetadata)).isTrue();
             assertNotNull(nodeMetadata.getPrivateAddresses());
          }
       }
@@ -653,9 +654,9 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       assertEquals(toDestroy, destroyed.size());
       Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
       for (NodeMetadata node : filter(client.listNodesDetailsMatching(all()), inGroup(group))) {
-         assert node.getStatus() == Status.TERMINATED : node;
-         assert view.utils().credentialStore().get("node#" + node.getId()) == null : "credential should have been null for "
-               + "node#" + node.getId();
+         assertThat(node.getStatus() == Status.TERMINATED).as(String.valueOf(node)).isTrue();
+         assertThat(view.utils().credentialStore().get("node#" + node.getId()) == null).as("credential should have been null for "
+               + "node#" + node.getId()).isTrue();
       }
    }
 
@@ -763,16 +764,16 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
       Map<String, String> missing = Maps.difference(node.getUserMetadata(), userMetadata).entriesOnlyOnRight();
-      assert missing.isEmpty() : format("node userMetadata did not contain %s %s", missing, node);
+      assertThat(missing.isEmpty()).as(format("node userMetadata did not contain %s %s", missing, node)).isTrue();
    }
 
    protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
-      assert node.getTags().equals(tags) : format("node tags did not match %s %s", tags, node);
+      assertThat(node.getTags().equals(tags)).as(format("node tags did not match %s %s", tags, node)).isTrue();
    }
 
    public void testListImages() throws Exception {
       for (Image image : client.listImages()) {
-         assert image.getProviderId() != null : image;
+         assertThat(image.getProviderId() != null).as(String.valueOf(image)).isTrue();
          // image.getLocationId() can be null, if it is a location-free image
          assertEquals(image.getType(), ComputeType.IMAGE);
       }
@@ -782,9 +783,9 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    public void testGetAssignableLocations() throws Exception {
       for (Location location : client.listAssignableLocations()) {
          getAnonymousLogger().warning("location " + location);
-         assert location.getId() != null : location;
-         assert location != location.getParent() : location;
-         assert location.getScope() != null : location;
+         assertThat(location.getId() != null).as(String.valueOf(location)).isTrue();
+         assertThat(location != location.getParent()).as(String.valueOf(location)).isTrue();
+         assertThat(location.getScope() != null).as(String.valueOf(location)).isTrue();
          switch (location.getScope()) {
          case PROVIDER:
             assertProvider(location);
@@ -826,10 +827,10 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          long time = currentTimeMillis();
          Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
          NodeMetadata node = getOnlyElement(nodes);
-         assert node.getStatus() != Status.RUNNING : node;
+         assertThat(node.getStatus() != Status.RUNNING).as(String.valueOf(node)).isTrue();
          long duration = (currentTimeMillis() - time) / 1000;
-         assert duration < nonBlockDurationSeconds : format("duration(%d) longer than expected(%d) seconds! ",
-               duration, nonBlockDurationSeconds);
+         assertThat(duration < nonBlockDurationSeconds).as(format("duration(%d) longer than expected(%d) seconds! ",
+               duration, nonBlockDurationSeconds)).isTrue();
       } finally {
          client.destroyNodesMatching(inGroup(group));
       }
@@ -842,10 +843,10 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    public void testListSizes() throws Exception {
       for (Hardware hardware : client.listHardwareProfiles()) {
-         assert hardware.getProviderId() != null : hardware;
-         assert getCores(hardware) > 0 : hardware;
-         assert hardware.getVolumes().size() > 0 : hardware;
-         assert hardware.getRam() > 0 : hardware;
+         assertThat(hardware.getProviderId() != null).as(String.valueOf(hardware)).isTrue();
+         assertThat(getCores(hardware) > 0).as(String.valueOf(hardware)).isTrue();
+         assertThat(hardware.getVolumes().size() > 0).as(String.valueOf(hardware)).isTrue();
+         assertThat(hardware.getRam() > 0).as(String.valueOf(hardware)).isTrue();
          assertEquals(hardware.getType(), ComputeType.HARDWARE);
       }
    }
@@ -869,14 +870,14 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
       assertEquals(defaultSize, smallest);
 
-      assert getCores(smallest) <= getCores(fastest) : format("%s ! <= %s", smallest, fastest);
-      assert getCores(biggest) <= getCores(fastest) : format("%s ! <= %s", biggest, fastest);
+      assertThat(getCores(smallest) <= getCores(fastest)).as(format("%s ! <= %s", smallest, fastest)).isTrue();
+      assertThat(getCores(biggest) <= getCores(fastest)).as(format("%s ! <= %s", biggest, fastest)).isTrue();
 
-      assert biggest.getRam() >= fastest.getRam() : format("%s ! >= %s", biggest, fastest);
-      assert biggest.getRam() >= smallest.getRam() : format("%s ! >= %s", biggest, smallest);
+      assertThat(biggest.getRam() >= fastest.getRam()).as(format("%s ! >= %s", biggest, fastest)).isTrue();
+      assertThat(biggest.getRam() >= smallest.getRam()).as(format("%s ! >= %s", biggest, smallest)).isTrue();
 
-      assert getCores(fastest) >= getCores(biggest) : format("%s ! >= %s", fastest, biggest);
-      assert getCores(fastest) >= getCores(smallest) : format("%s ! >= %s", fastest, smallest);
+      assertThat(getCores(fastest) >= getCores(biggest)).as(format("%s ! >= %s", fastest, biggest)).isTrue();
+      assertThat(getCores(fastest) >= getCores(smallest)).as(format("%s ! >= %s", fastest, smallest)).isTrue();
    }
 
    private void sshPing(NodeMetadata node, String taskName) throws IOException {
@@ -901,10 +902,10 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          ExecResponse hello = ssh.exec("echo hello");
          assertEquals(hello.getOutput().trim(), "hello");
          ExecResponse exec = ssh.exec("java -version");
-         assert exec.getError().indexOf("OpenJDK") != -1 || exec.getOutput().indexOf("OpenJDK") != -1 : exec
+         assertThat(exec.getError().indexOf("OpenJDK") != -1 || exec.getOutput().indexOf("OpenJDK") != -1).as(exec
                + "\n"
                + ssh.exec("cat /tmp/" + taskName + "/" + taskName + ".sh /tmp/" + taskName + "/stdout.log /tmp/"
-                     + taskName + "/stderr.log");
+                     + taskName + "/stderr.log")).isTrue();
       } finally {
          if (ssh != null)
             ssh.disconnect();

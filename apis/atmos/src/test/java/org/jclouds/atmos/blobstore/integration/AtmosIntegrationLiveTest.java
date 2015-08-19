@@ -16,6 +16,7 @@
  */
 package org.jclouds.atmos.blobstore.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -79,22 +80,22 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    // not supported
    @Override
    protected void checkContentDisposition(Blob blob, String contentDisposition) {
-      assert blob.getPayload().getContentMetadata().getContentDisposition() == null;
-      assert blob.getMetadata().getContentMetadata().getContentDisposition() == null;
+      assertThat(blob.getPayload().getContentMetadata().getContentDisposition() == null).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentDisposition() == null).isTrue();
    }
 
    // not supported
    @Override
    protected void checkContentEncoding(Blob blob, String contentEncoding) {
-      assert blob.getPayload().getContentMetadata().getContentEncoding() == null;
-      assert blob.getMetadata().getContentMetadata().getContentEncoding() == null;
+      assertThat(blob.getPayload().getContentMetadata().getContentEncoding() == null).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentEncoding() == null).isTrue();
    }
 
    // not supported
    @Override
    protected void checkContentLanguage(Blob blob, String contentLanguage) {
-      assert blob.getPayload().getContentMetadata().getContentLanguage() == null;
-      assert blob.getMetadata().getContentMetadata().getContentLanguage() == null;
+      assertThat(blob.getPayload().getContentMetadata().getContentLanguage() == null).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentLanguage() == null).isTrue();
    }
 
    @Override

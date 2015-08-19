@@ -19,6 +19,7 @@ package org.jclouds.aws.ec2.features;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.aws.ec2.options.AWSDescribeImagesOptions.Builder.filters;
 import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.addNewBlockDevice;
 import static org.jclouds.ec2.options.RunInstancesOptions.Builder.withBlockDeviceMappings;
@@ -78,7 +79,7 @@ public class AWSAMIApiLiveTest extends AMIApiLiveTest {
                   .put("root-device-type", "ebs")//
                   .build()).ownedBy("137112412989", "099720109477"));
       assertNotNull(ccResults);
-      assert ccResults.size() >= 34 : ccResults;
+      assertThat(ccResults.size() >= 34).as(String.valueOf(ccResults)).isTrue();
    }
 
    protected RegisterImageBackedByEbsOptions newBlockDeviceOption() {
@@ -118,7 +119,7 @@ public class AWSAMIApiLiveTest extends AMIApiLiveTest {
                  device.getVolumeId());
          snapshotsToDelete.add(snapshot.getId());
          Predicate<Snapshot> snapshotted = retry(new SnapshotCompleted(ec2Api.getElasticBlockStoreApi().get()), 600, 10, SECONDS);
-         assert snapshotted.apply(snapshot);
+         assertThat(snapshotted.apply(snapshot)).isTrue();
          return snapshot;
       } finally {
          if (instanceId != null)

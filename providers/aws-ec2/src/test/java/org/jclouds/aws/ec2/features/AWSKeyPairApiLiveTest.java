@@ -19,6 +19,7 @@ package org.jclouds.aws.ec2.features;
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.newTreeSet;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.compute.options.TemplateOptions.Builder.overrideLoginCredentials;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.jclouds.compute.predicates.NodePredicates.runningInGroup;
@@ -91,11 +92,11 @@ public class AWSKeyPairApiLiveTest extends BaseComputeServiceContextLiveTest {
          Set<? extends NodeMetadata> nodes = noSshContext.getComputeService().createNodesInGroup(group, 1, options);
 
          NodeMetadata first = get(nodes, 0);
-         assert first.getCredentials() != null : first;
-         assert first.getCredentials().identity != null : first;
+         assertThat(first.getCredentials() != null).as(String.valueOf(first)).isTrue();
+         assertThat(first.getCredentials().identity != null).as(String.valueOf(first)).isTrue();
          // credentials should not be present as the import public key call doesn't have access to
          // the related private key
-         assert first.getCredentials().credential == null : first;
+         assertThat(first.getCredentials().credential == null).as(String.valueOf(first)).isTrue();
 
          AWSRunningInstance instance = getInstance(instanceApi, first.getProviderId());
 

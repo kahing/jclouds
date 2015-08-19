@@ -17,6 +17,7 @@
 package org.jclouds.s3.options;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagDoesntMatch;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagMatches;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceModifiedSince;
@@ -78,8 +79,8 @@ public class CopyObjectOptionsTest {
    }
 
    private void assertGoodMeta(CopyObjectOptions options) {
-      assert options != null;
-      assert options.getMetadata() != null;
+      assertThat(options != null).isTrue();
+      assertThat(options.getMetadata() != null).isTrue();
       Multimap<String, String> headers = options.buildRequestHeaders();
       assertEquals(headers.size(), 2);
       assertEquals(headers.get(METADATA_DIRECTIVE).iterator().next(), "REPLACE");
@@ -272,7 +273,7 @@ public class CopyObjectOptionsTest {
       options.setHeaderTag(DEFAULT_AMAZON_HEADERTAG);
 
       options.setMetadataPrefix(USER_METADATA_PREFIX);
-      assert options.buildRequestHeaders() != null;
+      assertThat(options.buildRequestHeaders() != null).isTrue();
    }
 
    @Test

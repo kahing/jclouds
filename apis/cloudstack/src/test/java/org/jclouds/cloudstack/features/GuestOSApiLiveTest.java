@@ -17,6 +17,7 @@
 package org.jclouds.cloudstack.features;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -37,7 +38,7 @@ public class GuestOSApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListOSTypes() throws Exception {
       Set<OSType> response = client.getGuestOSApi().listOSTypes();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (OSType type : response) {
          OSType newDetails = getOnlyElement(client.getGuestOSApi().listOSTypes(
@@ -49,7 +50,7 @@ public class GuestOSApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListOSCategories() throws Exception {
       Map<String, String> response = client.getGuestOSApi().listOSCategories();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (Entry<String, String> category : response.entrySet()) {
          checkOSCategory(category);
@@ -58,15 +59,15 @@ public class GuestOSApiLiveTest extends BaseCloudStackApiLiveTest {
 
    protected void checkOSCategory(Entry<String, String> category) {
       assertEquals(category, client.getGuestOSApi().getOSCategory(category.getKey()));
-      assert category.getKey() != null : category;
-      assert category.getValue() != null : category;
+      assertThat(category.getKey() != null).as(String.valueOf(category)).isTrue();
+      assertThat(category.getValue() != null).as(String.valueOf(category)).isTrue();
    }
 
    protected void checkOSType(OSType type) {
       assertEquals(type.getId(), client.getGuestOSApi().getOSType(type.getId()).getId());
-      assert type.getId() != null : type;
-      assert type.getOSCategoryId() != null : type;
-      assert type.getDescription() != null : type;
+      assertThat(type.getId() != null).as(String.valueOf(type)).isTrue();
+      assertThat(type.getOSCategoryId() != null).as(String.valueOf(type)).isTrue();
+      assertThat(type.getDescription() != null).as(String.valueOf(type)).isTrue();
 
    }
 

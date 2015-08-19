@@ -25,6 +25,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_LANGUAGE;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.Constants.PROPERTY_RELAX_HOSTNAME;
 import static org.jclouds.Constants.PROPERTY_TRUST_ALL_CERTS;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
@@ -162,9 +163,9 @@ public abstract class BaseJettyTest {
       Properties properties = new Properties();
       addConnectionProperties(properties);
       client = newBuilder(testPort, properties, createConnectionModule()).buildApi(IntegrationTestClient.class);
-      assert client != null;
+      assertThat(client != null).isTrue();
 
-      assert client.newStringBuilder() != null;
+      assertThat(client.newStringBuilder() != null).isTrue();
    }
 
    private static void handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.predicates.NetworkPredicates.defaultNetworkInZone;
 import static org.jclouds.cloudstack.predicates.NetworkPredicates.hasLoadBalancerService;
 import static org.jclouds.cloudstack.predicates.NetworkPredicates.supportsPortForwarding;
@@ -38,9 +39,9 @@ public class NetworkPredicatesTest {
    public void testHasLoadBalancerService() {
       Network network = Network.builder().id("204").services(ImmutableSet.of(NetworkService.builder().name("Lb").build())).build();
 
-      assert hasLoadBalancerService().apply(network);
-      assert !supportsStaticNAT().apply(network);
-      assert !supportsPortForwarding().apply(network);
+      assertThat(hasLoadBalancerService().apply(network)).isTrue();
+      assertThat(!supportsStaticNAT().apply(network)).isTrue();
+      assertThat(!supportsPortForwarding().apply(network)).isTrue();
 
    }
 
@@ -53,9 +54,9 @@ public class NetworkPredicatesTest {
                         ImmutableMap.<String, String> of("StaticNat", "true")).build()))
             .build();
 
-      assert !hasLoadBalancerService().apply(network);
-      assert supportsStaticNAT().apply(network);
-      assert !supportsPortForwarding().apply(network);
+      assertThat(!hasLoadBalancerService().apply(network)).isTrue();
+      assertThat(supportsStaticNAT().apply(network)).isTrue();
+      assertThat(!supportsPortForwarding().apply(network)).isTrue();
    }
 
    public void testNoSupport() {
@@ -63,9 +64,9 @@ public class NetworkPredicatesTest {
             .services(ImmutableSet.of(NetworkService.builder().name("Firewall").capabilities(
                   ImmutableMap.<String, String> of()).build())).build();
 
-      assert !hasLoadBalancerService().apply(network);
-      assert !supportsStaticNAT().apply(network);
-      assert !supportsPortForwarding().apply(network);
+      assertThat(!hasLoadBalancerService().apply(network)).isTrue();
+      assertThat(!supportsStaticNAT().apply(network)).isTrue();
+      assertThat(!supportsPortForwarding().apply(network)).isTrue();
    }
 
    public void testSupportsPortForwardingFindsWhenFirewallHasPortForwardingFeature() {
@@ -76,9 +77,9 @@ public class NetworkPredicatesTest {
                   ImmutableSet.of(NetworkService.builder().name("Firewall").capabilities(
                         ImmutableMap.<String, String> of("PortForwarding", "true")).build())).build();
 
-      assert !hasLoadBalancerService().apply(network);
-      assert !supportsStaticNAT().apply(network);
-      assert supportsPortForwarding().apply(network);
+      assertThat(!hasLoadBalancerService().apply(network)).isTrue();
+      assertThat(!supportsStaticNAT().apply(network)).isTrue();
+      assertThat(supportsPortForwarding().apply(network)).isTrue();
    }
 
    public void testSupportsPortForwardingAndStaticNATWhenFirewallHasFeatures() {
@@ -89,8 +90,8 @@ public class NetworkPredicatesTest {
                   ImmutableSet.of(NetworkService.builder().name("Firewall").capabilities(
                         ImmutableMap.<String, String> of("StaticNat", "true", "PortForwarding", "true")).build())).build();
 
-      assert Predicates.and(supportsPortForwarding(), supportsStaticNAT()).apply(network);
-      assert !hasLoadBalancerService().apply(network);
+      assertThat(Predicates.and(supportsPortForwarding(), supportsStaticNAT()).apply(network)).isTrue();
+      assertThat(!hasLoadBalancerService().apply(network)).isTrue();
 
    }
 

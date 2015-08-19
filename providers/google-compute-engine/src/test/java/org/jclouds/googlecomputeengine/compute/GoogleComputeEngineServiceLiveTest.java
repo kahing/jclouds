@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.compute;
 
 import static com.google.common.collect.Iterables.contains;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -137,7 +138,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
       Set<String> nodeTags = node.getTags();
       for (String tag : tags){
-         assert nodeTags.contains(tag) : String.format("node tags did not match %s %s node:", tags, nodeTags, node);
+         assertThat(nodeTags.contains(tag)).as(String.format("node tags did not match %s %s node:", tags, nodeTags, node)).isTrue();
       }
    }
 

@@ -16,6 +16,7 @@
  */
 package org.jclouds.dynect.v3.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.dynect.v3.domain.RecordId.recordIdBuilder;
 import static org.jclouds.dynect.v3.predicates.RecordPredicates.typeEquals;
 
@@ -32,11 +33,11 @@ public class RecordPredicatesTest {
 
    @Test
    public void testTypeEqualsWhenEqual() {
-      assert typeEquals("SOA").apply(recordId);
+      assertThat(typeEquals("SOA").apply(recordId)).isTrue();
    }
 
    @Test
    public void testTypeEqualsWhenNotEqual() {
-      assert !typeEquals("NS").apply(recordId);
+      assertThat(!typeEquals("NS").apply(recordId)).isTrue();
    }
 }

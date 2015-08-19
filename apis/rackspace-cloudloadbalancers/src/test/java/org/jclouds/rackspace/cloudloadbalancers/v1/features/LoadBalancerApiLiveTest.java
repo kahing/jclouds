@@ -16,6 +16,7 @@
  */
 package org.jclouds.rackspace.cloudloadbalancers.v1.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.rackspace.cloudloadbalancers.v1.predicates.LoadBalancerPredicates.awaitAvailable;
 import static org.jclouds.rackspace.cloudloadbalancers.v1.predicates.LoadBalancerPredicates.awaitDeleted;
 import static org.testng.Assert.assertEquals;
@@ -114,17 +115,17 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
          for (LoadBalancer lb : response) {
             if (!lbs.contains(lb))
                continue;
-            assert lb.getRegion() != null : lb;
-            assert lb.getName() != null : lb;
-            assert lb.getId() != -1 : lb;
-            assert lb.getProtocol() != null : lb;
-            assert lb.getPort() != -1 : lb;
-            assert lb.getStatus() != null : lb;
-            assert lb.getCreated() != null : lb;
-            assert lb.getUpdated() != null : lb;
-            assert !lb.getVirtualIPs().isEmpty() : lb;
+            assertThat(lb.getRegion() != null).as(String.valueOf(lb)).isTrue();
+            assertThat(lb.getName() != null).as(String.valueOf(lb)).isTrue();
+            assertThat(lb.getId() != -1).as(String.valueOf(lb)).isTrue();
+            assertThat(lb.getProtocol() != null).as(String.valueOf(lb)).isTrue();
+            assertThat(lb.getPort() != -1).as(String.valueOf(lb)).isTrue();
+            assertThat(lb.getStatus() != null).as(String.valueOf(lb)).isTrue();
+            assertThat(lb.getCreated() != null).as(String.valueOf(lb)).isTrue();
+            assertThat(lb.getUpdated() != null).as(String.valueOf(lb)).isTrue();
+            assertThat(!lb.getVirtualIPs().isEmpty()).as(String.valueOf(lb)).isTrue();
             // node info not available during list;
-            assert lb.getNodes().size() == 0 : lb;
+            assertThat(lb.getNodes().size() == 0).as(String.valueOf(lb)).isTrue();
 
             LoadBalancer getDetails = api.getLoadBalancerApi(region).get(lb.getId());
 
@@ -139,7 +140,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
                assertEquals(getDetails.getUpdated(), lb.getUpdated());
                assertEquals(getDetails.getVirtualIPs(), lb.getVirtualIPs());
                // node info not available during list;
-               assert !getDetails.getNodes().isEmpty() : lb;
+               assertThat(!getDetails.getNodes().isEmpty()).as(String.valueOf(lb)).isTrue();
             } catch (AssertionError e) {
                throw new AssertionError(String.format("%s\n%s - %s", e.getMessage(), getDetails, lb));
             }

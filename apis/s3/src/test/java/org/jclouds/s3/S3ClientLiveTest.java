@@ -91,7 +91,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
     */
    @Test(groups = { "integration", "live" })
    public void deleteContainerIfEmptyNotFound() throws Exception {
-      assert getApi().deleteBucketIfEmpty("dbienf");
+      assertThat(getApi().deleteBucketIfEmpty("dbienf")).isTrue();
    }
 
    @Test(groups = { "integration", "live" })
@@ -99,7 +99,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       String containerName = getContainerName();
       try {
          addBlobToContainer(containerName, "test");
-         assert !getApi().deleteBucketIfEmpty(containerName);
+         assertThat(!getApi().deleteBucketIfEmpty(containerName)).isTrue();
       } finally {
          returnContainer(containerName);
       }
@@ -298,7 +298,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
             ExecutionException, TimeoutException, IOException {
       assertConsistencyAwareContainerSize(sourceContainer, 1);
       S3Object newObject = getApi().getObject(sourceContainer, key);
-      assert newObject != null;
+      assertThat(newObject != null).isTrue();
       assertEquals(Strings2.toStringAndClose(newObject.getPayload().openStream()), TEST_STRING);
       return newObject;
    }
@@ -325,15 +325,15 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected void assertCacheControl(S3Object newObject, String string) {
-      assert newObject.getMetadata().getCacheControl().indexOf(string) != -1 : newObject.getMetadata()
-               .getCacheControl();
+      assertThat(newObject.getMetadata().getCacheControl().indexOf(string) != -1).as(newObject.getMetadata()
+               .getCacheControl()).isTrue();
    }
 
    protected void assertContentEncoding(S3Object newObject, String string) {
-      assert newObject.getPayload().getContentMetadata().getContentEncoding().indexOf(string) != -1 : newObject
-               .getPayload().getContentMetadata().getContentEncoding();
-      assert newObject.getMetadata().getContentMetadata().getContentEncoding().indexOf(string) != -1 : newObject
-               .getMetadata().getContentMetadata().getContentEncoding();
+      assertThat(newObject.getPayload().getContentMetadata().getContentEncoding().indexOf(string) != -1).as(newObject
+               .getPayload().getContentMetadata().getContentEncoding()).isTrue();
+      assertThat(newObject.getMetadata().getContentMetadata().getContentEncoding().indexOf(string) != -1).as(newObject
+               .getMetadata().getContentMetadata().getContentEncoding()).isTrue();
    }
 
    @Test(groups = { "integration", "live" })
@@ -533,7 +533,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
          String eTag = getApi().completeMultipartUpload(containerName, key, uploadId, ImmutableMap.of(1, eTagOf1));
 
-         assert !eTagOf1.equals(eTag);
+         assertThat(!eTagOf1.equals(eTag)).isTrue();
 
          object = getApi().getObject(containerName, key);
          assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), buffer);

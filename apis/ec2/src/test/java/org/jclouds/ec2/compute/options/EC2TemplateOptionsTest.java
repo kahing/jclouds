@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.compute.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.compute.options.EC2TemplateOptions.Builder.authorizePublicKey;
 import static org.jclouds.ec2.compute.options.EC2TemplateOptions.Builder.blockOnPort;
 import static org.jclouds.ec2.compute.options.EC2TemplateOptions.Builder.inboundPorts;
@@ -149,21 +150,21 @@ public class EC2TemplateOptionsTest {
       EC2TemplateOptions options = new EC2TemplateOptions();
       options.noKeyPair();
       assertEquals(options.getKeyPair(), null);
-      assert !options.shouldAutomaticallyCreateKeyPair();
+      assertThat(!options.shouldAutomaticallyCreateKeyPair()).isTrue();
    }
 
    @Test
    public void testFalsenoKeyPair() {
       EC2TemplateOptions options = new EC2TemplateOptions();
       assertEquals(options.getKeyPair(), null);
-      assert options.shouldAutomaticallyCreateKeyPair();
+      assertThat(options.shouldAutomaticallyCreateKeyPair()).isTrue();
    }
 
    @Test
    public void testnoKeyPairStatic() {
       EC2TemplateOptions options = noKeyPair();
       assertEquals(options.getKeyPair(), null);
-      assert !options.shouldAutomaticallyCreateKeyPair();
+      assertThat(!options.shouldAutomaticallyCreateKeyPair()).isTrue();
    }
 
    // superclass tests

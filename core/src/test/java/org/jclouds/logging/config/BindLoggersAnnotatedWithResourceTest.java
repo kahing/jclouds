@@ -17,6 +17,7 @@
 package org.jclouds.logging.config;
 
 import static com.google.inject.matcher.Matchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.testng.Assert.assertEquals;
 
@@ -85,14 +86,14 @@ public class BindLoggersAnnotatedWithResourceTest {
       Field field = A.class.getDeclaredField("logger");
       AssignLoggerToField<A> assigner = new AssignLoggerToField<A>(logger, field);
       assigner.afterInjection(a);
-      assert field.get(a).equals(logger);
+      assertThat(field.get(a).equals(logger)).isTrue();
    }
 
    @Test
    public void testLoggerFieldsAnnotatedWithResource() throws SecurityException,
             NoSuchFieldException {
       LoggerFieldsAnnotatedWithResource predicate = new LoggerFieldsAnnotatedWithResource();
-      assert predicate.apply(A.class.getDeclaredField("logger"));
+      assertThat(predicate.apply(A.class.getDeclaredField("logger"))).isTrue();
    }
 
    public static class C {
@@ -104,7 +105,7 @@ public class BindLoggersAnnotatedWithResourceTest {
    public void testLoggerFieldsAnnotatedWithInjectReturnsNull() throws SecurityException,
             NoSuchFieldException {
       LoggerFieldsAnnotatedWithResource predicate = new LoggerFieldsAnnotatedWithResource();
-      assert !predicate.apply(C.class.getDeclaredField("logger"));
+      assertThat(!predicate.apply(C.class.getDeclaredField("logger"))).isTrue();
    }
 
    public static class D {

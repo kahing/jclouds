@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotEquals;
@@ -51,7 +52,7 @@ public class GlobalPodApiLiveTest extends BaseCloudStackApiLiveTest {
       skipIfNotGlobalAdmin();
 
       Set<Pod> response = globalAdminClient.getPodClient().listPods();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long podCount = response.size();
       assertTrue(podCount >= 0);
 

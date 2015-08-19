@@ -17,6 +17,7 @@
 package org.jclouds.io.payloads;
 
 import static com.google.common.net.MediaType.PLAIN_TEXT_UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -111,7 +112,7 @@ public class MultipartFormTest {
       assertEquals(Strings2.toStringAndClose(multipartForm.openStream()), expects);
 
       // test repeatable
-      assert multipartForm.isRepeatable();
+      assertThat(multipartForm.isRepeatable()).isTrue();
       assertEquals(Strings2.toStringAndClose(multipartForm.openStream()), expects);
       assertEquals(multipartForm.getContentMetadata().getContentLength(), Long.valueOf(352));
    }

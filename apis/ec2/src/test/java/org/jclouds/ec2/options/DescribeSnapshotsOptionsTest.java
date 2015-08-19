@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.DescribeSnapshotsOptions.Builder.ownedBy;
 import static org.jclouds.ec2.options.DescribeSnapshotsOptions.Builder.restorableBy;
 import static org.jclouds.ec2.options.DescribeSnapshotsOptions.Builder.snapshotIds;
@@ -33,8 +34,8 @@ public class DescribeSnapshotsOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(DescribeSnapshotsOptions.class);
-      assert !String.class.isAssignableFrom(DescribeSnapshotsOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(DescribeSnapshotsOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(DescribeSnapshotsOptions.class)).isTrue();
    }
 
    @Test

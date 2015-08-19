@@ -18,6 +18,7 @@ package org.jclouds.cloudstack.features;
 
 import static com.google.common.collect.Iterables.find;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.predicates.NetworkPredicates.hasLoadBalancerService;
 import static org.jclouds.cloudstack.predicates.NetworkPredicates.isVirtualNetwork;
 import static org.jclouds.util.Predicates2.retry;
@@ -190,7 +191,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListLoadBalancerRules() throws Exception {
       Set<LoadBalancerRule> response = client.getLoadBalancerApi().listLoadBalancerRules();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (LoadBalancerRule rule : response) {
          LoadBalancerRule newDetails = findRuleWithId(rule.getId());
@@ -212,16 +213,16 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
 
    protected void checkRule(LoadBalancerRule rule) {
       assertEquals(rule.getId(), findRuleWithId(rule.getId()).getId());
-      assert rule.getId() != null : rule;
-      assert rule.getAccount() != null : rule;
-      assert rule.getAlgorithm() != null : rule;
-      assert rule.getPrivatePort() > 0 : rule;
-      assert rule.getPublicPort() > 0 : rule;
-      assert rule.getDomain() != null : rule;
-      assert rule.getDomainId() != null : rule;
-      assert rule.getState() != null : rule;
-      assert rule.getName() != null : rule;
-      assert rule.getPublicIP() != null : rule;
-      assert rule.getPublicIPId() != null : rule;
+      assertThat(rule.getId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getAccount() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getAlgorithm() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getPrivatePort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getPublicPort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getDomain() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getDomainId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getState() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getName() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getPublicIP() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getPublicIPId() != null).as(String.valueOf(rule)).isTrue();
    }
 }

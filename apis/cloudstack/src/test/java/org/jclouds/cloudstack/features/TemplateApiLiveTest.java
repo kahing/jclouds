@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.options.ListTemplatesOptions.Builder.zoneId;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
@@ -64,7 +65,7 @@ public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {
    @Test
    public void testListTemplates() throws Exception {
       Set<Template> response = client.getTemplateApi().listTemplates();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long templateCount = response.size();
       assertTrue(templateCount >= 0);
       for (Template template : response) {
@@ -74,23 +75,23 @@ public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {
 
          assertEquals(template, newDetails);
          assertEquals(template, client.getTemplateApi().getTemplateInZone(template.getId(), template.getZoneId()));
-         assert template.getId() != null : template;
-         assert template.getName() != null : template;
-         assert template.getDisplayText() != null : template;
-         assert template.getCreated() != null : template;
-         assert template.getFormat() != null && template.getFormat() != Template.Format.UNRECOGNIZED : template;
-         assert template.getOSType() != null : template;
-         assert template.getOSTypeId() != null : template;
-         assert template.getAccount() != null : template;
-         assert template.getZone() != null : template;
-         assert template.getZoneId() != null : template;
-         assert template.getStatus() == null ||
-            template.getStatus() == Template.Status.DOWNLOADED : template;
-         assert template.getType() != null && template.getType() != Template.Type.UNRECOGNIZED : template;
-         assert template.getHypervisor() != null : template;
-         assert template.getDomain() != null : template;
-         assert template.getDomainId() != null : template;
-         assert template.getSize() > 0 : template;
+         assertThat(template.getId() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getName() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getDisplayText() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getCreated() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getFormat() != null && template.getFormat() != Template.Format.UNRECOGNIZED).as(String.valueOf(template)).isTrue();
+         assertThat(template.getOSType() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getOSTypeId() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getAccount() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getZone() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getZoneId() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getStatus() == null ||
+            template.getStatus() == Template.Status.DOWNLOADED).as(String.valueOf(template)).isTrue();
+         assertThat(template.getType() != null && template.getType() != Template.Type.UNRECOGNIZED).as(String.valueOf(template)).isTrue();
+         assertThat(template.getHypervisor() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getDomain() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getDomainId() != null).as(String.valueOf(template)).isTrue();
+         assertThat(template.getSize() > 0).as(String.valueOf(template)).isTrue();
       }
    }
 
@@ -201,7 +202,7 @@ public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {
       if (vmForRegistration != null) {
          assertTrue(jobComplete.apply(client.getVirtualMachineApi().stopVirtualMachine(vmForRegistration.getId())), vmForRegistration.toString());
          assertTrue(jobComplete.apply(client.getVirtualMachineApi().destroyVirtualMachine(vmForRegistration.getId())), vmForRegistration.toString());
-         assert virtualMachineDestroyed.apply(vmForRegistration);
+         assertThat(virtualMachineDestroyed.apply(vmForRegistration)).isTrue();
       }
       if (createdTemplate != null) {
          AsyncCreateResponse deleteJob = client.getTemplateApi().deleteTemplate(createdTemplate.getId());

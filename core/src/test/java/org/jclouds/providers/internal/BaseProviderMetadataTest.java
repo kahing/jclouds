@@ -17,6 +17,7 @@
 package org.jclouds.providers.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 
@@ -50,7 +51,7 @@ public abstract class BaseProviderMetadataTest {
       ProviderMetadata providerMetadata = Providers.withId(toTest.getId());
 
       assertEquals(toTest, providerMetadata);
-      assert providerMetadata.getLinkedServices().contains(toTest.getId());
+      assertThat(providerMetadata.getLinkedServices().contains(toTest.getId())).isTrue();
    }
 
    @Test
@@ -58,22 +59,22 @@ public abstract class BaseProviderMetadataTest {
       if (expectedApi == null)
          Logger.getAnonymousLogger().warning("please update your test class");
       ImmutableSet<ProviderMetadata> ofApi = ImmutableSet.copyOf(Providers.apiMetadataAssignableFrom(typeToken(expectedApi.getClass())));
-      assert ofApi.contains(toTest) : String.format("%s not found in %s", toTest, ofApi);
+      assertThat(ofApi.contains(toTest)).as(String.format("%s not found in %s", toTest, ofApi)).isTrue();
    }
 
    @Test
    public void testTransformableToContains() {
       for (TypeToken<? extends View> view : views) {
          ImmutableSet<ProviderMetadata> ofType = ImmutableSet.copyOf(Providers.viewableAs(view));
-         assert ofType.contains(toTest) : String.format("%s not found in %s for %s", toTest, ofType,
-                  view);
+         assertThat(ofType.contains(toTest)).as(String.format("%s not found in %s for %s", toTest, ofType,
+                  view)).isTrue();
       }
    }
 
    @Test
    public void testAllContains() {
       ImmutableSet<ProviderMetadata> all = ImmutableSet.copyOf(Providers.all());
-      assert all.contains(toTest) : String.format("%s not found in %s", toTest, all);
+      assertThat(all.contains(toTest)).as(String.format("%s not found in %s", toTest, all)).isTrue();
    }
 
 }

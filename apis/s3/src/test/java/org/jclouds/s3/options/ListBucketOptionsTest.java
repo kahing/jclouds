@@ -16,6 +16,7 @@
  */
 package org.jclouds.s3.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.afterMarker;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.delimiter;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.maxResults;
@@ -36,8 +37,8 @@ public class ListBucketOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(ListBucketOptions.class);
-      assert !String.class.isAssignableFrom(ListBucketOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(ListBucketOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(ListBucketOptions.class)).isTrue();
    }
 
    @Test

@@ -18,6 +18,7 @@ package org.jclouds.http.functions;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.LOCATION;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -54,7 +55,7 @@ public class ParseURIFromListOrLocationHeaderIf20xTest {
       try {
          function.apply(response);
       } catch (Exception e) {
-         assert e.getMessage().equals("no content");
+         assertThat(e.getMessage().equals("no content")).isTrue();
       }
       verify(payload);
       verify(response);
@@ -78,7 +79,7 @@ public class ParseURIFromListOrLocationHeaderIf20xTest {
       try {
          function.apply(response);
       } catch (Exception e) {
-         assert e.equals(exception);
+         assertThat(e.equals(exception)).isTrue();
       }
       verify(payload);
       verify(response);

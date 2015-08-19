@@ -18,6 +18,7 @@ package org.jclouds.aws.ec2.compute;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.newTreeSet;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.compute.domain.OsFamily.AMZN_LINUX;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.runAsRoot;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
@@ -115,7 +116,7 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
          template.getOptions().as(AWSEC2TemplateOptions.class).keyPair(result.getKeyName());
 
          // pass in the private key, so that we can run a script with it
-         assert result.getKeyMaterial() != null : result;
+         assertThat(result.getKeyMaterial() != null).as(String.valueOf(result)).isTrue();
          template.getOptions().overrideLoginPrivateKey(result.getKeyMaterial());
 
          Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
@@ -124,8 +125,8 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
          checkUserMetadataContains(first, userMetadata);
          checkTagsInNodeEquals(first, tags);
 
-         assert first.getCredentials() != null : first;
-         assert first.getCredentials().identity != null : first;
+         assertThat(first.getCredentials() != null).as(String.valueOf(first)).isTrue();
+         assertThat(first.getCredentials().identity != null).as(String.valueOf(first)).isTrue();
 
          startedId = first.getProviderId();
 
@@ -133,7 +134,7 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
                   .describeInstancesInRegion(region, startedId))));
 
          assertEquals(instance.getKeyName(), group);
-         assert instance.getSpotInstanceRequestId() != null;
+         assertThat(instance.getSpotInstanceRequestId() != null).isTrue();
          assertEquals(instance.getMonitoringState(), MonitoringState.ENABLED);
 
          // generate some load
@@ -163,7 +164,7 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
                                                              .period(60)
                                                              .statistic(Statistics.AVERAGE)
                                                              .build());
-            assert !datapoints.isEmpty() : instance;
+            assertThat(!datapoints.isEmpty()).as(String.valueOf(instance)).isTrue();
          } finally {
             monitoringApi.close();
          }
@@ -175,7 +176,7 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
          SecurityGroup secgroup = getOnlyElement(securityGroupApi.describeSecurityGroupsInRegion(instance
                   .getRegion(), "jclouds#" + group));
 
-         assert secgroup.size() == 0 : secgroup;
+         assertThat(secgroup.size() == 0).as(String.valueOf(secgroup)).isTrue();
 
          // try to run a script with the original keyPair
          runScriptWithCreds(group, first.getOperatingSystem(), LoginCredentials.builder().user(
@@ -202,14 +203,14 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
 
       assertEquals(defaultSize, smallest);
 
-      assert getCores(smallest) <= getCores(fastest) : String.format("%s ! <= %s", smallest, fastest);
+      assertThat(getCores(smallest) <= getCores(fastest)).as(String.format("%s ! <= %s", smallest, fastest)).isTrue();
       // m4.10xlarge is slower but has more cores than c4.8xlarge
       // assert getCores(biggest) <= getCores(fastest) : String.format("%s ! <= %s", biggest, fastest);
       // assert getCores(fastest) >= getCores(biggest) : String.format("%s ! >= %s", fastest, biggest);
 
-      assert biggest.getRam() >= fastest.getRam() : String.format("%s ! >= %s", biggest, fastest);
-      assert biggest.getRam() >= smallest.getRam() : String.format("%s ! >= %s", biggest, smallest);
+      assertThat(biggest.getRam() >= fastest.getRam()).as(String.format("%s ! >= %s", biggest, fastest)).isTrue();
+      assertThat(biggest.getRam() >= smallest.getRam()).as(String.format("%s ! >= %s", biggest, smallest)).isTrue();
 
-      assert getCores(fastest) >= getCores(smallest) : String.format("%s ! >= %s", fastest, smallest);
+      assertThat(getCores(fastest) >= getCores(smallest)).as(String.format("%s ! >= %s", fastest, smallest)).isTrue();
    }
 }

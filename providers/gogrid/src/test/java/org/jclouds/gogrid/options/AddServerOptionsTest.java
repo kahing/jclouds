@@ -16,6 +16,7 @@
  */
 package org.jclouds.gogrid.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.gogrid.options.AddServerOptions.Builder.asSandboxType;
 import static org.jclouds.gogrid.options.AddServerOptions.Builder.withDescription;
 import static org.testng.Assert.assertEquals;
@@ -34,8 +35,8 @@ public class AddServerOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(AddServerOptions.class);
-      assert !String.class.isAssignableFrom(AddServerOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(AddServerOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(AddServerOptions.class)).isTrue();
    }
 
    @Test

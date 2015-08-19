@@ -20,6 +20,8 @@ import org.jclouds.cloudstack.domain.Capabilities;
 import org.jclouds.cloudstack.internal.BaseCloudStackApiLiveTest;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests behavior of {@code ConfigurationApiLiveTest}
  */
@@ -28,8 +30,8 @@ public class ConfigurationApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListCapabilities() throws Exception {
       Capabilities response = client.getConfigurationApi().listCapabilities();
-      assert null != response;
-      assert null != response.getCloudStackVersion();
+      assertThat(null != response).isTrue();
+      assertThat(null != response.getCloudStackVersion()).isTrue();
    }
 
 }

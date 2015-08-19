@@ -26,6 +26,8 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Module;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test(groups = "live", enabled = true, singleThreaded = true)
 public class SoftLayerComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
@@ -42,8 +44,8 @@ public class SoftLayerComputeServiceLiveTest extends BaseComputeServiceLiveTest 
    // softlayer does not support metadata
    @Override
    protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
-      assert node.getUserMetadata().equals(ImmutableMap.<String, String> of()) : String.format(
-            "node userMetadata did not match %s %s", userMetadata, node);
+      assertThat(node.getUserMetadata().equals(ImmutableMap.<String, String> of())).as(String.format(
+            "node userMetadata did not match %s %s", userMetadata, node)).isTrue();
    }
 
    @Override

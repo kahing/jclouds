@@ -16,6 +16,7 @@
  */
 package org.jclouds.http.functions;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -47,7 +48,7 @@ public class ReturnStringIf200Test {
 
       replay(payload);
       replay(response);
-      assert function.apply(response) == null;
+      assertThat(function.apply(response) == null).isTrue();
 
       verify(payload);
       verify(response);
@@ -71,7 +72,7 @@ public class ReturnStringIf200Test {
       try {
          function.apply(response);
       } catch (Exception e) {
-         assert e.equals(exception);
+         assertThat(e.equals(exception)).isTrue();
       }
       verify(payload);
       verify(response);

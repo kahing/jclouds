@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.BundleInstanceS3StorageOptions.Builder.bucketOwnedBy;
 import static org.testng.Assert.assertEquals;
 
@@ -34,8 +35,8 @@ public class BundleInstanceS3StorageOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(BundleInstanceS3StorageOptions.class);
-      assert !String.class.isAssignableFrom(BundleInstanceS3StorageOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(BundleInstanceS3StorageOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(BundleInstanceS3StorageOptions.class)).isTrue();
    }
 
    @Test

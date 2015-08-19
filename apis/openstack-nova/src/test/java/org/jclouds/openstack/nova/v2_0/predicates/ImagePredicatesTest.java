@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.nova.v2_0.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.nova.v2_0.predicates.ImagePredicates.statusEquals;
 
 import org.jclouds.openstack.nova.v2_0.domain.Image;
@@ -29,12 +30,12 @@ public class ImagePredicatesTest {
 
    @Test
    public void teststatusEqualsWhenEqual() {
-      assert statusEquals(Status.SAVING).apply(ref);
+      assertThat(statusEquals(Status.SAVING).apply(ref)).isTrue();
    }
 
    @Test
    public void teststatusEqualsWhenNotEqual() {
-      assert !statusEquals(Status.DELETED).apply(ref);
+      assertThat(!statusEquals(Status.DELETED).apply(ref)).isTrue();
    }
 
 }

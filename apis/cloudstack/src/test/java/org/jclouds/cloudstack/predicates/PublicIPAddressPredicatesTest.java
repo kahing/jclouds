@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.predicates.PublicIPAddressPredicates.available;
 
 import org.jclouds.cloudstack.domain.PublicIPAddress;
@@ -27,14 +28,14 @@ public class PublicIPAddressPredicatesTest {
    public void testIsAvailableWhenAllocated() {
       PublicIPAddress address = PublicIPAddress.builder().state(PublicIPAddress.State.ALLOCATED).id("204").build();
 
-      assert available().apply(address);
+      assertThat(available().apply(address)).isTrue();
 
    }
 
    public void testIsNotAvailableWhenNotAllocated() {
       PublicIPAddress address = PublicIPAddress.builder().state(PublicIPAddress.State.ALLOCATING).id("204").build();
 
-      assert !available().apply(address);
+      assertThat(!available().apply(address)).isTrue();
 
    }
 
@@ -42,7 +43,7 @@ public class PublicIPAddressPredicatesTest {
       PublicIPAddress address = PublicIPAddress.builder().state(PublicIPAddress.State.ALLOCATED).virtualMachineId("1")
             .id("204").build();
 
-      assert !available().apply(address);
+      assertThat(!available().apply(address)).isTrue();
 
    }
 
@@ -50,7 +51,7 @@ public class PublicIPAddressPredicatesTest {
       PublicIPAddress address = PublicIPAddress.builder().state(PublicIPAddress.State.ALLOCATED).isSourceNAT(true)
             .id("204").build();
 
-      assert !available().apply(address);
+      assertThat(!available().apply(address)).isTrue();
 
    }
 
@@ -58,7 +59,7 @@ public class PublicIPAddressPredicatesTest {
       PublicIPAddress address = PublicIPAddress.builder().state(PublicIPAddress.State.ALLOCATED).isStaticNAT(true)
             .id("204").build();
 
-      assert !available().apply(address);
+      assertThat(!available().apply(address)).isTrue();
 
    }
 }

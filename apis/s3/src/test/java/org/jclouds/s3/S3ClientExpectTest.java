@@ -18,6 +18,7 @@ package org.jclouds.s3;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.hash.Hashing.md5;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -48,10 +49,10 @@ public class S3ClientExpectTest extends BaseS3ClientExpectTest {
                   .build()).build();
       
       S3Client clientWhenBucketExists = requestSendsResponse(bucketFooExists, HttpResponse.builder().statusCode(200).build());
-      assert clientWhenBucketExists.bucketExists("foo");
+      assertThat(clientWhenBucketExists.bucketExists("foo")).isTrue();
       
       S3Client clientWhenBucketDoesntExist = requestSendsResponse(bucketFooExists, HttpResponse.builder().statusCode(404).build());
-      assert !clientWhenBucketDoesntExist.bucketExists("foo");
+      assertThat(!clientWhenBucketDoesntExist.bucketExists("foo")).isTrue();
       
    }
 

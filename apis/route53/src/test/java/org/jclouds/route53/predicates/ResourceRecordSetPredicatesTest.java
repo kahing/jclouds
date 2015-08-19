@@ -16,6 +16,7 @@
  */
 package org.jclouds.route53.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.route53.predicates.ResourceRecordSetPredicates.typeEquals;
 
 import org.jclouds.route53.domain.ResourceRecordSet;
@@ -28,11 +29,11 @@ public class ResourceRecordSetPredicatesTest {
 
    @Test
    public void testTypeEqualsWhenEqual() {
-      assert typeEquals("NS").apply(rrs);
+      assertThat(typeEquals("NS").apply(rrs)).isTrue();
    }
 
    @Test
    public void testTypeEqualsWhenNotEqual() {
-      assert !typeEquals("AAAA").apply(rrs);
+      assertThat(!typeEquals("AAAA").apply(rrs)).isTrue();
    }
 }

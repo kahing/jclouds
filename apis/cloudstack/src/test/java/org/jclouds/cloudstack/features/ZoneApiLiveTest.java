@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -37,7 +38,7 @@ public class ZoneApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListZones() throws Exception {
       Set<Zone> response = client.getZoneApi().listZones();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long zoneCount = response.size();
       assertTrue(zoneCount >= 0);
       for (Zone zone : response) {
@@ -45,9 +46,9 @@ public class ZoneApiLiveTest extends BaseCloudStackApiLiveTest {
                ListZonesOptions.Builder.id(zone.getId())));
          assertEquals(zone, newDetails);
          assertEquals(zone, client.getZoneApi().getZone(zone.getId()));
-         assert zone.getId() != null : zone;
-         assert zone.getName() != null : zone;
-         assert zone.getNetworkType() != null && zone.getNetworkType() != NetworkType.UNRECOGNIZED : zone;
+         assertThat(zone.getId() != null).as(String.valueOf(zone)).isTrue();
+         assertThat(zone.getName() != null).as(String.valueOf(zone)).isTrue();
+         assertThat(zone.getNetworkType() != null && zone.getNetworkType() != NetworkType.UNRECOGNIZED).as(String.valueOf(zone)).isTrue();
          switch (zone.getNetworkType()) {
          case ADVANCED:
             // TODO
@@ -57,12 +58,12 @@ public class ZoneApiLiveTest extends BaseCloudStackApiLiveTest {
             // assert zone.getGuestCIDRAddress() != null : zone;
             break;
          case BASIC:
-            assert zone.getVLAN() == null : zone;
-            assert zone.getDNS().size() > 0 : zone;
-            assert zone.getInternalDNS().size() > 0 : zone;
-            assert zone.getDomain() == null : zone;
-            assert zone.getDomainId() == null : zone;
-            assert zone.getGuestCIDRAddress() == null : zone;
+            assertThat(zone.getVLAN() == null).as(String.valueOf(zone)).isTrue();
+            assertThat(zone.getDNS().size() > 0).as(String.valueOf(zone)).isTrue();
+            assertThat(zone.getInternalDNS().size() > 0).as(String.valueOf(zone)).isTrue();
+            assertThat(zone.getDomain() == null).as(String.valueOf(zone)).isTrue();
+            assertThat(zone.getDomainId() == null).as(String.valueOf(zone)).isTrue();
+            assertThat(zone.getGuestCIDRAddress() == null).as(String.valueOf(zone)).isTrue();
             break;
          }
 

@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -134,15 +135,15 @@ public class SecurityGroupApiLiveTest extends BaseCloudStackApiLiveTest {
 
       });
 
-      assert ICMPPingRule.getId() != null : ICMPPingRule;
-      assert "icmp".equals(ICMPPingRule.getProtocol()) : ICMPPingRule;
-      assert ICMPPingRule.getStartPort() == -1 : ICMPPingRule;
-      assert ICMPPingRule.getEndPort() == -1 : ICMPPingRule;
-      assert ICMPPingRule.getICMPCode() == 0 : ICMPPingRule;
-      assert ICMPPingRule.getICMPType() == 8 : ICMPPingRule;
-      assert ICMPPingRule.getAccount() == null : ICMPPingRule;
-      assert ICMPPingRule.getSecurityGroupName() == null : ICMPPingRule;
-      assert cidr.equals(ICMPPingRule.getCIDR()) : ICMPPingRule;
+      assertThat(ICMPPingRule.getId() != null).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat("icmp".equals(ICMPPingRule.getProtocol())).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat(ICMPPingRule.getStartPort() == -1).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat(ICMPPingRule.getEndPort() == -1).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat(ICMPPingRule.getICMPCode() == 0).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat(ICMPPingRule.getICMPType() == 8).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat(ICMPPingRule.getAccount() == null).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat(ICMPPingRule.getSecurityGroupName() == null).as(String.valueOf(ICMPPingRule)).isTrue();
+      assertThat(cidr.equals(ICMPPingRule.getCIDR())).as(String.valueOf(ICMPPingRule)).isTrue();
 
       IngressRule SSHRule = Iterables.find(group.getIngressRules(), new Predicate<IngressRule>() {
 
@@ -153,15 +154,15 @@ public class SecurityGroupApiLiveTest extends BaseCloudStackApiLiveTest {
 
       });
 
-      assert SSHRule.getId() != null : SSHRule;
-      assert "tcp".equals(SSHRule.getProtocol()) : SSHRule;
-      assert SSHRule.getStartPort() == 22 : SSHRule;
-      assert SSHRule.getEndPort() == 22 : SSHRule;
-      assert SSHRule.getICMPCode() == -1 : SSHRule;
-      assert SSHRule.getICMPType() == -1 : SSHRule;
-      assert SSHRule.getAccount() == null : SSHRule;
-      assert SSHRule.getSecurityGroupName() == null : SSHRule;
-      assert cidr.equals(SSHRule.getCIDR()) : SSHRule;
+      assertThat(SSHRule.getId() != null).as(String.valueOf(SSHRule)).isTrue();
+      assertThat("tcp".equals(SSHRule.getProtocol())).as(String.valueOf(SSHRule)).isTrue();
+      assertThat(SSHRule.getStartPort() == 22).as(String.valueOf(SSHRule)).isTrue();
+      assertThat(SSHRule.getEndPort() == 22).as(String.valueOf(SSHRule)).isTrue();
+      assertThat(SSHRule.getICMPCode() == -1).as(String.valueOf(SSHRule)).isTrue();
+      assertThat(SSHRule.getICMPType() == -1).as(String.valueOf(SSHRule)).isTrue();
+      assertThat(SSHRule.getAccount() == null).as(String.valueOf(SSHRule)).isTrue();
+      assertThat(SSHRule.getSecurityGroupName() == null).as(String.valueOf(SSHRule)).isTrue();
+      assertThat(cidr.equals(SSHRule.getCIDR())).as(String.valueOf(SSHRule)).isTrue();
 
    }
 
@@ -193,12 +194,12 @@ public class SecurityGroupApiLiveTest extends BaseCloudStackApiLiveTest {
          assertEquals(group, client.getSecurityGroupApi().getSecurityGroup(group.getId()));
          assertEquals(group, client.getSecurityGroupApi().getSecurityGroupByName(group.getName()));
       }
-      assert group.getId() != null : group;
-      assert group.getName() != null : group;
-      assert group.getAccount() != null : group;
-      assert group.getDomain() != null : group;
-      assert group.getDomainId() != null : group;
-      assert group.getIngressRules() != null : group;
+      assertThat(group.getId() != null).as(String.valueOf(group)).isTrue();
+      assertThat(group.getName() != null).as(String.valueOf(group)).isTrue();
+      assertThat(group.getAccount() != null).as(String.valueOf(group)).isTrue();
+      assertThat(group.getDomain() != null).as(String.valueOf(group)).isTrue();
+      assertThat(group.getDomainId() != null).as(String.valueOf(group)).isTrue();
+      assertThat(group.getIngressRules() != null).as(String.valueOf(group)).isTrue();
    }
 
    @Test

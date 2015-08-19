@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.DescribeAvailabilityZonesOptions.Builder.availabilityZones;
 import static org.jclouds.ec2.options.DescribeRegionsOptions.Builder.regions;
 import static org.testng.Assert.assertEquals;
@@ -59,7 +60,7 @@ public class AvailabilityZoneAndRegionApiLiveTest extends BaseComputeServiceCont
       for (String region : ec2Api.getConfiguredRegions()) {
          Set<AvailabilityZoneInfo> allResults = client.describeAvailabilityZonesInRegion(region);
          assertNotNull(allResults);
-         assert !allResults.isEmpty() : allResults.size();
+         assertThat(!allResults.isEmpty()).as(String.valueOf(allResults.size())).isTrue();
          Iterator<AvailabilityZoneInfo> iterator = allResults.iterator();
          String id1 = iterator.next().getZone();
          Set<AvailabilityZoneInfo> oneResult = client.describeAvailabilityZonesInRegion(region,
@@ -75,7 +76,7 @@ public class AvailabilityZoneAndRegionApiLiveTest extends BaseComputeServiceCont
       SortedMap<String, URI> allResults = Maps.newTreeMap();
       allResults.putAll(client.describeRegions());
       assertNotNull(allResults);
-      assert !allResults.isEmpty() : allResults.size();
+      assertThat(!allResults.isEmpty()).as(String.valueOf(allResults.size())).isTrue();
       Iterator<Entry<String, URI>> iterator = allResults.entrySet().iterator();
       String r1 = iterator.next().getKey();
       SortedMap<String, URI> oneResult = Maps.newTreeMap();

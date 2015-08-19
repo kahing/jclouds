@@ -18,6 +18,7 @@ package org.jclouds.http.handlers;
 
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.LOCATION;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -59,7 +60,7 @@ public class RedirectionRetryHandlerTest {
 
       RedirectionRetryHandler retry = injector.getInstance(RedirectionRetryHandler.class);
 
-      assert !retry.shouldRetryRequest(command, response);
+      assertThat(!retry.shouldRetryRequest(command, response)).isTrue();
 
       verify(command);
 
@@ -81,7 +82,7 @@ public class RedirectionRetryHandlerTest {
 
       RedirectionRetryHandler retry = injector.getInstance(RedirectionRetryHandler.class);
 
-      assert !retry.shouldRetryRequest(command, response);
+      assertThat(!retry.shouldRetryRequest(command, response)).isTrue();
 
       verify(command);
 
@@ -178,7 +179,7 @@ public class RedirectionRetryHandlerTest {
 
       RedirectionRetryHandler retry = injector.getInstance(RedirectionRetryHandler.class);
 
-      assert retry.shouldRetryRequest(command, response);
+      assertThat(retry.shouldRetryRequest(command, response)).isTrue();
       verify(command);
    }
 }

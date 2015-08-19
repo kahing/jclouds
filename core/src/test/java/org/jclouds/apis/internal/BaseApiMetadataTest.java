@@ -16,6 +16,7 @@
  */
 package org.jclouds.apis.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
@@ -51,15 +52,15 @@ public abstract class BaseApiMetadataTest {
    public void testTransformableToContains() {
       for (TypeToken<? extends View> view : views) {
          ImmutableSet<ApiMetadata> ofType = ImmutableSet.copyOf(Apis.viewableAs(view));
-         assert ofType.contains(toTest) : String.format("%s not found in %s for %s", toTest, ofType,
-                  view);
+         assertThat(ofType.contains(toTest)).as(String.format("%s not found in %s for %s", toTest, ofType,
+                  view)).isTrue();
       }
    }
 
    @Test
    public void testAllContains() {
       ImmutableSet<ApiMetadata> all = ImmutableSet.copyOf(Apis.all());
-      assert all.contains(toTest) : String.format("%s not found in %s", toTest, all);
+      assertThat(all.contains(toTest)).as(String.format("%s not found in %s", toTest, all)).isTrue();
    }
 
 }

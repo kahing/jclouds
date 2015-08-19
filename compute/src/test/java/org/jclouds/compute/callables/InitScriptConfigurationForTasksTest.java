@@ -17,6 +17,7 @@
 package org.jclouds.compute.callables;
 
 import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;
@@ -62,11 +63,11 @@ public class InitScriptConfigurationForTasksTest {
    public void testCurrentTimeSupplier() throws InterruptedException {
       InitScriptConfigurationForTasks config = InitScriptConfigurationForTasks.create();
       long time1 = Long.parseLong(config.getAnonymousTaskSuffixSupplier().get());
-      assert time1 <= System.currentTimeMillis();
+      assertThat(time1 <= System.currentTimeMillis()).isTrue();
       Thread.sleep(10);
       long time2 = Long.parseLong(config.getAnonymousTaskSuffixSupplier().get());
-      assert time2 <= System.currentTimeMillis();
-      assert time2 > time1;
+      assertThat(time2 <= System.currentTimeMillis()).isTrue();
+      assertThat(time2 > time1).isTrue();
    }
 
    public void testIncrementingTimeSupplier() throws InterruptedException {

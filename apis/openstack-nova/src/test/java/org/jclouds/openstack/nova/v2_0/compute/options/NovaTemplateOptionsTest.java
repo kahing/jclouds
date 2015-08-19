@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.nova.v2_0.compute.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.authorizePublicKey;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.autoAssignFloatingIp;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.blockOnPort;
@@ -94,37 +95,37 @@ public class NovaTemplateOptionsTest {
    @Test
    public void testautoAssignFloatingIpDefault() {
       NovaTemplateOptions options = new NovaTemplateOptions();
-      assert !options.shouldAutoAssignFloatingIp();
+      assertThat(!options.shouldAutoAssignFloatingIp()).isTrue();
    }
 
    @Test
    public void testautoAssignFloatingIp() {
       NovaTemplateOptions options = new NovaTemplateOptions().autoAssignFloatingIp(true);
-      assert options.shouldAutoAssignFloatingIp();
+      assertThat(options.shouldAutoAssignFloatingIp()).isTrue();
    }
 
    @Test
    public void testautoAssignFloatingIpStatic() {
       NovaTemplateOptions options = autoAssignFloatingIp(true);
-      assert options.shouldAutoAssignFloatingIp();
+      assertThat(options.shouldAutoAssignFloatingIp()).isTrue();
    }
 
    @Test
    public void testGenerateKeyPairDefault() {
       NovaTemplateOptions options = new NovaTemplateOptions();
-      assert !options.shouldGenerateKeyPair();
+      assertThat(!options.shouldGenerateKeyPair()).isTrue();
    }
 
    @Test
    public void testGenerateKeyPair() {
       NovaTemplateOptions options = new NovaTemplateOptions().generateKeyPair(true);
-      assert options.shouldGenerateKeyPair();
+      assertThat(options.shouldGenerateKeyPair()).isTrue();
    }
 
    @Test
    public void testGenerateKeyPairStatic() {
       NovaTemplateOptions options = generateKeyPair(true);
-      assert options.shouldGenerateKeyPair();
+      assertThat(options.shouldGenerateKeyPair()).isTrue();
    }
 
    // superclass tests

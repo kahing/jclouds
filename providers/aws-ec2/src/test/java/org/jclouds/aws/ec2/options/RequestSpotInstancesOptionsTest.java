@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.aws.ec2.options.RequestSpotInstancesOptions.Builder.availabilityZoneGroup;
 import static org.jclouds.aws.ec2.options.RequestSpotInstancesOptions.Builder.launchGroup;
 import static org.jclouds.aws.ec2.options.RequestSpotInstancesOptions.Builder.type;
@@ -38,8 +39,8 @@ public class RequestSpotInstancesOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(RequestSpotInstancesOptions.class);
-      assert !String.class.isAssignableFrom(RequestSpotInstancesOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(RequestSpotInstancesOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(RequestSpotInstancesOptions.class)).isTrue();
    }
 
    @Test

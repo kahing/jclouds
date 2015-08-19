@@ -16,6 +16,7 @@
  */
 package org.jclouds.atmos.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
@@ -52,18 +53,18 @@ public class ListOptionsTest {
 
    public void testNoMeta() {
       ListOptions options = new ListOptions();
-      assert !options.metaIncluded();
+      assertThat(!options.metaIncluded()).isTrue();
    }
 
    public void testMeta() {
       ListOptions options = new ListOptions().includeMeta();
       assertEquals(ImmutableList.of("1"), options.buildRequestHeaders().get("x-emc-include-meta"));
-      assert options.metaIncluded();
+      assertThat(options.metaIncluded()).isTrue();
    }
 
    public void testMetaStatic() {
       ListOptions options = ListOptions.Builder.includeMeta();
       assertEquals(ImmutableList.of("1"), options.buildRequestHeaders().get("x-emc-include-meta"));
-      assert options.metaIncluded();
+      assertThat(options.metaIncluded()).isTrue();
    }
 }

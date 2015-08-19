@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertNotNull;
 
 import java.util.Set;
@@ -52,7 +53,7 @@ public class AWSInstanceApiLiveTest extends BaseComputeServiceContextLiveTest {
       for (String region : view.unwrapApi(AWSEC2Api.class).getAvailabilityZoneAndRegionApi().get().describeRegions().keySet()) {
          Set<? extends Reservation<? extends RunningInstance>> allResults = client.describeInstancesInRegion(region);
          assertNotNull(allResults);
-         assert allResults.size() > 0 : allResults.size();
+         assertThat(allResults.size() > 0).as(String.valueOf(allResults.size())).isTrue();
       }
    }
 }

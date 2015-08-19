@@ -17,6 +17,7 @@
 package org.jclouds.cloudstack.features;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.options.ListConfigurationEntriesOptions.Builder.name;
 import static org.testng.Assert.assertEquals;
 
@@ -51,8 +52,8 @@ public class GlobalConfigurationApiLiveTest extends BaseCloudStackApiLiveTest {
          categories.add(entry.getCategory());
       }
 
-      assert categories.containsAll(ImmutableSet.<Object>of("Network", "Advanced",
-         "Storage", "Usage", "Snapshots", "Account Defaults", "Console Proxy", "Alert"));
+      assertThat(categories.containsAll(ImmutableSet.<Object>of("Network", "Advanced",
+         "Storage", "Usage", "Snapshots", "Account Defaults", "Console Proxy", "Alert"))).isTrue();
    }
 
    @Test
@@ -63,13 +64,13 @@ public class GlobalConfigurationApiLiveTest extends BaseCloudStackApiLiveTest {
          .getConfigurationApi().listConfigurationEntries();
 
       long expungeDelay = Long.parseLong(getValueByName(entries, "expunge.delay"));
-      assert expungeDelay > 0;
+      assertThat(expungeDelay > 0).isTrue();
 
       globalAdminClient.getConfigurationApi()
          .updateConfigurationEntry("expunge.delay", "" + (expungeDelay + 1));
 
       long newDelay = Long.parseLong(getOnlyElement(globalAdminClient.getConfigurationApi()
-         .listConfigurationEntries(name("expunge.delay"))).getValue());
+              .listConfigurationEntries(name("expunge.delay"))).getValue());
       assertEquals(newDelay, expungeDelay + 1);
 
       globalAdminClient.getConfigurationApi()
@@ -79,9 +80,9 @@ public class GlobalConfigurationApiLiveTest extends BaseCloudStackApiLiveTest {
    private void checkConfigurationEntry(ConfigurationEntry entry) {
       assertEquals(entry, getEntryByName(globalAdminClient.getConfigurationApi()
          .listConfigurationEntries(name(entry.getName())), entry.getName()));
-      assert entry.getCategory() != null : entry;
+      assertThat(entry.getCategory() != null).as(String.valueOf(entry)).isTrue();
       // Description apparently can be null, so ... assert entry.getDescription() != null : entry;
-      assert entry.getName() != null : entry;
+      assertThat(entry.getName() != null).as(String.valueOf(entry)).isTrue();
    }
 
    private String getValueByName(Set<ConfigurationEntry> entries, String name) {

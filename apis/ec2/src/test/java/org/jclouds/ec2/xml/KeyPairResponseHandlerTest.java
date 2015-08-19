@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.ec2.xml;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -67,8 +68,8 @@ public class KeyPairResponseHandlerTest extends BaseEC2HandlerTest {
 
       assertEquals(result, expected);
 
-      assert SshKeys.privateKeyHasSha1(result.getKeyMaterial(), result.getSha1OfPrivateKey());
-      assert SshKeys.privateKeyHasFingerprint(result.getKeyMaterial(), result.getFingerprint());
+      assertThat(SshKeys.privateKeyHasSha1(result.getKeyMaterial(), result.getSha1OfPrivateKey())).isTrue();
+      assertThat(SshKeys.privateKeyHasFingerprint(result.getKeyMaterial(), result.getFingerprint())).isTrue();
 
    }
 

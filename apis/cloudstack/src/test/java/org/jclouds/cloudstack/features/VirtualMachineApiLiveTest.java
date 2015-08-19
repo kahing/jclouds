@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.filter;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.isDefault;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -164,7 +165,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
          });
       VirtualMachine vm = jobWithResult.getResult();
       if (vm.isPasswordEnabled()) {
-         assert vm.getPassword() != null : vm;
+         assertThat(vm.getPassword() != null).as(String.valueOf(vm)).isTrue();
       }
       assertTrue(virtualMachineRunning.apply(vm));
       assertEquals(vm.getServiceOfferingId(), serviceOfferingId);
@@ -180,8 +181,8 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
       if (vm.getPassword() != null) {
          conditionallyCheckSSH();
       }
-      assert in(ImmutableSet.of("ROOT", "NetworkFilesystem", "IscsiLUN", "VMFS", "PreSetup"))
-         .apply(vm.getRootDeviceType()) : vm;
+      assertThat(in(ImmutableSet.of("ROOT", "NetworkFilesystem", "IscsiLUN", "VMFS", "PreSetup"))
+         .apply(vm.getRootDeviceType())).as(String.valueOf(vm)).isTrue();
       checkVm(vm);
    }
 
@@ -257,7 +258,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
                assertEquals(nic.getIPAddress(), ipAddress);
             }
          }
-         assert hasStaticIpNic;
+         assertThat(hasStaticIpNic).isTrue();
          checkVm(vm);
 
       } finally {
@@ -282,7 +283,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
    private void conditionallyCheckSSH() {
       if (vm.getPassword() != null && !loginCredentials.getOptionalPassword().isPresent())
          loginCredentials = loginCredentials.toBuilder().password(vm.getPassword()).build();
-      assert HostSpecifier.isValid(vm.getIPAddress());
+      assertThat(HostSpecifier.isValid(vm.getIPAddress())).isTrue();
       if (!InetAddresses2.isPrivateIPAddress(vm.getIPAddress())) {
          // not sure if the network is public or not, so we have to test
          HostAndPort socket = HostAndPort.fromParts(vm.getIPAddress(), 22);
@@ -334,7 +335,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
    @Test
    public void testListVirtualMachines() throws Exception {
       Set<VirtualMachine> response = client.getVirtualMachineApi().listVirtualMachines();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (VirtualMachine vm : response) {
          VirtualMachine newDetails = getOnlyElement(client.getVirtualMachineApi().listVirtualMachines(
@@ -346,53 +347,53 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
 
    protected void checkVm(VirtualMachine vm) {
       assertEquals(vm.getId(), client.getVirtualMachineApi().getVirtualMachine(vm.getId()).getId());
-      assert vm.getId() != null : vm;
-      assert vm.getName() != null : vm;
+      assertThat(vm.getId() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getName() != null).as(String.valueOf(vm)).isTrue();
       // vm.getDisplayName() can be null, so skip that check.
-      assert vm.getAccount() != null : vm;
-      assert vm.getDomain() != null : vm;
-      assert vm.getDomainId() != null : vm;
-      assert vm.getCreated() != null : vm;
-      assert vm.getState() != null : vm;
-      assert vm.getZoneId() != null : vm;
-      assert vm.getZoneName() != null : vm;
-      assert vm.getTemplateId() != null : vm;
-      assert vm.getTemplateName() != null : vm;
-      assert vm.getServiceOfferingId() != null : vm;
-      assert vm.getServiceOfferingName() != null : vm;
-      assert vm.getCpuCount() > 0 : vm;
-      assert vm.getCpuSpeed() > 0 : vm;
-      assert vm.getMemory() > 0 : vm;
-      assert vm.getGuestOSId() != null : vm;
-      assert vm.getRootDeviceId() != null : vm;
+      assertThat(vm.getAccount() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getDomain() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getDomainId() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getCreated() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getState() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getZoneId() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getZoneName() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getTemplateId() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getTemplateName() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getServiceOfferingId() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getServiceOfferingName() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getCpuCount() > 0).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getCpuSpeed() > 0).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getMemory() > 0).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getGuestOSId() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getRootDeviceId() != null).as(String.valueOf(vm)).isTrue();
       // assert vm.getRootDeviceType() != null : vm;
       if (vm.getJobId() != null)
-         assert vm.getJobStatus() != null : vm;
-      assert vm.getNICs() != null && !vm.getNICs().isEmpty() : vm;
+         assertThat(vm.getJobStatus() != null).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getNICs() != null && !vm.getNICs().isEmpty()).as(String.valueOf(vm)).isTrue();
       for (NIC nic : vm.getNICs()) {
-         assert nic.getId() != null : vm;
-         assert nic.getNetworkId() != null : vm;
-         assert nic.getTrafficType() != null : vm;
-         assert nic.getGuestIPType() != null : vm;
+         assertThat(nic.getId() != null).as(String.valueOf(vm)).isTrue();
+         assertThat(nic.getNetworkId() != null).as(String.valueOf(vm)).isTrue();
+         assertThat(nic.getTrafficType() != null).as(String.valueOf(vm)).isTrue();
+         assertThat(nic.getGuestIPType() != null).as(String.valueOf(vm)).isTrue();
          switch (vm.getState()) {
          case RUNNING:
-            assert nic.getNetmask() != null : vm;
-            assert nic.getGateway() != null : vm;
-            assert nic.getIPAddress() != null : vm;
+            assertThat(nic.getNetmask() != null).as(String.valueOf(vm)).isTrue();
+            assertThat(nic.getGateway() != null).as(String.valueOf(vm)).isTrue();
+            assertThat(nic.getIPAddress() != null).as(String.valueOf(vm)).isTrue();
             break;
          case STARTING:
-            assert nic.getNetmask() == null : vm;
-            assert nic.getGateway() == null : vm;
-            assert nic.getIPAddress() == null : vm;
+            assertThat(nic.getNetmask() == null).as(String.valueOf(vm)).isTrue();
+            assertThat(nic.getGateway() == null).as(String.valueOf(vm)).isTrue();
+            assertThat(nic.getIPAddress() == null).as(String.valueOf(vm)).isTrue();
             break;
          default:
-            assert nic.getNetmask() != null : vm;
-            assert nic.getGateway() != null : vm;
-            assert nic.getIPAddress() != null : vm;
+            assertThat(nic.getNetmask() != null).as(String.valueOf(vm)).isTrue();
+            assertThat(nic.getGateway() != null).as(String.valueOf(vm)).isTrue();
+            assertThat(nic.getIPAddress() != null).as(String.valueOf(vm)).isTrue();
          }
 
       }
-      assert vm.getSecurityGroups() != null && vm.getSecurityGroups().size() > 0 : vm;
-      assert vm.getHypervisor() != null : vm;
+      assertThat(vm.getSecurityGroups() != null && vm.getSecurityGroups().size() > 0).as(String.valueOf(vm)).isTrue();
+      assertThat(vm.getHypervisor() != null).as(String.valueOf(vm)).isTrue();
    }
 }

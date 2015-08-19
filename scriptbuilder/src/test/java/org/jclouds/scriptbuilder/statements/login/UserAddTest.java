@@ -16,6 +16,7 @@
  */
 package org.jclouds.scriptbuilder.statements.login;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.scriptbuilder.domain.OsFamily;
@@ -63,8 +64,8 @@ public class UserAddTest {
 
    public void testWithPasswordUNIX() {
       String userAdd = UserAdd.builder().cryptFunction(crypt).login("me").password("password").group("wheel").build().render(OsFamily.UNIX);
-      assert userAdd.startsWith("mkdir -p /home/users\nchmod 0755 /home/users\ngroupadd -f wheel\nuseradd -c me -s /bin/bash -g wheel -m  -d /home/users/me -p 'CRYPT'") : userAdd;
-      assert userAdd.endsWith("' me\nchown -R me /home/users/me\n") : userAdd;
+      assertThat(userAdd.startsWith("mkdir -p /home/users\nchmod 0755 /home/users\ngroupadd -f wheel\nuseradd -c me -s /bin/bash -g wheel -m  -d /home/users/me -p 'CRYPT'")).as(userAdd).isTrue();
+      assertThat(userAdd.endsWith("' me\nchown -R me /home/users/me\n")).as(userAdd).isTrue();
    }
 
    public void testWithSshAuthorizedKeyUNIX() {

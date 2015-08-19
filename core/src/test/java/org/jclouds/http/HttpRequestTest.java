@@ -17,6 +17,7 @@
 package org.jclouds.http;
 
 import static com.google.common.net.MediaType.FORM_DATA;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
@@ -35,7 +36,7 @@ public class HttpRequestTest {
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testConstructorHostNull() throws Exception {
       URI uri = URI.create("http://adriancole.compute1138eu.s3-external-3.amazonaws.com:-1");
-      assert uri.getHost() == null : "test requires something to produce a uri with a null hostname";
+      assertThat(uri.getHost() == null).as("test requires something to produce a uri with a null hostname").isTrue();
       HttpRequest.builder().method("GET").endpoint(uri).build();
    }
 

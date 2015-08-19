@@ -16,6 +16,7 @@
  */
 package org.jclouds.http.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.http.utils.Queries.queryParser;
 import static org.testng.Assert.assertEquals;
 
@@ -49,22 +50,22 @@ public class QueriesTest {
    @Test
    public void testParseQueryToMapSingleParam() {
       Multimap<String, String> parsedMap = queryParser().apply("v=1.3");
-      assert parsedMap.keySet().size() == 1 : "Expected 1 key, found: " + parsedMap.keySet().size();
-      assert parsedMap.keySet().contains("v") : "Expected v to be a part of the keys";
+      assertThat(parsedMap.keySet().size() == 1).as("Expected 1 key, found: " + parsedMap.keySet().size()).isTrue();
+      assertThat(parsedMap.keySet().contains("v")).as("Expected v to be a part of the keys").isTrue();
       String valueForV = Iterables.getOnlyElement(parsedMap.get("v"));
-      assert valueForV.equals("1.3") : "Expected the value for 'v' to be '1.3', found: " + valueForV;
+      assertThat(valueForV.equals("1.3")).as("Expected the value for 'v' to be '1.3', found: " + valueForV).isTrue();
    }
 
    @Test
    public void testParseQueryToMapMultiParam() {
       Multimap<String, String> parsedMap = queryParser().apply("v=1.3&sig=123");
-      assert parsedMap.keySet().size() == 2 : "Expected 2 keys, found: " + parsedMap.keySet().size();
-      assert parsedMap.keySet().contains("v") : "Expected v to be a part of the keys";
-      assert parsedMap.keySet().contains("sig") : "Expected sig to be a part of the keys";
+      assertThat(parsedMap.keySet().size() == 2).as("Expected 2 keys, found: " + parsedMap.keySet().size()).isTrue();
+      assertThat(parsedMap.keySet().contains("v")).as("Expected v to be a part of the keys").isTrue();
+      assertThat(parsedMap.keySet().contains("sig")).as("Expected sig to be a part of the keys").isTrue();
       String valueForV = Iterables.getOnlyElement(parsedMap.get("v"));
-      assert valueForV.equals("1.3") : "Expected the value for 'v' to be '1.3', found: " + valueForV;
+      assertThat(valueForV.equals("1.3")).as("Expected the value for 'v' to be '1.3', found: " + valueForV).isTrue();
       String valueForSig = Iterables.getOnlyElement(parsedMap.get("sig"));
-      assert valueForSig.equals("123") : "Expected the value for 'v' to be '123', found: " + valueForSig;
+      assertThat(valueForSig.equals("123")).as("Expected the value for 'v' to be '123', found: " + valueForSig).isTrue();
    }
 
    @Test

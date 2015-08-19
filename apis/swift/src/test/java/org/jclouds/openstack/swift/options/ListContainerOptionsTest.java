@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.swift.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.swift.options.ListContainerOptions.Builder.afterMarker;
 import static org.jclouds.openstack.swift.options.ListContainerOptions.Builder.maxResults;
 import static org.jclouds.openstack.swift.options.ListContainerOptions.Builder.underPath;
@@ -36,8 +37,8 @@ public class ListContainerOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(ListContainerOptions.class);
-      assert !String.class.isAssignableFrom(ListContainerOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(ListContainerOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(ListContainerOptions.class)).isTrue();
    }
 
    @Test

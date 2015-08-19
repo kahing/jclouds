@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.RegisterImageOptions.Builder.asArchitecture;
 import static org.jclouds.ec2.options.RegisterImageOptions.Builder.withDescription;
 import static org.jclouds.ec2.options.RegisterImageOptions.Builder.withKernelId;
@@ -35,8 +36,8 @@ public class RegisterImageOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(RegisterImageOptions.class);
-      assert !String.class.isAssignableFrom(RegisterImageOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(RegisterImageOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(RegisterImageOptions.class)).isTrue();
    }
 
    @Test

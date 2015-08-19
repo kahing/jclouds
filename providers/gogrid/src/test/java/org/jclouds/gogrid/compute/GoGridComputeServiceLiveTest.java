@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
@@ -55,8 +56,8 @@ public class GoGridComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    // gogrid does not support metadata
    @Override
    protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
-      assert node.getUserMetadata().equals(ImmutableMap.<String, String> of()) : String.format(
-            "node userMetadata did not match %s %s", userMetadata, node);
+      assertThat(node.getUserMetadata().equals(ImmutableMap.<String, String> of())).as(String.format(
+            "node userMetadata did not match %s %s", userMetadata, node)).isTrue();
    }
    
    protected void checkResponseEqualsHostname(ExecResponse execResponse, NodeMetadata node1) {
@@ -80,7 +81,7 @@ public class GoGridComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
          Server updatedServer = api.getServerServices().editServerRam(Long.valueOf(node.getId()), ram);
          assertNotNull(updatedServer);
-         assert serverLatestJobCompleted.apply(updatedServer);
+         assertThat(serverLatestJobCompleted.apply(updatedServer)).isTrue();
 
          assertEquals(getLast(api.getServerServices().getServersById(Long.valueOf(node.getId()))).getRam().getName(),
                ram);

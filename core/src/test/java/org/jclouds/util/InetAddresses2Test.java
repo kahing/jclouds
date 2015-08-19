@@ -18,18 +18,20 @@ package org.jclouds.util;
 
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test(groups = "unit")
 public class InetAddresses2Test {
 
    @Test
    public void testPrivateIPAddress() {
-      assert InetAddresses2.isPrivateIPAddress("10.0.0.0");
-      assert !InetAddresses2.isPrivateIPAddress("11.0.0.0");
-      assert InetAddresses2.isPrivateIPAddress("172.16.0.0");
-      assert !InetAddresses2.isPrivateIPAddress("172.32.0.0");
-      assert InetAddresses2.isPrivateIPAddress("172.16.0.0");
-      assert !InetAddresses2.isPrivateIPAddress("192.169.0.0");
-      assert InetAddresses2.isPrivateIPAddress("192.168.0.0");
+      assertThat(InetAddresses2.isPrivateIPAddress("10.0.0.0")).isTrue();
+      assertThat(!InetAddresses2.isPrivateIPAddress("11.0.0.0")).isTrue();
+      assertThat(InetAddresses2.isPrivateIPAddress("172.16.0.0")).isTrue();
+      assertThat(!InetAddresses2.isPrivateIPAddress("172.32.0.0")).isTrue();
+      assertThat(InetAddresses2.isPrivateIPAddress("172.16.0.0")).isTrue();
+      assertThat(!InetAddresses2.isPrivateIPAddress("192.169.0.0")).isTrue();
+      assertThat(InetAddresses2.isPrivateIPAddress("192.168.0.0")).isTrue();
    }
 
 }

@@ -18,6 +18,7 @@ package org.jclouds.atmos;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkState;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
@@ -117,7 +118,7 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
    @Test
    public void testListDirectorys() throws Exception {
       BoundedSet<? extends DirectoryEntry> response = getApi().listDirectories();
-      assert null != response;
+      assertThat(null != response).isTrue();
    }
 
    String privateDirectory;
@@ -140,7 +141,7 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
       BoundedSet<? extends DirectoryEntry> response = getApi().listDirectories();
       for (DirectoryEntry id : response) {
          BoundedSet<? extends DirectoryEntry> r2 = getApi().listDirectory(id.getObjectName());
-         assert r2 != null;
+         assertThat(r2 != null).isTrue();
       }
       // subsequent creation should fail
       assertNull(getApi().createDirectory(privateDirectory));
@@ -155,11 +156,11 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
       createOrReplaceObject("object4", data, hashCode, "meta-value1");
       BoundedSet<? extends DirectoryEntry> r2 = getApi().listDirectory(privateDirectory, ListOptions.Builder.limit(1));
       assertEquals(r2.size(), 1);
-      assert r2.getToken() != null;
+      assertThat(r2.getToken() != null).isTrue();
       assertEquals(Iterables.getLast(Sets.newTreeSet(r2)).getObjectName(), "object2");
       r2 = getApi().listDirectory(privateDirectory, ListOptions.Builder.token(r2.getToken()));
       assertEquals(r2.size(), 2);
-      assert r2.getToken() == null;
+      assertThat(r2.getToken() == null).isTrue();
       assertEquals(Iterables.getLast(Sets.newTreeSet(r2)).getObjectName(), "object4");
    }
 
@@ -270,26 +271,26 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    private static void verifyMetadata(String metadataValue, AtmosObject getBlob) {
       assertEquals(getBlob.getContentMetadata().getContentLength(), Long.valueOf(16));
-      assert getBlob.getContentMetadata().getContentType().startsWith("text/plain");
+      assertThat(getBlob.getContentMetadata().getContentType().startsWith("text/plain")).isTrue();
       assertEquals(getBlob.getUserMetadata().getMetadata().get("Metadata"), metadataValue);
       SystemMetadata md = getBlob.getSystemMetadata();
       assertEquals(md.getSize(), 16);
-      assert md.getGroupID() != null;
+      assertThat(md.getGroupID() != null).isTrue();
       assertEquals(md.getHardLinkCount(), 1);
-      assert md.getInceptionTime() != null;
-      assert md.getLastAccessTime() != null;
-      assert md.getLastMetadataModification() != null;
-      assert md.getLastUserDataModification() != null;
-      assert md.getObjectID() != null;
+      assertThat(md.getInceptionTime() != null).isTrue();
+      assertThat(md.getLastAccessTime() != null).isTrue();
+      assertThat(md.getLastMetadataModification() != null).isTrue();
+      assertThat(md.getLastUserDataModification() != null).isTrue();
+      assertThat(md.getObjectID() != null).isTrue();
       assertEquals(md.getObjectName(), "object");
-      assert md.getPolicyName() != null;
+      assertThat(md.getPolicyName() != null).isTrue();
       assertEquals(md.getType(), FileType.REGULAR);
-      assert md.getUserID() != null;
+      assertThat(md.getUserID() != null).isTrue();
 
       try {
          Strings2.toStringAndClose(URI.create(
-                  "http://accesspoint.emccis.com/rest/objects/" + getBlob.getSystemMetadata().getObjectID()).toURL()
-                  .openStream());
+                 "http://accesspoint.emccis.com/rest/objects/" + getBlob.getSystemMetadata().getObjectID()).toURL()
+                 .openStream());
          fail("shouldn't have worked, since it is private");
       } catch (IOException e) {
 
@@ -330,9 +331,9 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
          getApi().deletePath(path);
       } catch (KeyNotFoundException ex) {
       }
-      assert !getApi().pathExists(path);
+      assertThat(!getApi().pathExists(path)).isTrue();
       System.err.printf("path %s doesn't exist%n", path);
-      assert !getApi().pathExists(path);
+      assertThat(!getApi().pathExists(path)).isTrue();
       System.err.printf("path %s doesn't exist%n", path);
 
    }

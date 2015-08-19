@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.compute;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorService.getArgsForRequestAtIndex;
 import static org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorService.getInvokerOfRequest;
 import static org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorService.getInvokerOfRequestAtIndex;
@@ -76,7 +77,7 @@ public abstract class EC2TemplateBuilderLiveTest extends BaseTemplateBuilderLive
             }
          });
          
-         assert filteredCommandsInvoked.size() == 1 : commandsInvoked;
+         assertThat(filteredCommandsInvoked.size() == 1).as(String.valueOf(commandsInvoked)).isTrue();
          assertInvokedCommand(getInvokerOfRequestAtIndex(filteredCommandsInvoked, 0), Invokable.from(AMIApi.class
                   .getMethod("describeImagesInRegion", String.class, DescribeImagesOptions[].class)));
          assertDescribeImagesOptionsEquals((DescribeImagesOptions[])getArgsForRequestAtIndex(filteredCommandsInvoked, 0).get(1), 
@@ -87,7 +88,7 @@ public abstract class EC2TemplateBuilderLiveTest extends BaseTemplateBuilderLive
             context.close();
       }
    }
-   
+
    private static void assertDescribeImagesOptionsEquals(DescribeImagesOptions[] actual, String expectedImageId) {
       assertEquals(actual.length, 1);
       assertEquals(actual[0].getImageIds(), ImmutableSet.of(expectedImageId));

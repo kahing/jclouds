@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
@@ -32,11 +33,11 @@ public class HypervisorApiLiveTest extends BaseCloudStackApiLiveTest {
 
    public void testListHypervisors() throws Exception {
       Set<String> response = client.getHypervisorApi().listHypervisors();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (Zone zone : client.getZoneApi().listZones()) {
          Set<String> zoneHype = client.getHypervisorApi().listHypervisorsInZone(zone.getId());
-         assert response.containsAll(zoneHype);
+         assertThat(response.containsAll(zoneHype)).isTrue();
       }
    }
 

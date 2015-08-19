@@ -18,6 +18,7 @@ package org.jclouds.aws.handlers;
 import static javax.ws.rs.HttpMethod.PUT;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.SERVICE_UNAVAILABLE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -108,7 +109,7 @@ public class AWSServerErrorRetryHandlerTest {
       AWSServerErrorRetryHandler retry = new AWSServerErrorRetryHandler(utils,
             ImmutableSet.of("RequestLimitExceeded", "InternalError"));
 
-      assert retry.shouldRetryRequest(command, response);
+      assertThat(retry.shouldRetryRequest(command, response)).isTrue();
 
       verify(utils, command);
 

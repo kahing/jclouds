@@ -17,6 +17,7 @@
 package org.jclouds.ec2;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.CreateSnapshotOptions.Builder.withDescription;
 import static org.jclouds.ec2.options.DescribeImagesOptions.Builder.imageIds;
 import static org.jclouds.ec2.options.RegisterImageBackedByEbsOptions.Builder.withKernelId;
@@ -218,14 +219,14 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
             VOLUME_SIZE);
       System.out.printf("%d: %s awaiting volume to become available%n", System.currentTimeMillis(), volume.getId());
 
-      assert volumeTester.apply(volume);
+      assertThat(volumeTester.apply(volume)).isTrue();
 
       Attachment attachment = client.getElasticBlockStoreApi().get().attachVolumeInRegion(instance.getRegion(),
             volume.getId(), instance.getId(), "/dev/sdh");
 
       System.out.printf("%d: %s awaiting attachment to complete%n", System.currentTimeMillis(), attachment.getId());
 
-      assert attachTester.apply(attachment);
+      assertThat(attachTester.apply(attachment)).isTrue();
       System.out.printf("%d: %s attachment complete%n", System.currentTimeMillis(), attachment.getId());
    }
 
@@ -282,7 +283,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
          System.out.println(output);
          output = ssh.exec(script + " status");
 
-         assert !output.getOutput().trim().equals("") : output;
+         assertThat(!output.getOutput().trim().equals("")).as(String.valueOf(output)).isTrue();
          Predicate<String> scriptTester = retry(new ScriptTester(ssh, SCRIPT_END), 600, 10, SECONDS);
          scriptTester.apply(script);
       } finally {
@@ -329,7 +330,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
          // should be cleanly unmounted, so force is not necessary.
          client.getElasticBlockStoreApi().get().detachVolumeInRegion(instance.getRegion(), volume.getId(), false);
          System.out.printf("%d: %s awaiting detachment to complete%n", System.currentTimeMillis(), volume.getId());
-         assert volumeTester.apply(volume);
+         assertThat(volumeTester.apply(volume)).isTrue();
       } else {
          attachment = null; // protect test closer so that it doesn't try to
          // detach
@@ -339,7 +340,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
 
       System.out.printf("%d: %s awaiting snapshot to complete%n", System.currentTimeMillis(), snapshot.getId());
 
-      assert snapshotTester.apply(snapshot);
+      assertThat(snapshotTester.apply(snapshot)).isTrue();
       Image image = Iterables.getOnlyElement(client.getAMIApi().get().describeImagesInRegion(snapshot.getRegion(),
             imageIds(IMAGE_ID)));
       String description = image.getDescription() == null ? "jclouds" : image.getDescription();
@@ -508,7 +509,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
 
    private RunningInstance blockUntilWeCanSshIntoInstance(RunningInstance instance) throws UnknownHostException {
       System.out.printf("%d: %s awaiting instance to run %n", System.currentTimeMillis(), instance.getId());
-      assert runningTester.apply(instance);
+      assertThat(runningTester.apply(instance)).isTrue();
 
       // search my identity for the instance I just created
       Set<? extends Reservation<? extends RunningInstance>> reservations = client.getInstanceApi().get()
@@ -522,7 +523,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
       instance = Iterables.getOnlyElement(Iterables.getOnlyElement(reservations));
 
       System.out.printf("%d: %s awaiting ssh service to start%n", System.currentTimeMillis(), instance.getIpAddress());
-      assert socketTester.apply(HostAndPort.fromParts(instance.getIpAddress(), 22));
+      assertThat(socketTester.apply(HostAndPort.fromParts(instance.getIpAddress(), 22))).isTrue();
       System.out.printf("%d: %s ssh service started%n", System.currentTimeMillis(), instance.getDnsName());
       sshPing(instance);
       System.out.printf("%d: %s ssh connection made%n", System.currentTimeMillis(), instance.getId());
@@ -557,7 +558,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
       if (attachment != null) {
          try {
             client.getElasticBlockStoreApi().get().detachVolumeInRegion(volume.getRegion(), volume.getId(), true);
-            assert volumeTester.apply(volume);
+            assertThat(volumeTester.apply(volume)).isTrue();
          } catch (Exception e) {
             e.printStackTrace();
          }

@@ -23,6 +23,8 @@ import org.jclouds.gogrid.features.BaseGoGridApiTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests behavior of {@code GoGridApi}
  */
@@ -34,11 +36,11 @@ public class GoGridApiTest extends BaseGoGridApiTest<GoGridApi> {
 
    public void testSync() throws SecurityException, NoSuchMethodException, InterruptedException,
             ExecutionException {
-      assert syncClient.getImageServices() != null;
-      assert syncClient.getIpServices() != null;
-      assert syncClient.getJobServices() != null;
-      assert syncClient.getLoadBalancerServices() != null;
-      assert syncClient.getServerServices() != null;
+      assertThat(syncClient.getImageServices() != null).isTrue();
+      assertThat(syncClient.getIpServices() != null).isTrue();
+      assertThat(syncClient.getJobServices() != null).isTrue();
+      assertThat(syncClient.getLoadBalancerServices() != null).isTrue();
+      assertThat(syncClient.getServerServices() != null).isTrue();
    }
 
    @BeforeClass

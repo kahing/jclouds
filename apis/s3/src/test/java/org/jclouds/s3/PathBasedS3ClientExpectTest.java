@@ -16,6 +16,7 @@
  */
 package org.jclouds.s3;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.s3.reference.S3Constants.PROPERTY_S3_VIRTUAL_HOST_BUCKETS;
 
 import java.util.Properties;
@@ -49,10 +50,10 @@ public class PathBasedS3ClientExpectTest extends BaseS3ClientExpectTest {
                                                .build();
                                     
       S3Client clientWhenBucketExists = requestSendsResponse(bucketFooExists, HttpResponse.builder().statusCode(200).build());
-      assert clientWhenBucketExists.bucketExists("foo");
+      assertThat(clientWhenBucketExists.bucketExists("foo")).isTrue();
       
       S3Client clientWhenBucketDoesntExist = requestSendsResponse(bucketFooExists, HttpResponse.builder().statusCode(404).build());
-      assert !clientWhenBucketDoesntExist.bucketExists("foo");
+      assertThat(!clientWhenBucketDoesntExist.bucketExists("foo")).isTrue();
       
    }
 
@@ -66,7 +67,7 @@ public class PathBasedS3ClientExpectTest extends BaseS3ClientExpectTest {
                                                .build();
                                     
       S3Client clientWhenBucketExists = requestSendsResponse(bucketFooExists, HttpResponse.builder().statusCode(200).build());
-      assert clientWhenBucketExists.putBucketInRegion(null, "foo");
+      assertThat(clientWhenBucketExists.putBucketInRegion(null, "foo")).isTrue();
       
    }
    

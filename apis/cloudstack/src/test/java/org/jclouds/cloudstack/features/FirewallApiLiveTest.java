@@ -17,6 +17,7 @@
 package org.jclouds.cloudstack.features;
 
 import static com.google.common.collect.Iterables.find;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.predicates.NetworkPredicates.supportsPortForwarding;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -114,7 +115,7 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
    @Test(dependsOnMethods = "testCreatePortForwardingRule")
    public void testListPortForwardingRules() throws Exception {
       Set<PortForwardingRule> response = client.getFirewallApi().listPortForwardingRules();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (final PortForwardingRule rule : response) {
          checkPortForwardingRule(rule);
@@ -142,7 +143,7 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListFirewallRules() {
       Set<FirewallRule> rules = client.getFirewallApi().listFirewallRules();
 
-      assert rules != null;
+      assertThat(rules != null).isTrue();
       assertTrue(!rules.isEmpty());
 
       for (FirewallRule rule : rules) {
@@ -171,7 +172,7 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListEgressFirewallRules() {
       Set<FirewallRule> rules = client.getFirewallApi().listEgressFirewallRules();
 
-      assert rules != null;
+      assertThat(rules != null).isTrue();
       assertTrue(!rules.isEmpty());
 
       for (FirewallRule rule : rules) {
@@ -202,32 +203,32 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
    protected void checkFirewallRule(FirewallRule rule) {
       assertEquals(rule,
          client.getFirewallApi().getFirewallRule(rule.getId()));
-      assert rule.getId() != null : rule;
-      assert rule.getStartPort() > 0 : rule;
-      assert rule.getEndPort() >= rule.getStartPort() : rule;
-      assert rule.getProtocol() != null;
+      assertThat(rule.getId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getStartPort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getEndPort() >= rule.getStartPort()).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getProtocol() != null).isTrue();
    }
 
    protected void checkEgressFirewallRule(FirewallRule rule) {
       assertEquals(rule,
               client.getFirewallApi().getEgressFirewallRule(rule.getId()));
-      assert rule.getId() != null : rule;
-      assert rule.getStartPort() > 0 : rule;
-      assert rule.getEndPort() >= rule.getStartPort() : rule;
-      assert rule.getProtocol() != null;
+      assertThat(rule.getId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getStartPort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getEndPort() >= rule.getStartPort()).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getProtocol() != null).isTrue();
    }
 
    protected void checkPortForwardingRule(PortForwardingRule rule) {
       assertEquals(rule,
          client.getFirewallApi().getPortForwardingRule(rule.getId()));
-      assert rule.getId() != null : rule;
-      assert rule.getIPAddress() != null : rule;
-      assert rule.getIPAddressId() != null : rule;
-      assert rule.getPrivatePort() > 0 : rule;
-      assert rule.getProtocol() != null : rule;
-      assert rule.getPublicPort() > 0 : rule;
-      assert rule.getState() != null : rule;
-      assert rule.getVirtualMachineId() != null : rule;
-      assert rule.getVirtualMachineName() != null : rule;
+      assertThat(rule.getId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getIPAddress() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getIPAddressId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getPrivatePort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getProtocol() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getPublicPort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getState() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getVirtualMachineId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getVirtualMachineName() != null).as(String.valueOf(rule)).isTrue();
    }
 }

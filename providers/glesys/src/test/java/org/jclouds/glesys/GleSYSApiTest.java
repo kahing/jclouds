@@ -25,6 +25,8 @@ import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests behavior of {@code GleSYSApi}
  */
@@ -40,10 +42,10 @@ public class GleSYSApiTest extends BaseRestAnnotationProcessingTest<GleSYSApi> {
    }
    
    public void testSync() throws SecurityException, NoSuchMethodException, InterruptedException, ExecutionException {
-      assert syncApi.getServerApi() != null;
-      assert syncApi.getIpApi() != null;
-      assert syncApi.getDomainApi() != null;
-      assert syncApi.getArchiveApi() != null;
+      assertThat(syncApi.getServerApi() != null).isTrue();
+      assertThat(syncApi.getIpApi() != null).isTrue();
+      assertThat(syncApi.getDomainApi() != null).isTrue();
+      assertThat(syncApi.getArchiveApi() != null).isTrue();
    }
 
    @BeforeClass

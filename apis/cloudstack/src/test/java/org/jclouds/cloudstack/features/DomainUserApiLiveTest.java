@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.features.GlobalAccountApiLiveTest.createTestAccount;
 import static org.jclouds.cloudstack.features.GlobalUserApiLiveTest.createTestUser;
 import static org.testng.Assert.assertEquals;
@@ -43,8 +44,8 @@ public class DomainUserApiLiveTest extends BaseCloudStackApiLiveTest {
 
       Set<User> users = domainAdminClient.getUserClient().listUsers();
 
-      assert !users.isEmpty();
-      assert users.contains(user); // contains the current user
+      assertThat(!users.isEmpty()).isTrue();
+      assertThat(users.contains(user)).isTrue(); // contains the current user
 
       for (User user : users) {
          checkUser(user);
@@ -52,9 +53,9 @@ public class DomainUserApiLiveTest extends BaseCloudStackApiLiveTest {
    }
 
    private void checkUser(User user) {
-      assert user.getId() != null;
-      assert user.getAccount() != null;
-      assert user.getDomain() != null;
+      assertThat(user.getId() != null).isTrue();
+      assertThat(user.getAccount() != null).isTrue();
+      assertThat(user.getDomain() != null).isTrue();
    }
 
    @Test

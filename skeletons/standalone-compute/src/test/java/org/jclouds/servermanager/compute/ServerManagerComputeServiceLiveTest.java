@@ -16,6 +16,7 @@
  */
 package org.jclouds.servermanager.compute;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
 
@@ -53,8 +54,8 @@ public class ServerManagerComputeServiceLiveTest extends BaseComputeServiceLiveT
    // servermanager does not support metadata
    @Override
    protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
-      assert node.getUserMetadata().equals(ImmutableMap.<String, String> of()) : String.format(
-            "node userMetadata did not match %s %s", userMetadata, node);
+      assertThat(node.getUserMetadata().equals(ImmutableMap.<String, String> of())).as(String.format(
+            "node userMetadata did not match %s %s", userMetadata, node)).isTrue();
    }
    
 }

@@ -152,7 +152,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          }
          Map<Integer, Exception> exceptions = awaitCompletion(responses, exec, 30000l, Logger.CONSOLE,
                   "putFileParallel");
-         assert exceptions.size() == 0 : exceptions;
+         assertThat(exceptions.size() == 0).as(String.valueOf(exceptions)).isTrue();
 
       } finally {
          payloadFile.delete();
@@ -482,7 +482,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       String container = getContainerName();
       String name = "test";
       try {
-         assert !view.getBlobStore().blobExists(container, name);
+         assertThat(!view.getBlobStore().blobExists(container, name)).isTrue();
       } finally {
          returnContainer(container);
       }
@@ -583,7 +583,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          String returnedString = getContentAsStringOrNullAndClose(blob);
          assertEquals(returnedString, realObject);
          PageSet<? extends StorageMetadata> set = view.getBlobStore().list(container);
-         assert set.size() == 1 : set;
+         assertThat(set.size() == 1).as(String.valueOf(set)).isTrue();
       } finally {
          returnContainer(container);
       }
@@ -609,7 +609,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          validateMetadata(blob.getMetadata(), container, blob.getMetadata().getName());
          checkContentMetadata(blob);
          PageSet<? extends StorageMetadata> set = view.getBlobStore().list(container);
-         assert set.size() == 1 : set;
+         assertThat(set.size() == 1).as(String.valueOf(set)).isTrue();
       } finally {
          returnContainer(container);
       }
@@ -732,32 +732,32 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected void checkContentType(Blob blob, String contentType) {
-      assert blob.getPayload().getContentMetadata().getContentType().startsWith(contentType) : blob.getPayload()
-               .getContentMetadata().getContentType();
-      assert blob.getMetadata().getContentMetadata().getContentType().startsWith(contentType) : blob.getMetadata()
-               .getContentMetadata().getContentType();
+      assertThat(blob.getPayload().getContentMetadata().getContentType().startsWith(contentType)).as(blob.getPayload()
+               .getContentMetadata().getContentType()).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentType().startsWith(contentType)).as(blob.getMetadata()
+               .getContentMetadata().getContentType()).isTrue();
    }
 
    protected void checkContentDisposition(Blob blob, String contentDisposition) {
-      assert blob.getPayload().getContentMetadata().getContentDisposition().startsWith(contentDisposition) : blob
-               .getPayload().getContentMetadata().getContentDisposition();
-      assert blob.getMetadata().getContentMetadata().getContentDisposition().startsWith(contentDisposition) : blob
-               .getMetadata().getContentMetadata().getContentDisposition();
+      assertThat(blob.getPayload().getContentMetadata().getContentDisposition().startsWith(contentDisposition)).as(blob
+               .getPayload().getContentMetadata().getContentDisposition()).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentDisposition().startsWith(contentDisposition)).as(blob
+               .getMetadata().getContentMetadata().getContentDisposition()).isTrue();
 
    }
 
    protected void checkContentEncoding(Blob blob, String contentEncoding) {
-      assert blob.getPayload().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1 : blob
-               .getPayload().getContentMetadata().getContentEncoding();
-      assert blob.getMetadata().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1 : blob
-               .getMetadata().getContentMetadata().getContentEncoding();
+      assertThat(blob.getPayload().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1).as(blob
+               .getPayload().getContentMetadata().getContentEncoding()).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentEncoding().indexOf(contentEncoding) != -1).as(blob
+               .getMetadata().getContentMetadata().getContentEncoding()).isTrue();
    }
 
    protected void checkContentLanguage(Blob blob, String contentLanguage) {
-      assert blob.getPayload().getContentMetadata().getContentLanguage().startsWith(contentLanguage) : blob
-               .getPayload().getContentMetadata().getContentLanguage();
-      assert blob.getMetadata().getContentMetadata().getContentLanguage().startsWith(contentLanguage) : blob
-               .getMetadata().getContentMetadata().getContentLanguage();
+      assertThat(blob.getPayload().getContentMetadata().getContentLanguage().startsWith(contentLanguage)).as(blob
+               .getPayload().getContentMetadata().getContentLanguage()).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentLanguage().startsWith(contentLanguage)).as(blob
+               .getMetadata().getContentMetadata().getContentLanguage()).isTrue();
    }
 
    protected static volatile Crypto crypto;
@@ -1008,8 +1008,8 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected void validateMetadata(BlobMetadata metadata) throws IOException {
-      assert metadata.getContentMetadata().getContentType().startsWith("text/plain") : metadata.getContentMetadata()
-               .getContentType();
+      assertThat(metadata.getContentMetadata().getContentType().startsWith("text/plain")).as(metadata.getContentMetadata()
+               .getContentType()).isTrue();
       assertEquals(metadata.getContentMetadata().getContentLength(), Long.valueOf(TEST_STRING.length()));
       assertEquals(metadata.getUserMetadata().get("adrian"), "powderpuff");
       checkMD5(metadata);

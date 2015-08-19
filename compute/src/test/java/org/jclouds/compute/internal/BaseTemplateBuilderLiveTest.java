@@ -16,6 +16,7 @@
  */
 package org.jclouds.compute.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -53,14 +54,14 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
 
       assertEquals(defaultSize, smallest);
 
-      assert getCores(smallest) <= getCores(fastest) : String.format("%s ! <= %s", smallest, fastest);
-      assert getCores(biggest) <= getCores(fastest) : String.format("%s ! <= %s", biggest, fastest);
+      assertThat(getCores(smallest) <= getCores(fastest)).as(String.format("%s ! <= %s", smallest, fastest)).isTrue();
+      assertThat(getCores(biggest) <= getCores(fastest)).as(String.format("%s ! <= %s", biggest, fastest)).isTrue();
 
-      assert biggest.getRam() >= fastest.getRam() : String.format("%s ! >= %s", biggest, fastest);
-      assert biggest.getRam() >= smallest.getRam() : String.format("%s ! >= %s", biggest, smallest);
+      assertThat(biggest.getRam() >= fastest.getRam()).as(String.format("%s ! >= %s", biggest, fastest)).isTrue();
+      assertThat(biggest.getRam() >= smallest.getRam()).as(String.format("%s ! >= %s", biggest, smallest)).isTrue();
 
-      assert getCores(fastest) >= getCores(biggest) : String.format("%s ! >= %s", fastest, biggest);
-      assert getCores(fastest) >= getCores(smallest) : String.format("%s ! >= %s", fastest, smallest);
+      assertThat(getCores(fastest) >= getCores(biggest)).as(String.format("%s ! >= %s", fastest, biggest)).isTrue();
+      assertThat(getCores(fastest) >= getCores(smallest)).as(String.format("%s ! >= %s", fastest, smallest)).isTrue();
    }
 
    public void testFromTemplate() {
@@ -96,18 +97,18 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
    public void testGetAssignableLocations() throws Exception {
       assertProvider(view.unwrap());
       for (Location location : view.getComputeService().listAssignableLocations()) {
-         assert location.getId() != null : location;
-         assert location != location.getParent() : location;
-         assert location.getScope() != null : location;
+         assertThat(location.getId() != null).as(String.valueOf(location)).isTrue();
+         assertThat(location != location.getParent()).as(String.valueOf(location)).isTrue();
+         assertThat(location.getScope() != null).as(String.valueOf(location)).isTrue();
          switch (location.getScope()) {
          case PROVIDER:
             assertProvider(location);
             break;
          case REGION:
             assertProvider(location.getParent());
-            assert location.getIso3166Codes().size() == 0
-                  || location.getParent().getIso3166Codes().containsAll(location.getIso3166Codes()) : location + " ||"
-                  + location.getParent();
+            assertThat(location.getIso3166Codes().size() == 0
+                  || location.getParent().getIso3166Codes().containsAll(location.getIso3166Codes())).as(location + " ||"
+                  + location.getParent()).isTrue();
             break;
          case ZONE:
             Location provider = location.getParent().getParent();
@@ -115,9 +116,9 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
             if (provider == null)
                provider = location.getParent();
             assertProvider(provider);
-            assert location.getIso3166Codes().size() == 0
-                  || location.getParent().getIso3166Codes().containsAll(location.getIso3166Codes()) : location + " ||"
-                  + location.getParent();
+            assertThat(location.getIso3166Codes().size() == 0
+                  || location.getParent().getIso3166Codes().containsAll(location.getIso3166Codes())).as(location + " ||"
+                  + location.getParent()).isTrue();
             break;
          case SYSTEM:
             Location systemParent = location.getParent();

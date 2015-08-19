@@ -19,6 +19,7 @@ package org.jclouds.aws.ec2.features;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.newTreeSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -154,7 +155,7 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
    }
 
    private void verifyPlacementGroup(String region, String groupName) {
-      assert availableTester.apply(new PlacementGroup(region, groupName, "cluster", State.PENDING)) : group;
+      assertThat(availableTester.apply(new PlacementGroup(region, groupName, "cluster", State.PENDING))).as(String.valueOf(group)).isTrue();
       Set<PlacementGroup> oneResult = client.getPlacementGroupApi().get().describePlacementGroupsInRegion(region,
                groupName);
       assertNotNull(oneResult);
@@ -162,14 +163,14 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
       group = oneResult.iterator().next();
       assertEquals(group.getName(), groupName);
       assertEquals(group.getStrategy(), "cluster");
-      assert availableTester.apply(group) : group;
+      assertThat(availableTester.apply(group)).as(String.valueOf(group)).isTrue();
    }
 
    public void testStartHS1Instance() throws Exception {
 
       Template template = view.getComputeService().templateBuilder()
                .fromHardware(EC2HardwareBuilder.hs1_8xlarge().build()).osFamily(OsFamily.AMZN_LINUX).build();
-      assert template != null : "The returned template was null, but it should have a value.";
+      assertThat(template != null).as("The returned template was null, but it should have a value.").isTrue();
       assertEquals(template.getHardware().getProviderId(), InstanceType.HS1_8XLARGE);
       assertEquals(template.getImage().getUserMetadata().get("virtualizationType"), "hvm");
       assertEquals(template.getImage().getUserMetadata().get("hypervisor"), "xen");
@@ -203,7 +204,7 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
    protected void tearDownContext() {
       if (group != null) {
          client.getPlacementGroupApi().get().deletePlacementGroupInRegion(group.getRegion(), group.getName());
-         assert deletedTester.apply(group) : group;
+         assertThat(deletedTester.apply(group)).as(String.valueOf(group)).isTrue();
       }
       super.tearDownContext();
    }

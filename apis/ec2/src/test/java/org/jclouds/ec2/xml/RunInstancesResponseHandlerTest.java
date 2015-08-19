@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.xml;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -46,7 +47,7 @@ public class RunInstancesResponseHandlerTest extends BaseEC2HandlerTest {
    protected void setUpInjector() {
       super.setUpInjector();
       dateService = injector.getInstance(DateService.class);
-      assert dateService != null;
+      assertThat(dateService != null).isTrue();
    }
 
    public void testEC2() {

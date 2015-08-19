@@ -16,6 +16,7 @@
  */
 package org.jclouds.s3.filters;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
@@ -70,9 +71,9 @@ public class RequestAuthorizeSignatureTest extends BaseS3ClientTest<S3Client> {
          date = request.getFirstHeaderOrNull(HttpHeaders.DATE);
          request = filter.filter(request);
          if (request.getFirstHeaderOrNull(HttpHeaders.DATE).equals(date))
-            assert signature.equals(request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION)) : String.format(
+            assertThat(signature.equals(request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION))).as(String.format(
                      "sig: %s != %s on attempt %s", signature, request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION),
-                     iterations);
+                     iterations)).isTrue();
          else
             iterations++;
 

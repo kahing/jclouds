@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.asType;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.enableMonitoring;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withBlockDeviceMappings;
@@ -46,8 +47,8 @@ public class AWSRunInstancesOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(AWSRunInstancesOptions.class);
-      assert !String.class.isAssignableFrom(AWSRunInstancesOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(AWSRunInstancesOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(AWSRunInstancesOptions.class)).isTrue();
    }
 
    @Test

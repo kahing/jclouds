@@ -39,6 +39,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test(groups = "unit")
 public abstract class BaseEC2HandlerTest extends BaseHandlerTest {
    protected String defaultRegion = Region.US_EAST_1;
@@ -77,6 +79,6 @@ public abstract class BaseEC2HandlerTest extends BaseHandlerTest {
          }
       });
       factory = injector.getInstance(ParseSax.Factory.class);
-      assert factory != null;
+      assertThat(factory != null).isTrue();
    }
 }

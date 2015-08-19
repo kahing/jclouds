@@ -16,6 +16,7 @@
  */
 package org.jclouds.byon;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
 import static org.jclouds.scriptbuilder.domain.Statements.exec;
 
@@ -76,8 +77,8 @@ public class BYONComputeServiceLiveTest {
                Predicates.<NodeMetadata> alwaysTrue(), exec("id"), wrapInInitScript(false).runAsRoot(false));
 
       for (Entry<? extends NodeMetadata, ExecResponse> response : responses.entrySet())
-         assert response.getValue().getOutput().trim().contains(System.getProperty("user.name")) : response.getKey()
-                  + ": " + response.getValue();
+         assertThat(response.getValue().getOutput().trim().contains(System.getProperty("user.name"))).as(response.getKey()
+                  + ": " + response.getValue()).isTrue();
    }
 
    @AfterClass(groups = "live")

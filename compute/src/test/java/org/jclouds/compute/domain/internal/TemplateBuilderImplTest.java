@@ -16,6 +16,7 @@
  */
 package org.jclouds.compute.domain.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -141,7 +142,7 @@ public class TemplateBuilderImplTest {
 
       TemplateBuilderImpl template = createTemplateBuilder(null, locations, images, hardwares, region,
                optionsProvider, templateBuilderProvider, getImageStrategy);
-      assert template.locationPredicate.apply(hardware);
+      assertThat(template.locationPredicate.apply(hardware)).isTrue();
 
       verify(defaultTemplate, optionsProvider, templateBuilderProvider, getImageStrategy);
    }

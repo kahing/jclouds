@@ -19,6 +19,7 @@ package org.jclouds.cloudstack.features;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.options.CreateNetworkOptions.Builder.vlan;
 import static org.jclouds.cloudstack.options.ListNetworkOfferingsOptions.Builder.specifyVLAN;
 import static org.jclouds.cloudstack.options.ListNetworksOptions.Builder.accountInDomain;
@@ -133,7 +134,7 @@ public class NetworkApiLiveTest extends BaseCloudStackApiLiveTest {
          return;
       Set<Network> response = client.getNetworkApi().listNetworks(
             accountInDomain(user.getAccount(), user.getDomainId()));
-      assert null != response;
+      assertThat(null != response).isTrue();
       long networkCount = response.size();
       assertTrue(networkCount >= 0);
       for (Network network : response) {
@@ -145,40 +146,40 @@ public class NetworkApiLiveTest extends BaseCloudStackApiLiveTest {
    }
 
    private void checkNetwork(Network network) {
-      assert network.getId() != null : network;
-      assert network.getName() != null : network;
-      assert network.getDNS().size() != 0 : network;
-      assert network.getGuestIPType() != null && network.getGuestIPType() != GuestIPType.UNRECOGNIZED : network;
-      assert network.getBroadcastDomainType() != null : network;
-      assert network.getDisplayText() != null : network;
+      assertThat(network.getId() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getName() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getDNS().size() != 0).as(String.valueOf(network)).isTrue();
+      assertThat(network.getGuestIPType() != null && network.getGuestIPType() != GuestIPType.UNRECOGNIZED).as(String.valueOf(network)).isTrue();
+      assertThat(network.getBroadcastDomainType() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getDisplayText() != null).as(String.valueOf(network)).isTrue();
       // Network domain can be null sometimes
       // assert network.getNetworkDomain() != null : network;
-      assert network.getNetworkOfferingAvailability() != null : network;
-      assert network.getNetworkOfferingDisplayText() != null : network;
-      assert network.getNetworkOfferingId() != null : network;
-      assert network.getNetworkOfferingName() != null : network;
-      assert network.getRelated() != null : network;
-      assert network.getServices().size() != 0 : network;
-      assert network.getState() != null : network;
-      assert network.getTrafficType() != null : network;
-      assert network.getZoneId() != null : network;
-      assert network.getDomain() != null : network;
+      assertThat(network.getNetworkOfferingAvailability() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getNetworkOfferingDisplayText() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getNetworkOfferingId() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getNetworkOfferingName() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getRelated() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getServices().size() != 0).as(String.valueOf(network)).isTrue();
+      assertThat(network.getState() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getTrafficType() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getZoneId() != null).as(String.valueOf(network)).isTrue();
+      assertThat(network.getDomain() != null).as(String.valueOf(network)).isTrue();
       switch (network.getGuestIPType()) {
       case VIRTUAL:
-         assert network.getNetmask() == null : network;
-         assert network.getGateway() == null : network;
-         assert network.getVLAN() == null : network;
-         assert network.getStartIP() == null : network;
-         assert network.getEndIP() == null : network;
+         assertThat(network.getNetmask() == null).as(String.valueOf(network)).isTrue();
+         assertThat(network.getGateway() == null).as(String.valueOf(network)).isTrue();
+         assertThat(network.getVLAN() == null).as(String.valueOf(network)).isTrue();
+         assertThat(network.getStartIP() == null).as(String.valueOf(network)).isTrue();
+         assertThat(network.getEndIP() == null).as(String.valueOf(network)).isTrue();
          break;
       case DIRECT:
          // TODO: I've found a network that doesn't have a netmask associated
-         assert network.getNetmask() != null : network;
-         assert network.getGateway() != null : network;
-         assert network.getVLAN() != null : network;
+         assertThat(network.getNetmask() != null).as(String.valueOf(network)).isTrue();
+         assertThat(network.getGateway() != null).as(String.valueOf(network)).isTrue();
+         assertThat(network.getVLAN() != null).as(String.valueOf(network)).isTrue();
          assertEquals(network.getBroadcastURI(), URI.create("vlan://" + network.getVLAN()));
-         assert network.getStartIP() != null : network;
-         assert network.getEndIP() != null : network;
+         assertThat(network.getStartIP() != null).as(String.valueOf(network)).isTrue();
+         assertThat(network.getEndIP() != null).as(String.valueOf(network)).isTrue();
          break;
       }
    }

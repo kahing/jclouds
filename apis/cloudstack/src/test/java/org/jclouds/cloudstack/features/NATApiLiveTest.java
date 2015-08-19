@@ -17,6 +17,7 @@
 package org.jclouds.cloudstack.features;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -37,7 +38,7 @@ public class NATApiLiveTest extends BaseCloudStackApiLiveTest {
    // takes too long
    public void testListIPForwardingRules() throws Exception {
       Set<IPForwardingRule> response = client.getNATApi().listIPForwardingRules();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (IPForwardingRule rule : response) {
          IPForwardingRule newDetails = getOnlyElement(client.getNATApi().listIPForwardingRules(
@@ -49,15 +50,15 @@ public class NATApiLiveTest extends BaseCloudStackApiLiveTest {
 
    protected void checkRule(IPForwardingRule rule) {
       assertEquals(rule.getId(), client.getNATApi().getIPForwardingRule(rule.getId()).getId());
-      assert rule.getId() != null : rule;
-      assert rule.getIPAddress() != null : rule;
-      assert rule.getIPAddressId() != null : rule;
-      assert rule.getStartPort() > 0 : rule;
-      assert rule.getProtocol() != null : rule;
-      assert rule.getEndPort() > 0 : rule;
-      assert rule.getState() != null : rule;
-      assert rule.getVirtualMachineId() != null : rule;
-      assert rule.getVirtualMachineName() != null : rule;
+      assertThat(rule.getId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getIPAddress() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getIPAddressId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getStartPort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getProtocol() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getEndPort() > 0).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getState() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getVirtualMachineId() != null).as(String.valueOf(rule)).isTrue();
+      assertThat(rule.getVirtualMachineName() != null).as(String.valueOf(rule)).isTrue();
 
    }
 }

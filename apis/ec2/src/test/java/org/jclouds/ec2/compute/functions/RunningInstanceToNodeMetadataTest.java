@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.compute.functions;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m1_small;
 import static org.testng.Assert.assertEquals;
 
@@ -63,7 +64,7 @@ public class RunningInstanceToNodeMetadataTest {
    public void testAllStatesCovered() {
 
       for (InstanceState status : InstanceState.values()) {
-         assert EC2ComputeServiceDependenciesModule.toPortableNodeStatus.containsKey(status) : status;
+         assertThat(EC2ComputeServiceDependenciesModule.toPortableNodeStatus.containsKey(status)).as(String.valueOf(status)).isTrue();
       }
 
    }

@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -35,37 +36,37 @@ public class AsyncJobApiLiveTest extends BaseCloudStackApiLiveTest {
    @Test(enabled = true)
    public void testListAsyncJobs() throws Exception {
       Set<AsyncJob<?>> response = client.getAsyncJobApi().listAsyncJobs();
-      assert null != response;
+      assertThat(null != response).isTrue();
 
       long asyncJobCount = response.size();
       assertTrue(asyncJobCount >= 0);
 
       for (AsyncJob<?> asyncJob : response) {
-         assert asyncJob.getCmd() != null : asyncJob;
-         assert asyncJob.getUserId() != null : asyncJob;
+         assertThat(asyncJob.getCmd() != null).as(String.valueOf(asyncJob)).isTrue();
+         assertThat(asyncJob.getUserId() != null).as(String.valueOf(asyncJob)).isTrue();
          checkJob(asyncJob);
 
          AsyncJob<?> query = client.getAsyncJobApi().getAsyncJob(asyncJob.getId());
          assertEquals(query.getId(), asyncJob.getId());
 
-         assert query.getResultType() != null : query;
+         assertThat(query.getResultType() != null).as(String.valueOf(query)).isTrue();
          checkJob(query);
       }
    }
 
    private void checkJob(AsyncJob<?> query) {
-      assert query.getStatus().code() >= 0 : query;
-      assert query.getResultCode().code() >= 0 : query;
-      assert query.getProgress() >= 0 : query;
+      assertThat(query.getStatus().code() >= 0).as(String.valueOf(query)).isTrue();
+      assertThat(query.getResultCode().code() >= 0).as(String.valueOf(query)).isTrue();
+      assertThat(query.getProgress() >= 0).as(String.valueOf(query)).isTrue();
       if (query.getResultCode() == ResultCode.SUCCESS) {
          if (query.getResult() != null) {
             assertEquals(query.getResult().getClass().getPackage(), AsyncJob.class.getPackage());
          }
       } else if (query.getResultCode() == ResultCode.FAIL) {
-         assert query.getResult() == null : query;
-         assert query.getError() != null : query;
+         assertThat(query.getResult() == null).as(String.valueOf(query)).isTrue();
+         assertThat(query.getError() != null).as(String.valueOf(query)).isTrue();
       } else {
-         assert query.getResult() == null : query;
+         assertThat(query.getResult() == null).as(String.valueOf(query)).isTrue();
       }
    }
 

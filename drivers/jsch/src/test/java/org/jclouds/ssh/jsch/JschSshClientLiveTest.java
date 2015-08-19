@@ -16,6 +16,7 @@
  */
 package org.jclouds.ssh.jsch;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
@@ -173,7 +174,7 @@ public class JschSshClientLiveTest {
    public void testGetEtcPassword() throws IOException {
       Payload input = setupClient().get("/etc/passwd");
       String contents = Strings2.toStringAndClose(input.openStream());
-      assert contents.indexOf("root") >= 0 : "no root in " + contents;
+      assertThat(contents.indexOf("root") >= 0).as("no root in " + contents).isTrue();
    }
 
    @Test

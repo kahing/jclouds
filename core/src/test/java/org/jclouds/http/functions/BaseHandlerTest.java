@@ -17,6 +17,7 @@
 package org.jclouds.http.functions;
 
 import static com.google.common.base.Throwables.propagate;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.reflect.Reflection2.method;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class BaseHandlerTest {
    protected void setUpInjector() {
       injector = Guice.createInjector(new SaxParserModule());
       factory = injector.getInstance(ParseSax.Factory.class);
-      assert factory != null;
+      assertThat(factory != null).isTrue();
    }
 
    @BeforeTest

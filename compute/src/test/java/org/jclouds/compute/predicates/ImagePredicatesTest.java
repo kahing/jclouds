@@ -26,24 +26,26 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test
 public class ImagePredicatesTest {
    ComputeService computeService = ContextBuilder.newBuilder("stub").build(ComputeServiceContext.class).getComputeService();
 
    public void testImageId() {
       Image first = Iterables.get(computeService.listImages(), 0);
-      assert ImagePredicates.idEquals(first.getId()).apply(first);
+      assertThat(ImagePredicates.idEquals(first.getId()).apply(first)).isTrue();
       Image second = Iterables.get(computeService.listImages(), 1);
-      assert !ImagePredicates.idEquals(first.getId()).apply(second);
+      assertThat(!ImagePredicates.idEquals(first.getId()).apply(second)).isTrue();
    }
 
    public void testUserMetadataContains() {
       Image first = Iterables.get(computeService.listImages(), 0);
       first = ImageBuilder.fromImage(first).userMetadata(ImmutableMap.of("foo", "bar")).build();
-      assert ImagePredicates.userMetadataContains("foo", "bar").apply(first);
+      assertThat(ImagePredicates.userMetadataContains("foo", "bar").apply(first)).isTrue();
       Image second = Iterables.get(computeService.listImages(), 1);
       second = ImageBuilder.fromImage(second).userMetadata(ImmutableMap.of("foo", "baz")).build();
-      assert !ImagePredicates.userMetadataContains("foo", "bar").apply(second);
+      assertThat(!ImagePredicates.userMetadataContains("foo", "bar").apply(second)).isTrue();
    }
 
 }

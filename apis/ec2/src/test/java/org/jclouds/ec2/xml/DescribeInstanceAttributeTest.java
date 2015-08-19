@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.xml;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -57,7 +58,7 @@ public class DescribeInstanceAttributeTest extends BaseHandlerTest {
       BooleanValueHandler handler = injector.getInstance(BooleanValueHandler.class);
       Boolean result = factory.create(handler).parse(is);
 
-      assert !result;
+      assertThat(!result).isTrue();
    }
 
    public void testStringValueHandler() {

@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.CreateSnapshotOptions.Builder.withDescription;
 import static org.testng.Assert.assertEquals;
 
@@ -31,8 +32,8 @@ public class CreateSnapshotOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(CreateSnapshotOptions.class);
-      assert !String.class.isAssignableFrom(CreateSnapshotOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(CreateSnapshotOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(CreateSnapshotOptions.class)).isTrue();
    }
 
    @Test

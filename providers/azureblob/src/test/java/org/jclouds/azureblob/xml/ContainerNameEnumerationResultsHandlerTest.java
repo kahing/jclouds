@@ -16,6 +16,7 @@
  */
 package org.jclouds.azureblob.xml;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -50,7 +51,7 @@ public class ContainerNameEnumerationResultsHandlerTest extends BaseHandlerTest 
    protected void setUpInjector() {
       super.setUpInjector();
       dateService = injector.getInstance(DateService.class);
-      assert dateService != null;
+      assertThat(dateService != null).isTrue();
    }
 
    public void testApplyInputStream() {

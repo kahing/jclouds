@@ -16,6 +16,7 @@
  */
 package org.jclouds.scriptbuilder.statements.login;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.scriptbuilder.domain.OsFamily;
@@ -34,9 +35,9 @@ public class ReplaceShadowPasswordEntryTest {
 
    public void testWithPasswordUNIX() {
       String userAdd = new ReplaceShadowPasswordEntry(crypt, "foo", "password").render(OsFamily.UNIX);
-      assert userAdd.startsWith("awk -v user=^foo: -v password='CRYPT") : userAdd;
-      assert userAdd
-            .endsWith("' 'BEGIN { FS=OFS=\":\" } $0 ~ user { $2 = password } 1' /etc/shadow >/etc/shadow.foo\ntest -f /etc/shadow.foo && mv /etc/shadow.foo /etc/shadow\n") : userAdd;
+      assertThat(userAdd.startsWith("awk -v user=^foo: -v password='CRYPT")).as(userAdd).isTrue();
+      assertThat(userAdd
+            .endsWith("' 'BEGIN { FS=OFS=\":\" } $0 ~ user { $2 = password } 1' /etc/shadow >/etc/shadow.foo\ntest -f /etc/shadow.foo && mv /etc/shadow.foo /etc/shadow\n")).as(userAdd).isTrue();
    }
 
    @Test(expectedExceptions = UnsupportedOperationException.class)

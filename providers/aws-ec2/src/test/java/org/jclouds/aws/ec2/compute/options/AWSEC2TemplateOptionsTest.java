@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.compute.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.authorizePublicKey;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.blockOnPort;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.enableMonitoring;
@@ -212,41 +213,41 @@ public class AWSEC2TemplateOptionsTest {
       AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
       options.noKeyPair();
       assertEquals(options.getKeyPair(), null);
-      assert !options.shouldAutomaticallyCreateKeyPair();
+      assertThat(!options.shouldAutomaticallyCreateKeyPair()).isTrue();
    }
 
    @Test
    public void testFalsenoKeyPair() {
       AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
       assertEquals(options.getKeyPair(), null);
-      assert options.shouldAutomaticallyCreateKeyPair();
+      assertThat(options.shouldAutomaticallyCreateKeyPair()).isTrue();
    }
 
    @Test
    public void testnoKeyPairStatic() {
       AWSEC2TemplateOptions options = noKeyPair();
       assertEquals(options.getKeyPair(), null);
-      assert !options.shouldAutomaticallyCreateKeyPair();
+      assertThat(!options.shouldAutomaticallyCreateKeyPair()).isTrue();
    }
 
    @Test
    public void testMonitoringEnabledDefault() {
       AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
-      assert !options.isMonitoringEnabled();
+      assertThat(!options.isMonitoringEnabled()).isTrue();
    }
 
    @Test
    public void testMonitoringEnabled() {
       AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
       options.enableMonitoring();
-      assert options.isMonitoringEnabled();
+      assertThat(options.isMonitoringEnabled()).isTrue();
    }
 
    @Test
    public void testEnableMonitoringStatic() {
       AWSEC2TemplateOptions options = enableMonitoring();
       assertEquals(options.getKeyPair(), null);
-      assert options.isMonitoringEnabled();
+      assertThat(options.isMonitoringEnabled()).isTrue();
    }
 
    // superclass tests

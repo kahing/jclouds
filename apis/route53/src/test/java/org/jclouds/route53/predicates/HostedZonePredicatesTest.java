@@ -16,6 +16,7 @@
  */
 package org.jclouds.route53.predicates;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.route53.predicates.HostedZonePredicates.nameEquals;
 
 import org.jclouds.route53.domain.HostedZone;
@@ -27,11 +28,11 @@ public class HostedZonePredicatesTest {
 
    @Test
    public void testNameEqualsWhenEqual() {
-      assert nameEquals("jclouds.org.").apply(zone);
+      assertThat(nameEquals("jclouds.org.").apply(zone)).isTrue();
    }
 
    @Test
    public void testNameEqualsWhenNotEqual() {
-      assert !nameEquals("kclouds.org.").apply(zone);
+      assertThat(!nameEquals("kclouds.org.").apply(zone)).isTrue();
    }
 }

@@ -45,6 +45,7 @@ import org.testng.annotations.Test;
 import java.util.Properties;
 import java.util.Random;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -94,7 +95,7 @@ public class SoftLayerComputeServiceAdapterLiveTest extends BaseSoftLayerApiLive
       assertEquals(guest.getNodeId(), guest.getNode().getId() + "");
       assertEquals(guest.getNode().getDomain(), template.getOptions().as(SoftLayerTemplateOptions.class)
             .getDomainName());
-      assert InetAddresses.isInetAddress(guest.getNode().getPrimaryBackendIpAddress()) : guest;
+      assertThat(InetAddresses.isInetAddress(guest.getNode().getPrimaryBackendIpAddress())).as(String.valueOf(guest)).isTrue();
       doConnectViaSsh(guest.getNode(), prioritizeCredentialsFromTemplate.apply(template, guest.getCredentials()));
    }
 

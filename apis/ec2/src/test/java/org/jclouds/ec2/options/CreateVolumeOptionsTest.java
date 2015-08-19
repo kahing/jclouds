@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.fromSnapshotId;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.isEncrypted;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.volumeType;
@@ -34,8 +35,8 @@ public class CreateVolumeOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(CreateVolumeOptions.class);
-      assert !String.class.isAssignableFrom(CreateVolumeOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(CreateVolumeOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(CreateVolumeOptions.class)).isTrue();
    }
 
    @Test

@@ -18,6 +18,7 @@ package org.jclouds.cloudstack.features;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -70,7 +71,7 @@ public class AddressApiLiveTest extends BaseCloudStackApiLiveTest {
       if (!networksEnabled)
          return;
       Set<PublicIPAddress> response = client.getAddressApi().listPublicIPAddresses();
-      assert null != response;
+      assertThat(null != response).isTrue();
       assertTrue(response.size() > 0);
       for (PublicIPAddress ip : response) {
          PublicIPAddress newDetails = getOnlyElement(client.getAddressApi().listPublicIPAddresses(
@@ -82,13 +83,13 @@ public class AddressApiLiveTest extends BaseCloudStackApiLiveTest {
 
    protected void checkIP(PublicIPAddress ip) {
       assertEquals(ip.getId(), client.getAddressApi().getPublicIPAddress(ip.getId()).getId());
-      assert ip.getId() != null : ip;
-      assert ip.getAccount() != null : ip;
-      assert ip.getDomain() != null : ip;
-      assert ip.getDomainId() != null : ip;
-      assert ip.getState() != null : ip;
-      assert ip.getZoneId() != null : ip;
-      assert ip.getZoneName() != null : ip;
+      assertThat(ip.getId() != null).as(String.valueOf(ip)).isTrue();
+      assertThat(ip.getAccount() != null).as(String.valueOf(ip)).isTrue();
+      assertThat(ip.getDomain() != null).as(String.valueOf(ip)).isTrue();
+      assertThat(ip.getDomainId() != null).as(String.valueOf(ip)).isTrue();
+      assertThat(ip.getState() != null).as(String.valueOf(ip)).isTrue();
+      assertThat(ip.getZoneId() != null).as(String.valueOf(ip)).isTrue();
+      assertThat(ip.getZoneName() != null).as(String.valueOf(ip)).isTrue();
 
    }
 }

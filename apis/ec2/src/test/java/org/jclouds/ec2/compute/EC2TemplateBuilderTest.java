@@ -17,6 +17,7 @@
 package org.jclouds.ec2.compute;
 
 import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -100,7 +101,7 @@ public class EC2TemplateBuilderTest {
    public void testTemplateChoiceForInstanceByHardwareId() throws Exception {
       Template template = newTemplateBuilder().os64Bit(true).hardwareId("m2.xlarge").locationId("us-east-1").build();
 
-      assert template != null : "The returned template was null, but it should have a value.";
+      assertThat(template != null).as("The returned template was null, but it should have a value.").isTrue();
       // assert m2_xlarge().build().equals(template.getHardware()) : format(
       // "Incorrect image determined by the template. Expected: %s. Found: %s.", "m2.xlarge",
       // String.valueOf(template.getHardware()));
@@ -111,10 +112,10 @@ public class EC2TemplateBuilderTest {
    public void testTemplateChoiceForInstanceByFastest() throws Exception {
       Template template = newTemplateBuilder().fastest().build();
 
-      assert template != null : "The returned template was null, but it should have a value.";
-      assert g2_2xlarge().build().equals(template.getHardware()) : format(
+      assertThat(template != null).as("The returned template was null, but it should have a value.").isTrue();
+      assertThat(g2_2xlarge().build().equals(template.getHardware())).as(format(
                "Incorrect image determined by the template. Expected: %s. Found: %s.", g2_2xlarge(), template
-                        .getHardware().getId());
+                        .getHardware().getId())).isTrue();
    }
 
    /**
@@ -128,7 +129,7 @@ public class EC2TemplateBuilderTest {
       Template template = newTemplateBuilder().os64Bit(true).minRam(17510).minCores(6.5).smallest().locationId(
                "us-east-1").build();
 
-      assert template != null : "The returned template was null, but it should have a value.";
+      assertThat(template != null).as("The returned template was null, but it should have a value.").isTrue();
       assertEquals(template.getHardware().getId(), m2_4xlarge().build().getId());
    }
 
@@ -145,17 +146,17 @@ public class EC2TemplateBuilderTest {
       Template template = newTemplateBuilder().os64Bit(true).minRam(17510).minCores(6.7).smallest().locationId(
                "us-east-1").build();
 
-      assert template != null : "The returned template was null, but it should have a value.";
-      assert !m2_xlarge().build().equals(template.getHardware()) : format(
+      assertThat(template != null).as("The returned template was null, but it should have a value.").isTrue();
+      assertThat(!m2_xlarge().build().equals(template.getHardware())).as(format(
                "Incorrect image determined by the template. Expected: not %s. Found: %s.", "m2.xlarge", template
-                        .getHardware().getId());
+                        .getHardware().getId())).isTrue();
    }
 
    @Test
    public void testTemplateChoiceForInstanceByImageId() throws Exception {
       Template template = newTemplateBuilder().imageId("us-east-1/bogus-image").build();
 
-      assert template != null : "The returned template was null, but it should have a value.";
+      assertThat(template != null).as("The returned template was null, but it should have a value.").isTrue();
       assertEquals(template.getImage().getId(), "us-east-1/bogus-image");
       assertEquals(template.getHardware().getId(), HARDWARE_SUPPORTING_BOGUS.getId());
    }
@@ -180,7 +181,7 @@ public class EC2TemplateBuilderTest {
 
       Template template = newTemplateBuilder(images, imageCache).imageId("us-east-1/bogus-image").build();
 
-      assert template != null : "The returned template was null, but it should have a value.";
+      assertThat(template != null).as("The returned template was null, but it should have a value.").isTrue();
       assertEquals(template.getImage().getId(), "us-east-1/bogus-image");
       assertEquals(template.getHardware().getId(), HARDWARE_SUPPORTING_BOGUS.getId());
    }

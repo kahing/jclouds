@@ -16,6 +16,7 @@
  */
 package org.jclouds.date.joda;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Date;
@@ -45,7 +46,7 @@ public class JodaDateServiceTest extends DateServiceTest {
    protected void createDateService() {
       Injector i = Guice.createInjector(new JodaDateServiceModule());
       dateService = i.getInstance(DateService.class);
-      assert dateService instanceof JodaDateService;
+      assertThat(dateService instanceof JodaDateService).isTrue();
    }
 
    @Override

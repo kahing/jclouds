@@ -16,6 +16,7 @@
  */
 package org.jclouds.chef.handlers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -48,7 +49,7 @@ public class ChefApiErrorRetryHandlerTest {
 
       ChefApiErrorRetryHandler handler = new ChefApiErrorRetryHandler(retry);
 
-      assert !handler.shouldRetryRequest(command, response);
+      assertThat(!handler.shouldRetryRequest(command, response)).isTrue();
 
       verify(retry);
       verify(command);
@@ -72,7 +73,7 @@ public class ChefApiErrorRetryHandlerTest {
 
       ChefApiErrorRetryHandler handler = new ChefApiErrorRetryHandler(retry);
 
-      assert !handler.shouldRetryRequest(command, response);
+      assertThat(!handler.shouldRetryRequest(command, response)).isTrue();
 
       verify(retry);
       verify(command);
@@ -106,7 +107,7 @@ public class ChefApiErrorRetryHandlerTest {
 
       ChefApiErrorRetryHandler handler = new ChefApiErrorRetryHandler(retry);
 
-      assert handler.shouldRetryRequest(command, response);
+      assertThat(handler.shouldRetryRequest(command, response)).isTrue();
 
       verify(retry);
       verify(command);

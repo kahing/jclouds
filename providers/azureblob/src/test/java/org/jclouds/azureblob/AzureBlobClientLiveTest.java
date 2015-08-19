@@ -77,7 +77,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
    @Test
    public void testListContainers() throws Exception {
       Set<ContainerProperties> response = getApi().listContainers();
-      assert null != response;
+      assertThat(null != response).isTrue();
       long initialContainerCount = response.size();
       assertTrue(initialContainerCount >= 0);
 
@@ -101,7 +101,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
          }
       }
       Set<ContainerProperties> response = getApi().listContainers(includeMetadata());
-      assert null != response;
+      assertThat(null != response).isTrue();
       long containerCount = response.size();
       assertTrue(containerCount >= 1);
       ListBlobsResponse list = getApi().listBlobs(privateContainer);
@@ -170,7 +170,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
 
       BoundedSet<ContainerProperties> response = getApi().listContainers(
             ListOptions.Builder.prefix(privateContainer).maxResults(1).includeMetadata());
-      assert null != response;
+      assertThat(null != response).isTrue();
       long initialContainerCount = response.size();
       assertTrue(initialContainerCount >= 0);
       assertEquals(privateContainer, response.getPrefix());
@@ -234,7 +234,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       assertEquals(base16().lowerCase().encode(md5),
             base16().lowerCase().encode(object.getProperties().getContentMetadata().getContentMD5()));
       // Test HEAD of missing object
-      assert getApi().getBlobProperties(privateContainer, "non-existent-object") == null;
+      assertThat(getApi().getBlobProperties(privateContainer, "non-existent-object") == null).isTrue();
 
       // Test HEAD of object
       BlobProperties metadata = getApi().getBlobProperties(privateContainer, object.getProperties().getName());
@@ -260,7 +260,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       assertThat(eTag2).isNotNull().isNotEqualTo(eTag);
 
       // Test GET of missing object
-      assert getApi().getBlob(privateContainer, "non-existent-object") == null;
+      assertThat(getApi().getBlob(privateContainer, "non-existent-object") == null).isTrue();
 
       // Test GET of object (including updated metadata)
       AzureBlob getBlob = getApi().getBlob(privateContainer, object.getProperties().getName());
@@ -316,7 +316,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
                GetOptions.Builder.ifETagDoesntMatch(newEtag));
       } catch (Exception e) {
          HttpResponseException httpEx = Throwables2.getFirstThrowableOfType(e, HttpResponseException.class);
-         assert httpEx != null : "expected http exception, not " + e;
+         assertThat(httpEx != null).as("expected http exception, not " + e).isTrue();
          assertEquals(httpEx.getResponse().getStatusCode(), 304);
       }
 

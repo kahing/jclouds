@@ -16,6 +16,7 @@
  */
 package org.jclouds.hpcloud.objectstorage;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -76,10 +77,10 @@ public class HPCloudObjectStorageClientLiveTest extends CommonSwiftClientLiveTes
          assertEquals(cdnMetadata.getCDNUri(), cdnUri);
 
          cdnMetadata = getApi().getCDNExtension().get().get(containerNameWithoutCDN);
-         assert cdnMetadata == null || !cdnMetadata.isCDNEnabled() : containerNameWithoutCDN
-                  + " should not have metadata";
+         assertThat(cdnMetadata == null || !cdnMetadata.isCDNEnabled()).as(containerNameWithoutCDN
+                  + " should not have metadata").isTrue();
 
-         assert getApi().getCDNExtension().get().get("DoesNotExist") == null;
+         assertThat(getApi().getCDNExtension().get().get("DoesNotExist") == null).isTrue();
 
          // List CDN metadata for containers, and ensure all CDN info is
          // available for enabled

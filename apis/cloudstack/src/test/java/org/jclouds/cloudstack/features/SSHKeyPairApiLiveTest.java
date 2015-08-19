@@ -16,6 +16,7 @@
  */
 package org.jclouds.cloudstack.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -84,7 +85,7 @@ public class SSHKeyPairApiLiveTest extends BaseCloudStackApiLiveTest {
    }
 
    protected void checkSSHKeyPair(SshKeyPair pair) {
-      assert pair.getName() != null : pair;
+      assertThat(pair.getName() != null).as(String.valueOf(pair)).isTrue();
       assertEquals(pair.getFingerprint(),
          client.getSSHKeyPairApi().getSSHKeyPair(pair.getName()).getFingerprint());
    }

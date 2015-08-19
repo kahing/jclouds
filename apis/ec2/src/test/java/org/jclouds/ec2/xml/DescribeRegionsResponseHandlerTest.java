@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.xml;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -57,7 +58,7 @@ public class DescribeRegionsResponseHandlerTest extends BaseHandlerTest {
 
       });
       factory = injector.getInstance(ParseSax.Factory.class);
-      assert factory != null;
+      assertThat(factory != null).isTrue();
    }
 
    public void testApplyInputStream() {

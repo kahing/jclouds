@@ -19,6 +19,8 @@ package org.jclouds.gogrid.compute.config;
 import org.jclouds.gogrid.domain.ServerState;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
 @Test(groups = "unit", testName = "GoGridComputeServiceContextModuleTest")
 public class GoGridComputeServiceContextModuleTest {
@@ -26,7 +28,7 @@ public class GoGridComputeServiceContextModuleTest {
    public void testAllStatusCovered() {
 
       for (ServerState state : ServerState.values()) {
-         assert GoGridComputeServiceContextModule.toPortableNodeStatus.containsKey(state) : state;
+         assertThat(GoGridComputeServiceContextModule.toPortableNodeStatus.containsKey(state)).as(String.valueOf(state)).isTrue();
       }
 
    }

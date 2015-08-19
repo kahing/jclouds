@@ -16,6 +16,7 @@
  */
 package org.jclouds.rackspace.cloudloadbalancers.v1.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.rackspace.cloudloadbalancers.v1.predicates.LoadBalancerPredicates.awaitAvailable;
 import static org.jclouds.rackspace.cloudloadbalancers.v1.predicates.LoadBalancerPredicates.awaitDeleted;
 import static org.testng.Assert.assertEquals;
@@ -106,16 +107,16 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
    public void testListNodes() throws Exception {
       for (LoadBalancer lb : nodes.keySet()) {
          Set<Node> response = api.getNodeApi(lb.getRegion(), lb.getId()).list().concat().toSet();
-         assert null != response;
+         assertThat(null != response).isTrue();
          assertTrue(response.size() > 0);
          for (Node n : response) {
-            assert n.getId() != -1 : n;
-            assert n.getCondition() != null : n;
-            assert n.getAddress() != null : n;
-            assert n.getPort() != -1 : n;
-            assert n.getStatus() != null : n;
-            assert !Arrays.asList(LoadBalancer.WEIGHTED_ALGORITHMS).contains(lb.getAlgorithm())
-                     || n.getWeight() != null : n;
+            assertThat(n.getId() != -1).as(String.valueOf(n)).isTrue();
+            assertThat(n.getCondition() != null).as(String.valueOf(n)).isTrue();
+            assertThat(n.getAddress() != null).as(String.valueOf(n)).isTrue();
+            assertThat(n.getPort() != -1).as(String.valueOf(n)).isTrue();
+            assertThat(n.getStatus() != null).as(String.valueOf(n)).isTrue();
+            assertThat(!Arrays.asList(LoadBalancer.WEIGHTED_ALGORITHMS).contains(lb.getAlgorithm())
+                     || n.getWeight() != null).as(String.valueOf(n)).isTrue();
 
             Node getDetails = api.getNodeApi(lb.getRegion(), lb.getId()).get(n.getId());
 

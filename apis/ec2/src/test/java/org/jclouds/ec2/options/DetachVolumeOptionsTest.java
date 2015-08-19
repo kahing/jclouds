@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.DetachVolumeOptions.Builder.fromDevice;
 import static org.jclouds.ec2.options.DetachVolumeOptions.Builder.fromInstance;
 import static org.testng.Assert.assertEquals;
@@ -32,8 +33,8 @@ public class DetachVolumeOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(DetachVolumeOptions.class);
-      assert !String.class.isAssignableFrom(DetachVolumeOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(DetachVolumeOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(DetachVolumeOptions.class)).isTrue();
    }
 
    @Test

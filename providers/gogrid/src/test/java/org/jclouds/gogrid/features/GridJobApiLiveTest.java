@@ -16,6 +16,7 @@
  */
 package org.jclouds.gogrid.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
@@ -32,10 +33,10 @@ public class GridJobApiLiveTest extends BaseGoGridApiLiveTest {
 
    public void testListJobs() throws Exception {
       Set<Job> response = api.getJobServices().getJobList(GetJobListOptions.Builder.maxItems(10));
-      assert null != response;
-      assert response.size() <= 10 : response;
+      assertThat(null != response).isTrue();
+      assertThat(response.size() <= 10).as(String.valueOf(response)).isTrue();
       for (Job job : response) {
-         assert job.getId() >= 0 : job;
+         assertThat(job.getId() >= 0).as(String.valueOf(job)).isTrue();
          checkJob(job);
 
          Job query = Iterables.getOnlyElement(api.getJobServices().getJobsById(job.getId()));
@@ -46,15 +47,15 @@ public class GridJobApiLiveTest extends BaseGoGridApiLiveTest {
    }
 
    private void checkJob(Job job) {
-      assert job.getAttempts() >= 0 : job;
-      assert job.getCommand() != null : job;
-      assert job.getCreatedOn() != null : job;
-      assert job.getCreatedOn() != null : job;
-      assert job.getDetails() != null : job;
-      assert job.getHistory() != null : job;
-      assert job.getId() >= 0 : job;
-      assert job.getLastUpdatedOn() != null : job;
-      assert job.getObjectType() != null : job;
-      assert job.getOwner() != null : job;
+      assertThat(job.getAttempts() >= 0).as(String.valueOf(job)).isTrue();
+      assertThat(job.getCommand() != null).as(String.valueOf(job)).isTrue();
+      assertThat(job.getCreatedOn() != null).as(String.valueOf(job)).isTrue();
+      assertThat(job.getCreatedOn() != null).as(String.valueOf(job)).isTrue();
+      assertThat(job.getDetails() != null).as(String.valueOf(job)).isTrue();
+      assertThat(job.getHistory() != null).as(String.valueOf(job)).isTrue();
+      assertThat(job.getId() >= 0).as(String.valueOf(job)).isTrue();
+      assertThat(job.getLastUpdatedOn() != null).as(String.valueOf(job)).isTrue();
+      assertThat(job.getObjectType() != null).as(String.valueOf(job)).isTrue();
+      assertThat(job.getOwner() != null).as(String.valueOf(job)).isTrue();
    }
 }

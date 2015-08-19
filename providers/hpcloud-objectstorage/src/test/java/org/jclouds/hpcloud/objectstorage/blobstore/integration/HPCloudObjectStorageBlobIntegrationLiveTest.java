@@ -21,6 +21,8 @@ import org.jclouds.openstack.swift.blobstore.integration.SwiftBlobIntegrationLiv
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test(groups = "live")
 public class HPCloudObjectStorageBlobIntegrationLiveTest extends SwiftBlobIntegrationLiveTest {
    public HPCloudObjectStorageBlobIntegrationLiveTest() {
@@ -43,10 +45,10 @@ public class HPCloudObjectStorageBlobIntegrationLiveTest extends SwiftBlobIntegr
 
    @Override
    protected void checkContentDisposition(Blob blob, String contentDisposition) {
-      assert blob.getPayload().getContentMetadata().getContentDisposition().startsWith(contentDisposition) : blob
-               .getPayload().getContentMetadata().getContentDisposition();
-      assert blob.getMetadata().getContentMetadata().getContentDisposition().startsWith(contentDisposition) : blob
-               .getMetadata().getContentMetadata().getContentDisposition();
+      assertThat(blob.getPayload().getContentMetadata().getContentDisposition().startsWith(contentDisposition)).as(blob
+               .getPayload().getContentMetadata().getContentDisposition()).isTrue();
+      assertThat(blob.getMetadata().getContentMetadata().getContentDisposition().startsWith(contentDisposition)).as(blob
+               .getMetadata().getContentMetadata().getContentDisposition()).isTrue();
    }
 
 }

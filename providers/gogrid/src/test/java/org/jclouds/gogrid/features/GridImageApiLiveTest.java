@@ -17,6 +17,7 @@
 package org.jclouds.gogrid.features;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -46,9 +47,9 @@ public class GridImageApiLiveTest extends BaseGoGridApiLiveTest {
 
    public void testListImages() throws Exception {
       Set<ServerImage> response = api.getImageServices().getImageList();
-      assert null != response;
+      assertThat(null != response).isTrue();
       for (ServerImage image : response) {
-         assert image.getId() >= 0 : image;
+         assertThat(image.getId() >= 0).as(String.valueOf(image)).isTrue();
          checkImage(image);
 
          ServerImage query = Iterables.getOnlyElement(api.getImageServices()
@@ -60,20 +61,20 @@ public class GridImageApiLiveTest extends BaseGoGridApiLiveTest {
    }
 
    private void checkImage(ServerImage image) {
-      assert image.getArchitecture() != null : image;
-      assert image.getBillingTokens() != null : image;
+      assertThat(image.getArchitecture() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getBillingTokens() != null).as(String.valueOf(image)).isTrue();
       if (image.getCreatedTime() == null)
          Logger.getAnonymousLogger().warning("image " + image.getId() + " is missing the createdTime field");
-      assert image.getDescription() != null : image;
-      assert image.getFriendlyName() != null : image;
-      assert image.getId() >= 0 : image;
-      assert image.getLocation() != null : image;
-      assert image.getName() != null : image;
-      assert image.getOs() != null : image;
-      assert image.getOwner() != null : image;
-      assert image.getPrice() >= 0 : image;
-      assert image.getState() != null : image;
-      assert image.getType() != null : image;
+      assertThat(image.getDescription() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getFriendlyName() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getId() >= 0).as(String.valueOf(image)).isTrue();
+      assertThat(image.getLocation() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getName() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getOs() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getOwner() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getPrice() >= 0).as(String.valueOf(image)).isTrue();
+      assertThat(image.getState() != null).as(String.valueOf(image)).isTrue();
+      assertThat(image.getType() != null).as(String.valueOf(image)).isTrue();
       if (image.getUpdatedTime() == null)
          Logger.getAnonymousLogger().warning("image " + image.getId() + " is missing the updatedTime field");
    }
@@ -92,7 +93,7 @@ public class GridImageApiLiveTest extends BaseGoGridApiLiveTest {
          Server createdServer = api.getServerServices()
                .addServer(nameOfServer, "5489", "1", availableIp.getIp());
          assertNotNull(createdServer);
-         assert serverLatestJobCompleted.apply(createdServer);
+         assertThat(serverLatestJobCompleted.apply(createdServer)).isTrue();
          image = api
                .getImageServices()
                .saveImageFromServer("friendlyName", createdServer.getName(),

@@ -24,15 +24,17 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test
 public class HardwarePredicatesTest {
    ComputeService computeService = ContextBuilder.newBuilder("stub").build(ComputeServiceContext.class).getComputeService();
 
    public void testHardwareId() {
       Hardware first = Iterables.get(computeService.listHardwareProfiles(), 0);
-      assert HardwarePredicates.idEquals(first.getId()).apply(first);
+      assertThat(HardwarePredicates.idEquals(first.getId()).apply(first)).isTrue();
       Hardware second = Iterables.get(computeService.listHardwareProfiles(), 1);
-      assert !HardwarePredicates.idEquals(first.getId()).apply(second);
+      assertThat(!HardwarePredicates.idEquals(first.getId()).apply(second)).isTrue();
    }
 
 }

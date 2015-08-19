@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.DescribeImagesOptions.Builder.executableBy;
 import static org.jclouds.ec2.options.DescribeImagesOptions.Builder.imageIds;
 import static org.jclouds.ec2.options.DescribeImagesOptions.Builder.ownedBy;
@@ -33,8 +34,8 @@ public class DescribeImagesOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(DescribeImagesOptions.class);
-      assert !String.class.isAssignableFrom(DescribeImagesOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(DescribeImagesOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(DescribeImagesOptions.class)).isTrue();
    }
 
    @Test

@@ -24,6 +24,8 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Test(groups = "live", testName = "ElasticStackComputeServiceLiveTest")
 public class ElasticStackComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
@@ -43,6 +45,6 @@ public class ElasticStackComputeServiceLiveTest extends BaseComputeServiceLiveTe
 
    protected void checkResponseEqualsHostname(ExecResponse execResponse, NodeMetadata node1) {
       // hostname is not predictable based on node metadata
-      assert execResponse.getOutput().trim().equals("ubuntu") : execResponse.getOutput();
+      assertThat(execResponse.getOutput().trim().equals("ubuntu")).as(execResponse.getOutput()).isTrue();
    }
 }

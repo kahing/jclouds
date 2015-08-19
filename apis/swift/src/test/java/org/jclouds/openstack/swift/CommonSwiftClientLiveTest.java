@@ -17,6 +17,7 @@
 package org.jclouds.openstack.swift;
 
 import static com.google.common.io.BaseEncoding.base16;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.swift.options.ListContainerOptions.Builder.underPath;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -170,9 +171,9 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
          assertEquals(Iterables.get(response, 0).getName(), containerName + ".hello");
 
          String containerName2 = containerName + "?should-be-illegal-question-char";
-         assert getApi().createContainer(containerName2);
+         assertThat(getApi().createContainer(containerName2)).isTrue();
 
-         assert getApi().createContainer(containerName + "/illegal-slash-char");
+         assertThat(getApi().createContainer(containerName + "/illegal-slash-char")).isTrue();
 
          assertTrue(getApi().deleteContainerIfEmpty(containerName1));
          assertTrue(getApi().deleteContainerIfEmpty(containerName2));
@@ -191,11 +192,11 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
          getApi().putObject(containerName, newSwiftObject(data, "path/bar"));
 
          PageSet<ObjectInfo> container = getApi().listObjects(containerName, underPath(""));
-         assert container.getNextMarker() == null;
+         assertThat(container.getNextMarker() == null).isTrue();
          assertEquals(container.size(), 1);
          assertEquals(Iterables.get(container, 0).getName(), "foo");
          container = getApi().listObjects(containerName, underPath("path"));
-         assert container.getNextMarker() == null;
+         assertThat(container.getNextMarker() == null).isTrue();
          assertEquals(container.size(), 1);
          assertEquals(Iterables.get(container, 0).getName(), "path/bar");
       } finally {
@@ -214,20 +215,20 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
          SwiftObject object = newSwiftObject(data, key);
          byte[] md5 = object.getPayload().getContentMetadata().getContentMD5();
          String newEtag = getApi().putObject(containerName, object);
-         assert newEtag != null;
+         assertThat(newEtag != null).isTrue();
 
          assertEquals(base16().lowerCase().encode(md5), base16().lowerCase().encode(object.getPayload().getContentMetadata()
                   .getContentMD5()));
 
          // Test HEAD of missing object
-         assert getApi().getObjectInfo(containerName, "non-existent-object") == null;
+         assertThat(getApi().getObjectInfo(containerName, "non-existent-object") == null).isTrue();
 
          // Test HEAD of object
          MutableObjectInfoWithMetadata metadata = getApi().getObjectInfo(containerName, object.getInfo().getName());
          assertEquals(metadata.getName(), object.getInfo().getName());
 
          assertEquals(metadata.getBytes(), Long.valueOf(data.length()));
-         assert metadata.getContentType().startsWith("text/plain") : metadata.getContentType();
+         assertThat(metadata.getContentType().startsWith("text/plain")).as(metadata.getContentType()).isTrue();
 
          assertEquals(base16().lowerCase().encode(md5), base16().lowerCase().encode(metadata.getHash()));
          assertEquals(metadata.getHash(), base16().lowerCase().decode(newEtag));
@@ -241,7 +242,7 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
          assertTrue(getApi().setObjectInfo(containerName, object.getInfo().getName(), userMetadata));
 
          // Test GET of missing object
-         assert getApi().getObject(containerName, "non-existent-object") == null;
+         assertThat(getApi().getObject(containerName, "non-existent-object") == null).isTrue();
          // Test GET of object (including updated metadata)
          SwiftObject getBlob = getApi().getObject(containerName, object.getInfo().getName());
          assertEquals(Strings2.toStringAndClose(getBlob.getPayload().openStream()), data);
@@ -356,7 +357,7 @@ public abstract class CommonSwiftClientLiveTest<C extends CommonSwiftClient> ext
    
    protected void testGetObjectContentType(SwiftObject getBlob) {
        String contentType = getBlob.getPayload().getContentMetadata().getContentType();
-       assert contentType.startsWith("text/plain") || "application/x-www-form-urlencoded".equals(contentType) : contentType;
+       assertThat(contentType.startsWith("text/plain") || "application/x-www-form-urlencoded".equals(contentType)).as(contentType).isTrue();
    }
 
    protected SwiftObject newSwiftObject(String data, String key) throws IOException {

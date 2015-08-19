@@ -17,6 +17,7 @@
 package org.jclouds.glesys.features;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -93,13 +94,13 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
    private void checkAllowedArguments(AllowedArgumentsForCreateServer t) {
       assertNotNull(t);
 
-      assert !t.getDataCenters().isEmpty() : t;
-      assert !t.getCpuCoreOptions().getAllowedUnits().isEmpty() : t;
-      assert !t.getDiskSizesInGB().getAllowedUnits().isEmpty() : t;
-      assert !t.getMemorySizesInMB().getAllowedUnits().isEmpty() : t;
-      assert !t.getTemplateNames().isEmpty() : t;
-      assert !t.getTransfersInGB().getAllowedUnits().isEmpty() : t;
-      assert !t.getTransfersInGB().getAllowedUnits().isEmpty() : t;
+      assertThat(!t.getDataCenters().isEmpty()).as(String.valueOf(t)).isTrue();
+      assertThat(!t.getCpuCoreOptions().getAllowedUnits().isEmpty()).as(String.valueOf(t)).isTrue();
+      assertThat(!t.getDiskSizesInGB().getAllowedUnits().isEmpty()).as(String.valueOf(t)).isTrue();
+      assertThat(!t.getMemorySizesInMB().getAllowedUnits().isEmpty()).as(String.valueOf(t)).isTrue();
+      assertThat(!t.getTemplateNames().isEmpty()).as(String.valueOf(t)).isTrue();
+      assertThat(!t.getTransfersInGB().getAllowedUnits().isEmpty()).as(String.valueOf(t)).isTrue();
+      assertThat(!t.getTransfersInGB().getAllowedUnits().isEmpty()).as(String.valueOf(t)).isTrue();
    }
 
    public void testListTemplates() throws Exception {
@@ -116,8 +117,8 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
       assertNotNull(t.getOs());
 
       assertNotNull(t.getPlatform());
-      assert t.getMinDiskSize() > 0 : t;
-      assert t.getMinMemSize() > 0 : t;
+      assertThat(t.getMinDiskSize() > 0).as(String.valueOf(t)).isTrue();
+      assertThat(t.getMinMemSize() > 0).as(String.valueOf(t)).isTrue();
     }
 
    public void testListServers() throws Exception {
@@ -265,11 +266,11 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
 
    private void checkServer(ServerDetails server) {
       // description can be null
-      assert server.getCpuCores() > 0 : server;
-      assert server.getDiskSizeGB() > 0 : server;
-      assert server.getMemorySizeMB() > 0 : server;
-      assert server.getCost() != null;
-      assert server.getTransferGB() > 0 : server;
+      assertThat(server.getCpuCores() > 0).as(String.valueOf(server)).isTrue();
+      assertThat(server.getDiskSizeGB() > 0).as(String.valueOf(server)).isTrue();
+      assertThat(server.getMemorySizeMB() > 0).as(String.valueOf(server)).isTrue();
+      assertThat(server.getCost() != null).isTrue();
+      assertThat(server.getTransferGB() > 0).as(String.valueOf(server)).isTrue();
 
       assertNotNull(server.getTemplateName());
       assertNotNull(server.getIps());
@@ -282,14 +283,14 @@ public class ServerApiLiveTest extends BaseGleSYSApiWithAServerLiveTest {
 
       for (ResourceStatus usage : new ResourceStatus[] { status.getCpu(), status.getDisk(), status.getMemory() }) {
          assertNotNull(usage);
-         assert usage.getMax() >= 0.0 : status;
-         assert usage.getUsage() >= 0.0 : status;
+         assertThat(usage.getMax() >= 0.0).as(String.valueOf(status)).isTrue();
+         assertThat(usage.getUsage() >= 0.0).as(String.valueOf(status)).isTrue();
 
          assertNotNull(usage.getUnit());
       }
 
       assertNotNull(status.getUptime());
-      assert status.getUptime().getCurrent() > 0 : status;
+      assertThat(status.getUptime().getCurrent() > 0).as(String.valueOf(status)).isTrue();
       assertNotNull(status.getUptime().getUnit());
    }
 }

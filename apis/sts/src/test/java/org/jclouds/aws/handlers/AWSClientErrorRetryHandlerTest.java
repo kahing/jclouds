@@ -18,6 +18,7 @@ package org.jclouds.aws.handlers;
 import static javax.ws.rs.HttpMethod.PUT;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -52,7 +53,7 @@ public class AWSClientErrorRetryHandlerTest {
       AWSClientErrorRetryHandler retry = new AWSClientErrorRetryHandler(utils, backoffLimitedRetryHandler,
             ImmutableSet.<String> of());
 
-      assert !retry.shouldRetryRequest(command, HttpResponse.builder().statusCode(UNAUTHORIZED.getStatusCode()).build());
+      assertThat(!retry.shouldRetryRequest(command, HttpResponse.builder().statusCode(UNAUTHORIZED.getStatusCode()).build())).isTrue();
 
       verify(utils, backoffLimitedRetryHandler, command);
 
@@ -90,7 +91,7 @@ public class AWSClientErrorRetryHandlerTest {
       AWSClientErrorRetryHandler retry = new AWSClientErrorRetryHandler(utils, backoffLimitedRetryHandler,
             ImmutableSet.<String> of("RequestTimeout", "OperationAborted", "SignatureDoesNotMatch"));
 
-      assert retry.shouldRetryRequest(command, operationAborted);
+      assertThat(retry.shouldRetryRequest(command, operationAborted)).isTrue();
 
       verify(utils, backoffLimitedRetryHandler, command);
 

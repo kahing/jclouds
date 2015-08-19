@@ -16,6 +16,7 @@
  */
 package org.jclouds.sshj;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
@@ -159,7 +160,7 @@ public class SshjSshClientLiveTest {
    public void testGetEtcPassword() throws IOException {
       Payload input = setupClient().get("/etc/passwd");
       String contents = Strings2.toStringAndClose(input.openStream());
-      assert contents.indexOf("root") >= 0 : "no root in " + contents;
+      assertThat(contents.indexOf("root") >= 0).as("no root in " + contents).isTrue();
    }
 
    public void testExecHostname() throws IOException, InterruptedException {

@@ -16,6 +16,7 @@
  */
 package org.jclouds.ec2.compute;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -140,7 +141,7 @@ public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
          options.as(EC2TemplateOptions.class).keyPair(result.getKeyName());
          
          // pass in the private key, so that we can run a script with it
-         assert result.getKeyMaterial() != null : result;
+         assertThat(result.getKeyMaterial() != null).as(String.valueOf(result)).isTrue();
          options.overrideLoginPrivateKey(result.getKeyMaterial());
          
          // an arbitrary command to run
@@ -148,8 +149,8 @@ public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
          
          Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, options);
          NodeMetadata first = Iterables.get(nodes, 0);
-         assert first.getCredentials() != null : first;
-         assert first.getCredentials().identity != null : first;
+         assertThat(first.getCredentials() != null).as(String.valueOf(first)).isTrue();
+         assertThat(first.getCredentials().identity != null).as(String.valueOf(first)).isTrue();
 
          // Verify that the output of createNodesInGroup is the same.
          assertEquals(client.createNodesInGroup(group, 1, options), nodes, "Idempotency failing - got different instances");
@@ -166,7 +167,7 @@ public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
          // make sure our dummy group has no rules
          SecurityGroup secgroup = Iterables.getOnlyElement(securityGroupClient.describeSecurityGroupsInRegion(null,
                   "jclouds#" + group));
-         assert secgroup.size() == 0 : secgroup;
+         assertThat(secgroup.size() == 0).as(String.valueOf(secgroup)).isTrue();
 
          // try to run a script with the original keyPair
          runScriptWithCreds(group, first.getOperatingSystem(),

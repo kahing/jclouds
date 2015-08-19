@@ -16,6 +16,7 @@
  */
 package org.jclouds.elasticstack;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -104,7 +105,7 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
    @Test
    public void testGetServer() throws Exception {
       for (String serverUUID : client.listServers()) {
-         assert !"".equals(serverUUID);
+         assertThat(!"".equals(serverUUID)).isTrue();
          assertNotNull(client.getServerInfo(serverUUID));
       }
    }
@@ -138,8 +139,8 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
    @Test
    public void testGetDrive() throws Exception {
       for (String driveUUID : client.listDrives()) {
-         assert !"".equals(driveUUID) : driveUUID;
-         assert client.getDriveInfo(driveUUID) != null : driveUUID;
+         assertThat(!"".equals(driveUUID)).as(driveUUID).isTrue();
+         assertThat(client.getDriveInfo(driveUUID) != null).as(driveUUID).isTrue();
       }
    }
 
@@ -233,10 +234,10 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
    public void testConnectivity() throws Exception {
       HostAndPort vncsocket = HostAndPort.fromParts(server.getVnc().getIp(), 5900);
       Logger.getAnonymousLogger().info("awaiting vnc: " + vncsocket);
-      assert socketTester.apply(vncsocket) : server;
+      assertThat(socketTester.apply(vncsocket)).as(String.valueOf(server)).isTrue();
       HostAndPort sshsocket = HostAndPort.fromParts(server.getNics().get(0).getDhcp(), 22);
       Logger.getAnonymousLogger().info("awaiting ssh: " + sshsocket);
-      assert socketTester.apply(sshsocket) : server;
+      assertThat(socketTester.apply(sshsocket)).as(String.valueOf(server)).isTrue();
       doConnectViaSsh(server, getSshCredentials(server));
    }
 
@@ -254,8 +255,8 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
       client.shutdownServer(server.getUuid());
       // behavior on shutdown depends on how your server OS is set up to respond to an ACPI power
       // button signal
-      assert client.getServerInfo(server.getUuid()).getStatus() == ServerStatus.ACTIVE || client.getServerInfo(
-               server.getUuid()).getStatus() == ServerStatus.STOPPED;
+      assertThat(client.getServerInfo(server.getUuid()).getStatus() == ServerStatus.ACTIVE || client.getServerInfo(
+               server.getUuid()).getStatus() == ServerStatus.STOPPED).isTrue();
    }
 
    @Test(dependsOnMethods = "testLifeCycle")
@@ -339,8 +340,8 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
          System.err.println("before image; drive 2" + client.getDriveInfo(drive2.getUuid()));
          System.err.println("before image; drive 3" + client.getDriveInfo(drive3.getUuid()));
          client.imageDrive(drive2.getUuid(), drive3.getUuid());
-         assert driveNotClaimed.apply(drive3) : client.getDriveInfo(drive3.getUuid());
-         assert driveNotClaimed.apply(drive2) : client.getDriveInfo(drive2.getUuid());
+         assertThat(driveNotClaimed.apply(drive3)).as(String.valueOf(client.getDriveInfo(drive3.getUuid()))).isTrue();
+         assertThat(driveNotClaimed.apply(drive2)).as(String.valueOf(client.getDriveInfo(drive2.getUuid()))).isTrue();
          System.err.println("after image; drive 2" + client.getDriveInfo(drive2.getUuid()));
          System.err.println("after image; drive 3" + client.getDriveInfo(drive3.getUuid()));
          assertEquals(Strings2.toStringAndClose(client.readDrive(drive3.getUuid(), 0, 3).openStream()), "foo");
@@ -357,7 +358,7 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
    protected void prepareDrive() {
       System.err.println("before prepare" + client.getDriveInfo(drive.getUuid()));
       client.imageDrive(imageId, drive.getUuid(), ImageConversionType.GUNZIP);
-      assert driveNotClaimed.apply(drive) : client.getDriveInfo(drive.getUuid());
+      assertThat(driveNotClaimed.apply(drive)).as(String.valueOf(client.getDriveInfo(drive.getUuid()))).isTrue();
       System.err.println("after prepare" + client.getDriveInfo(drive.getUuid()));
    }
 

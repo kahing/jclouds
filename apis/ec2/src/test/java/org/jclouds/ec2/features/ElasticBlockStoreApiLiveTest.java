@@ -19,6 +19,7 @@ package org.jclouds.ec2.features;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.fromSnapshotId;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.withSize;
 import static org.jclouds.ec2.options.DescribeSnapshotsOptions.Builder.snapshotIds;
@@ -140,7 +141,7 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
    void testCreateSnapshotInRegion() {
       Snapshot snapshot = client.createSnapshotInRegion(defaultRegion, volumeId);
       Predicate<Snapshot> snapshotted = retry(new SnapshotCompleted(client), 600, 10, SECONDS);
-      assert snapshotted.apply(snapshot);
+      assertThat(snapshotted.apply(snapshot)).isTrue();
 
       Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegion(defaultRegion,
             snapshotIds(snapshot.getId())));
@@ -155,7 +156,7 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertNotNull(volume);
 
       Predicate<Volume> availabile = retry(new VolumeAvailable(client), 600, 10, SECONDS);
-      assert availabile.apply(volume);
+      assertThat(availabile.apply(volume)).isTrue();
 
       Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(defaultRegion, volume.getId()));
       assertEquals(volume.getId(), result.getId());
@@ -173,7 +174,7 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertNotNull(volume);
 
       Predicate<Volume> availabile = retry(new VolumeAvailable(client), 600, 10, SECONDS);
-      assert availabile.apply(volume);
+      assertThat(availabile.apply(volume)).isTrue();
 
       Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(defaultRegion, volume.getId()));
       assertEquals(volume.getId(), result.getId());
@@ -190,7 +191,7 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertNotNull(volume);
 
       Predicate<Volume> availabile = retry(new VolumeAvailable(client), 600, 10, SECONDS);
-      assert availabile.apply(volume);
+      assertThat(availabile.apply(volume)).isTrue();
 
       Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(defaultRegion, volume.getId()));
       assertEquals(volume.getId(), result.getId());
@@ -296,7 +297,7 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
    @Test(dependsOnMethods = "testDeleteVolumeInRegion")
    void testDeleteSnapshotInRegion() {
       client.deleteSnapshotInRegion(defaultRegion, snapshot.getId());
-      assert client.describeSnapshotsInRegion(defaultRegion, snapshotIds(snapshot.getId())).size() == 0;
+      assertThat(client.describeSnapshotsInRegion(defaultRegion, snapshotIds(snapshot.getId())).size() == 0).isTrue();
    }
 
    @AfterClass(groups = { "integration", "live" })

@@ -22,6 +22,8 @@ import org.jclouds.cloudstack.domain.ResourceLimit;
 import org.jclouds.cloudstack.internal.BaseCloudStackApiLiveTest;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests behavior of {@code LimitApi}
  */
@@ -37,8 +39,8 @@ public class LimitApiLiveTest extends BaseCloudStackApiLiveTest {
    }
 
    private void checkResourceLimit(ResourceLimit resourceLimit) {
-      assert resourceLimit.getAccount() != null : resourceLimit;
-      assert resourceLimit.getDomain() != null : resourceLimit;
-      assert resourceLimit.getResourceType() != ResourceLimit.ResourceType.UNRECOGNIZED : resourceLimit;
+      assertThat(resourceLimit.getAccount() != null).as(String.valueOf(resourceLimit)).isTrue();
+      assertThat(resourceLimit.getDomain() != null).as(String.valueOf(resourceLimit)).isTrue();
+      assertThat(resourceLimit.getResourceType() != ResourceLimit.ResourceType.UNRECOGNIZED).as(String.valueOf(resourceLimit)).isTrue();
    }
 }

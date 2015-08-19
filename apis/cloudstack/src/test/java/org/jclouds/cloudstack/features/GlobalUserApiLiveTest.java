@@ -20,6 +20,7 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base16;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.cloudstack.features.GlobalAccountApiLiveTest.createTestAccount;
 import static org.jclouds.cloudstack.options.UpdateUserOptions.Builder.userName;
 import static org.testng.Assert.assertEquals;
@@ -89,7 +90,7 @@ public class GlobalUserApiLiveTest extends BaseCloudStackApiLiveTest {
       CloudStackApi client = context.getApi();
       Set<Account> accounts = client.getAccountApi().listAccounts();
 
-      assert !accounts.isEmpty();
+      assertThat(!accounts.isEmpty()).isTrue();
 
       context.close();
    }

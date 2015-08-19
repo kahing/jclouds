@@ -17,6 +17,7 @@
 package org.jclouds.lifecycle.config;
 
 import static com.google.inject.name.Names.named;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 
 import java.io.Closeable;
@@ -46,7 +47,7 @@ public class LifeCycleModuleTest {
    @Test
    void testBindsExecutor() {
       Injector i = createInjector();
-      assert i.getInstance(Key.get(ListeningExecutorService.class, named(PROPERTY_USER_THREADS))) != null;
+      assertThat(i.getInstance(Key.get(ListeningExecutorService.class, named(PROPERTY_USER_THREADS))) != null).isTrue();
    }
 
    private Injector createInjector() {
@@ -64,8 +65,8 @@ public class LifeCycleModuleTest {
    @Test
    void testBindsCloser() {
       Injector i = createInjector();
-      assert i.getInstance(Closer.class) != null;
-      assert i.getInstance(Closer.class).getState() == Closer.State.AVAILABLE;
+      assertThat(i.getInstance(Closer.class) != null).isTrue();
+      assertThat(i.getInstance(Closer.class).getState() == Closer.State.AVAILABLE).isTrue();
    }
 
    @Test
@@ -73,12 +74,12 @@ public class LifeCycleModuleTest {
       Injector i = createInjector();
       ListeningExecutorService executor = i.getInstance(Key.get(ListeningExecutorService.class,
             named(PROPERTY_USER_THREADS)));
-      assert !executor.isShutdown();
+      assertThat(!executor.isShutdown()).isTrue();
       Closer closer = i.getInstance(Closer.class);
-      assert closer.getState() == Closer.State.AVAILABLE;
+      assertThat(closer.getState() == Closer.State.AVAILABLE).isTrue();
       closer.close();
-      assert executor.isShutdown();
-      assert closer.getState() == Closer.State.DONE;
+      assertThat(executor.isShutdown()).isTrue();
+      assertThat(closer.getState() == Closer.State.DONE).isTrue();
    }
 
    @Test
@@ -86,12 +87,12 @@ public class LifeCycleModuleTest {
       Injector i = createInjector();
       ListeningExecutorService userExecutor = i.getInstance(Key.get(ListeningExecutorService.class,
             named(PROPERTY_USER_THREADS)));
-      assert !userExecutor.isShutdown();
+      assertThat(!userExecutor.isShutdown()).isTrue();
       Closer closer = i.getInstance(Closer.class);
-      assert closer.getState() == Closer.State.AVAILABLE;
+      assertThat(closer.getState() == Closer.State.AVAILABLE).isTrue();
       closer.close();
-      assert userExecutor.isShutdown();
-      assert closer.getState() == Closer.State.DONE;
+      assertThat(userExecutor.isShutdown()).isTrue();
+      assertThat(closer.getState() == Closer.State.DONE).isTrue();
    }
 
    static class PostConstructable {
@@ -111,7 +112,7 @@ public class LifeCycleModuleTest {
          }
       });
       PostConstructable postConstructable = i.getInstance(PostConstructable.class);
-      assert postConstructable.isStarted;
+      assertThat(postConstructable.isStarted).isTrue();
    }
 
    @Test
@@ -127,10 +128,10 @@ public class LifeCycleModuleTest {
          public void close() throws IOException {
              try {
                  closeStart.countDown();
-                 assert closer.getState() == Closer.State.PROCESSING;
+                 assertThat(closer.getState() == Closer.State.PROCESSING).isTrue();
                  closeDone.await();
              } catch (InterruptedException e) {
-                 assert false : e.getMessage();
+                 assertThat(false).as(e.getMessage()).isTrue();
              }
          }
       });
@@ -141,7 +142,7 @@ public class LifeCycleModuleTest {
             try {
                closer.close();
             } catch (IOException e) {
-               assert false : e.getMessage();
+               assertThat(false).as(e.getMessage()).isTrue();
             }
          }
       });
@@ -150,13 +151,13 @@ public class LifeCycleModuleTest {
 
       closeStart.await();
 
-      assert closer.getState() == Closer.State.PROCESSING;
+      assertThat(closer.getState() == Closer.State.PROCESSING).isTrue();
 
       closeDone.countDown();
 
       thread.join();
 
-      assert closer.getState() == Closer.State.DONE;
+      assertThat(closer.getState() == Closer.State.DONE).isTrue();
    }
 
    @Test
@@ -180,7 +181,7 @@ public class LifeCycleModuleTest {
             try {
                closer.close();
             } catch (IOException e) {
-               assert false : e.getMessage();
+               assertThat(false).as(e.getMessage()).isTrue();
             }
          }
       };
@@ -196,6 +197,6 @@ public class LifeCycleModuleTest {
 
       verify(closeable);
 
-      assert closer.getState() == Closer.State.DONE;
+      assertThat(closer.getState() == Closer.State.DONE).isTrue();
    }
 }

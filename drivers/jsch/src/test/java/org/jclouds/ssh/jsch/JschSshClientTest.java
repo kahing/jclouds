@@ -17,6 +17,7 @@
 package org.jclouds.ssh.jsch;
 
 import static com.google.inject.name.Names.bindProperties;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -77,48 +78,48 @@ public class JschSshClientTest {
    }
 
    public void testExceptionClassesRetry() {
-      assert ssh.shouldRetry(new JSchException("io error", new IOException("socket closed")));
-      assert ssh.shouldRetry(new JSchException("connect error", new ConnectException("problem")));
-      assert ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException()));
-      assert ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException(null)));
+      assertThat(ssh.shouldRetry(new JSchException("io error", new IOException("socket closed")))).isTrue();
+      assertThat(ssh.shouldRetry(new JSchException("connect error", new ConnectException("problem")))).isTrue();
+      assertThat(ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException()))).isTrue();
+      assertThat(ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException(null)))).isTrue();
    }
 
    public void testOnlyRetryAuthWhenSet() throws UnknownHostException {
       JschSshClient ssh1 = createClient();
-      assert !ssh1.shouldRetry(new AuthorizationException("problem", null));
+      assertThat(!ssh1.shouldRetry(new AuthorizationException("problem", null))).isTrue();
       ssh1.retryAuth = true;
-      assert ssh1.shouldRetry(new AuthorizationException("problem", null));
+      assertThat(ssh1.shouldRetry(new AuthorizationException("problem", null))).isTrue();
    }
 
    public void testOnlyRetryAuthWhenSetViaProperties() throws UnknownHostException {
       Properties props = new Properties();
       props.setProperty("jclouds.ssh.retry-auth", "true");
       JschSshClient ssh1 = createClient(props);
-      assert ssh1.shouldRetry(new AuthorizationException("problem", null));
+      assertThat(ssh1.shouldRetry(new AuthorizationException("problem", null))).isTrue();
    }
 
    public void testExceptionMessagesRetry() {
-      assert !ssh.shouldRetry(new NullPointerException(""));
-      assert !ssh.shouldRetry(new NullPointerException((String) null));
-      assert ssh.shouldRetry(new JSchException("Session.connect: java.io.IOException: End of IO Stream Read"));
-      assert ssh.shouldRetry(new JSchException("Session.connect: invalid data"));
-      assert ssh.shouldRetry(new JSchException("Session.connect: java.net.SocketException: Connection reset"));
+      assertThat(!ssh.shouldRetry(new NullPointerException(""))).isTrue();
+      assertThat(!ssh.shouldRetry(new NullPointerException((String) null))).isTrue();
+      assertThat(ssh.shouldRetry(new JSchException("Session.connect: java.io.IOException: End of IO Stream Read"))).isTrue();
+      assertThat(ssh.shouldRetry(new JSchException("Session.connect: invalid data"))).isTrue();
+      assertThat(ssh.shouldRetry(new JSchException("Session.connect: java.net.SocketException: Connection reset"))).isTrue();
    }
 
    public void testDoNotRetryOnGeneralSftpError() {
       // http://sourceforge.net/mailarchive/forum.php?thread_name=CAARMrHVhASeku48xoAgWEb-nEpUuYkMA03PoA5TvvFdk%3DjGKMA%40mail.gmail.com&forum_name=jsch-users
-      assert !ssh.shouldRetry(new SftpException(ChannelSftp.SSH_FX_FAILURE, new NullPointerException().toString()));
+      assertThat(!ssh.shouldRetry(new SftpException(ChannelSftp.SSH_FX_FAILURE, new NullPointerException().toString()))).isTrue();
    }
 
    public void testCausalChainHasMessageContaining() {
-      assert ssh.causalChainHasMessageContaining(
+      assertThat(ssh.causalChainHasMessageContaining(
             new JSchException("Session.connect: java.io.IOException: End of IO Stream Read")).apply(
-            " End of IO Stream Read");
-      assert ssh.causalChainHasMessageContaining(new JSchException("Session.connect: invalid data")).apply(
-            " invalid data");
-      assert ssh.causalChainHasMessageContaining(
-            new JSchException("Session.connect: java.net.SocketException: Connection reset")).apply("java.net.Socket");
-      assert !ssh.causalChainHasMessageContaining(new NullPointerException()).apply(" End of IO Stream Read");
+            " End of IO Stream Read")).isTrue();
+      assertThat(ssh.causalChainHasMessageContaining(new JSchException("Session.connect: invalid data")).apply(
+            " invalid data")).isTrue();
+      assertThat(ssh.causalChainHasMessageContaining(
+            new JSchException("Session.connect: java.net.SocketException: Connection reset")).apply("java.net.Socket")).isTrue();
+      assertThat(!ssh.causalChainHasMessageContaining(new NullPointerException()).apply(" End of IO Stream Read")).isTrue();
    }
 
    public void testRetryOnToStringNpe() throws UnknownHostException {
@@ -127,7 +128,7 @@ public class JschSshClientTest {
       // ensure we test toString on the exception independently
       props.setProperty("jclouds.ssh.retryable-messages", nex.toString());
       JschSshClient ssh1 = createClient(props);
-      assert ssh1.shouldRetry(new RuntimeException(nex));
+      assertThat(ssh1.shouldRetry(new RuntimeException(nex))).isTrue();
    }
 
    private static class ExceptionWithStrangeToString extends RuntimeException {
@@ -140,7 +141,7 @@ public class JschSshClientTest {
       Properties props = new Properties();
       props.setProperty("jclouds.ssh.retryable-messages", "foo-bar");
       JschSshClient ssh1 = createClient(props);
-      assert ssh1.shouldRetry(new RuntimeException(nex));
+      assertThat(ssh1.shouldRetry(new RuntimeException(nex))).isTrue();
    }
 
    public void testRetryNotOnToStringCustomMismatch() throws UnknownHostException {
@@ -148,7 +149,7 @@ public class JschSshClientTest {
       Properties props = new Properties();
       props.setProperty("jclouds.ssh.retryable-messages", "foo-baR");
       JschSshClient ssh1 = createClient(props);
-      assert !ssh1.shouldRetry(new RuntimeException(nex));
+      assertThat(!ssh1.shouldRetry(new RuntimeException(nex))).isTrue();
    }
 
 }

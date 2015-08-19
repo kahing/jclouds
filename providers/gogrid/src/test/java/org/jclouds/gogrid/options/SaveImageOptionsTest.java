@@ -16,6 +16,7 @@
  */
 package org.jclouds.gogrid.options;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.gogrid.options.SaveImageOptions.Builder.withDescription;
 import static org.testng.Assert.assertEquals;
 
@@ -33,8 +34,8 @@ public class SaveImageOptionsTest {
 
    @Test
    public void testAssignability() {
-      assert HttpRequestOptions.class.isAssignableFrom(SaveImageOptions.class);
-      assert !String.class.isAssignableFrom(SaveImageOptions.class);
+      assertThat(HttpRequestOptions.class.isAssignableFrom(SaveImageOptions.class)).isTrue();
+      assertThat(!String.class.isAssignableFrom(SaveImageOptions.class)).isTrue();
    }
 
    @Test

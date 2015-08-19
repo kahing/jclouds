@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.s3.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.s3.options.PutBucketOptions.Builder.withBucketAcl;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -41,7 +42,7 @@ public class AWSBucketsLiveTest extends BucketsLiveTest {
       String bucketName = getContainerName();
       try {
          String location = getApi().getBucketLocation(bucketName);
-         assert location.equals(Region.US_STANDARD) : "bucket: " + bucketName + " location: " + location;
+         assertThat(location.equals(Region.US_STANDARD)).as("bucket: " + bucketName + " location: " + location).isTrue();
       } finally {
          returnContainer(bucketName);
       }
